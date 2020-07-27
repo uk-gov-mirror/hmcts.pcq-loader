@@ -45,7 +45,7 @@ public class PcqLoaderApplication implements ApplicationRunner {
     }
 
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(ConsolidationApplication.class);
+        ApplicationContext context = SpringApplication.run(PcqLoaderApplication.class);
         SpringApplication.exit(context);
     }
 }
