@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Version: 0.0.1
+Main-Class: org.springframework.boot.loader.JarLauncher
+Start-Class: uk.gov.hmcts.reform.pcqconsolidationservice.ConsolidationAp
+ plication
+Spring-Boot-Version: 2.3.0.RELEASE
+Spring-Boot-Classes: BOOT-INF/classes/
+Spring-Boot-Lib: BOOT-INF/lib/
+Spring-Boot-Classpath-Index: BOOT-INF/classpath.idx
+

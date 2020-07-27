@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.31">
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/ConsolidationApplicationTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/ConsolidationComponentTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/ConsolidationComponentUtil.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/config/ServiceConfigHelper.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/config/ServiceConfigProviderTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/controllers/RootController.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/controllers/advice/ErrorResponseTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/controllers/advice/ExternalApiExceptionTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/controllers/response/PcqAnswerResponseTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/controllers/response/PcqAnswersTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/controllers/response/PcqRecordWithoutCaseResponseTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/controllers/response/PcqWithoutCaseResponseTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/controllers/response/SubmitResponseTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/service/impl/PcqBackendServiceImplTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/services/ccd/CcdAuthenticatorFactoryTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/services/ccd/CcdClientApiTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/test/java/uk/gov/hmcts/reform/pcqconsolidationservice/utils/JsonFeignResponseUtilTest.java">
+</file>
+</checkstyle>

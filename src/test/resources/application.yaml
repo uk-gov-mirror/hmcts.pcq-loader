@@ -1,0 +1,32 @@
+server:
+  port: 4556
+
+#Application specific properties
+api-required-header-keys:
+  co-relationid: X-Correlation-Id
+api-schema-file:
+    submitanswer-schema: JsonSchema/submitAnswersSchema.json
+api-version-number: 1
+
+#Application specific unit test properties
+unit-test:
+  api-urls:
+    submit_answer: /pcq/backend/submitAnswers
+
+#If you use a database then uncomment below lines and update db properties accordingly
+spring:
+  application:
+    name: PCQ Loader Service Tests
+
+application-insights:
+  default:
+    modules:
+      WebSyntheticRequestTelemetryInitializer:
+        enabled: false
+
+azure:
+  application-insights:
+    instrumentation-key: ${APPINSIGHTS_INSTRUMENTATIONKEY:"Test"}
+
+pcqBackendUrl: ${PCQ_BACKEND_URL:http://localhost:4550}
+coRelationId: PCQ Loader Service

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="uk.gov.hmcts.reform.pcqconsolidationservice.services.ccd.CcdAuthenticatorFactoryTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2020-06-26T11:04:01" hostname="Manoj-MacBook-Pro.local" time="0.103">
+  <properties/>
+  <testcase name="returnSuccessfulCredentials()" classname="uk.gov.hmcts.reform.pcqconsolidationservice.services.ccd.CcdAuthenticatorFactoryTest" time="0.092"/>
+  <testcase name="returnSuccessfulCcdAuthenticator()" classname="uk.gov.hmcts.reform.pcqconsolidationservice.services.ccd.CcdAuthenticatorFactoryTest" time="0.01"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

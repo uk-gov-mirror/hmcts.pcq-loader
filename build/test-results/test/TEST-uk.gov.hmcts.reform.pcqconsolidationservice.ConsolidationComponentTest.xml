@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="uk.gov.hmcts.reform.pcqconsolidationservice.ConsolidationComponentTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2020-06-26T11:03:58" hostname="Manoj-MacBook-Pro.local" time="2.332">
+  <properties/>
+  <testcase name="executeApiErrorAddCase()" classname="uk.gov.hmcts.reform.pcqconsolidationservice.ConsolidationComponentTest" time="2.285"/>
+  <testcase name="executeApiInternalError()" classname="uk.gov.hmcts.reform.pcqconsolidationservice.ConsolidationComponentTest" time="0.004"/>
+  <testcase name="executeApiInvalidRequest()" classname="uk.gov.hmcts.reform.pcqconsolidationservice.ConsolidationComponentTest" time="0.003"/>
+  <testcase name="executeApiError()" classname="uk.gov.hmcts.reform.pcqconsolidationservice.ConsolidationComponentTest" time="0.003"/>
+  <testcase name="executeApiInvalidRequestAddCase()" classname="uk.gov.hmcts.reform.pcqconsolidationservice.ConsolidationComponentTest" time="0.01"/>
+  <testcase name="executeApiSuccess()" classname="uk.gov.hmcts.reform.pcqconsolidationservice.ConsolidationComponentTest" time="0.01"/>
+  <testcase name="executeApiInternalErrorAddCase()" classname="uk.gov.hmcts.reform.pcqconsolidationservice.ConsolidationComponentTest" time="0.009"/>
+  <system-out><![CDATA[2020-06-26T12:04:00.918 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent ConsolidationComponent started
+2020-06-26T12:04:00.925 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Searching SERVICE_JD1 service to find case reference for PCQ ID PCQ_ID1
+2020-06-26T12:04:00.927 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Found case reference 484757637549 for PCQ ID PCQ_ID1
+2020-06-26T12:04:00.929 ERROR [Test worker] u.g.h.r.p.ConsolidationComponent API could not be invoked due to error message - Add Case Gateway Error
+2020-06-26T12:04:00.954 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent ConsolidationComponent started
+2020-06-26T12:04:00.955 ERROR [Test worker] u.g.h.r.p.ConsolidationComponent PcqWithoutCase API generated error message Unknown error 
+2020-06-26T12:04:00.955 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent ConsolidationComponent finished
+2020-06-26T12:04:00.958 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent ConsolidationComponent started
+2020-06-26T12:04:00.959 ERROR [Test worker] u.g.h.r.p.ConsolidationComponent PcqWithoutCase API generated error message Invalid Request 
+2020-06-26T12:04:00.959 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent ConsolidationComponent finished
+2020-06-26T12:04:00.962 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent ConsolidationComponent started
+2020-06-26T12:04:00.963 ERROR [Test worker] u.g.h.r.p.ConsolidationComponent API could not be invoked due to error message - Gateway Error
+2020-06-26T12:04:00.969 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent ConsolidationComponent started
+2020-06-26T12:04:00.970 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Searching SERVICE_JD1 service to find case reference for PCQ ID PCQ_ID1
+2020-06-26T12:04:00.970 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Found case reference 484757637549 for PCQ ID PCQ_ID1
+2020-06-26T12:04:00.971 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Successfully added case information for PCQ ID PCQ_ID1 .
+2020-06-26T12:04:00.971 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Searching SERVICE_JD1 service to find case reference for PCQ ID PCQ_ID2
+2020-06-26T12:04:00.971 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Found case reference 484757637549 for PCQ ID PCQ_ID2
+2020-06-26T12:04:00.971 ERROR [Test worker] u.g.h.r.p.ConsolidationComponent AddCaseForPcq API generated error message Invalid Request 
+2020-06-26T12:04:00.972 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent ConsolidationComponent finished
+2020-06-26T12:04:00.980 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent ConsolidationComponent started
+2020-06-26T12:04:00.981 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Searching SERVICE_JD1 service to find case reference for PCQ ID PCQ_ID1
+2020-06-26T12:04:00.981 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Found case reference 484757637549 for PCQ ID PCQ_ID1
+2020-06-26T12:04:00.982 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Successfully added case information for PCQ ID PCQ_ID1 .
+2020-06-26T12:04:00.982 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Searching SERVICE_JD1 service to find case reference for PCQ ID PCQ_ID2
+2020-06-26T12:04:00.982 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Found case reference 484757637549 for PCQ ID PCQ_ID2
+2020-06-26T12:04:00.982 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Successfully added case information for PCQ ID PCQ_ID2 .
+2020-06-26T12:04:00.982 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent ConsolidationComponent finished
+2020-06-26T12:04:00.990 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent ConsolidationComponent started
+2020-06-26T12:04:00.991 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Searching SERVICE_JD1 service to find case reference for PCQ ID PCQ_ID1
+2020-06-26T12:04:00.991 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Found case reference 484757637549 for PCQ ID PCQ_ID1
+2020-06-26T12:04:00.991 ERROR [Test worker] u.g.h.r.p.ConsolidationComponent AddCaseForPcq API generated error message Unknown error 
+2020-06-26T12:04:00.992 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Searching SERVICE_JD1 service to find case reference for PCQ ID PCQ_ID2
+2020-06-26T12:04:00.992 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Found case reference 484757637549 for PCQ ID PCQ_ID2
+2020-06-26T12:04:00.992 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent Successfully added case information for PCQ ID PCQ_ID2 .
+2020-06-26T12:04:00.992 INFO  [Test worker] u.g.h.r.p.ConsolidationComponent ConsolidationComponent finished
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

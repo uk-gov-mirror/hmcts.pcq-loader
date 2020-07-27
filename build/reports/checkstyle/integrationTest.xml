@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.31">
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/integrationTest/java/uk/gov/hmcts/reform/pcqconsolidationservice/config/ServiceConfigTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/integrationTest/java/uk/gov/hmcts/reform/pcqconsolidationservice/config/TestApplicationConfiguration.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/integrationTest/java/uk/gov/hmcts/reform/pcqconsolidationservice/controllers/RootController.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/integrationTest/java/uk/gov/hmcts/reform/pcqconsolidationservice/services/ccd/CcdClientApiTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/integrationTest/java/uk/gov/hmcts/reform/pcqconsolidationservice/util/ConsolidationServiceIntegrationTest.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/integrationTest/java/uk/gov/hmcts/reform/pcqconsolidationservice/util/SpringBootIntegrationTest.java">
+</file>
+</checkstyle>

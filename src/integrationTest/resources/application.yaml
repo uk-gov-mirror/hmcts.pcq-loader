@@ -1,0 +1,44 @@
+server:
+  port: 4556
+
+management:
+  endpoint:
+    health:
+      show-details: "always"
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, info, prometheus
+
+#Application specific properties
+api-error-messages:
+  bad_request: Invalid Request
+  created: Successfully created
+  updated: Successfully updated
+  accepted: Success
+  internal_error: Unknown error occurred
+api-required-header-keys:
+  co-relationid: X-Correlation-Id
+api-schema-file:
+  submitanswer-schema: JsonSchema/submitAnswersSchema.json
+api-version-number: 1
+
+#Application specific unit test properties
+unit-test:
+  api-urls:
+    submit_answer: /pcq/backend/submitAnswers
+
+spring:
+  application:
+    name: PCQ Loader Service Integration Tests
+  main:
+    allow-bean-definition-overriding: true
+
+feign:
+  allow:
+    headers:
+      - X-Correlation-Id
+
+pcqBackendUrl: ${PCQ_BACKEND_URL:http://localhost:4550}
+coRelationId: PCQ Loader Service

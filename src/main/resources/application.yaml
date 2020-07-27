@@ -1,0 +1,37 @@
+server:
+  port: 4556
+
+management:
+  endpoint:
+    health:
+      show-details: "always"
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, info, prometheus
+
+spring:
+  application:
+    name: PCQ Loader Service
+
+smoke.test.enabled: false
+
+application-insights:
+  default:
+    modules:
+      WebSyntheticRequestTelemetryInitializer:
+        enabled: false
+
+azure:
+  application-insights:
+    instrumentation-key: ${APPINSIGHTS_INSTRUMENTATIONKEY:"Test"}
+
+pcqBackendUrl: ${PCQ_BACKEND_URL:http://localhost:4550}
+
+feign:
+  allow:
+    headers:
+      - x-correlation-id
+
+coRelationId: PCQ Loader Service

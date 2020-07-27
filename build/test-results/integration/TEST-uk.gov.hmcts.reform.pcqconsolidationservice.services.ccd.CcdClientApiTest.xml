@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="uk.gov.hmcts.reform.pcqconsolidationservice.services.ccd.CcdClientApiTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-06-26T11:05:23" hostname="Manoj-MacBook-Pro.local" time="0.179">
+  <properties/>
+  <testcase name="testPcqWithoutCaseExecuteSuccess" classname="uk.gov.hmcts.reform.pcqconsolidationservice.services.ccd.CcdClientApiTest" time="0.179"/>
+  <system-out><![CDATA[2020-06-26T12:05:23.855 INFO  [Test worker] org.eclipse.jetty.server.Server jetty-9.4.28.v20200408; built: 2020-04-08T17:49:39.557Z; git: ab228fde9e55e9164c738d7fa121f8ac5acd51c9; jvm 11.0.2+9
+2020-06-26T12:05:23.857 INFO  [Test worker] org.eclipse.jetty.server.handler.ContextHandler Started o.e.j.s.ServletContextHandler@65941383{/__admin,null,AVAILABLE}
+2020-06-26T12:05:23.857 INFO  [Test worker] org.eclipse.jetty.server.handler.ContextHandler Started o.e.j.s.ServletContextHandler@2a00de89{/,null,AVAILABLE}
+2020-06-26T12:05:23.859 INFO  [Test worker] org.eclipse.jetty.server.AbstractConnector Started NetworkTrafficServerConnector@35ab525{HTTP/1.1, (http/1.1)}{0.0.0.0:4554}
+2020-06-26T12:05:23.859 INFO  [Test worker] org.eclipse.jetty.server.Server Started @21185ms
+2020-06-26T12:05:23.875 INFO  [qtp1821353437-982] o.eclipse.jetty.server.handler.ContextHandler.ROOT RequestHandlerClass from context returned com.github.tomakehurst.wiremock.http.StubRequestHandler. Normalized mapped under returned 'null'
+2020-06-26T12:05:23.926 INFO  [Test worker] u.g.h.r.p.services.ccd.CcdClientApi Searching for pcqId 1234 within the service pcqtestone using CCD field applicantPcqId
+2020-06-26T12:05:24.000 INFO  [qtp1821353437-983] o.e.jetty.server.handler.ContextHandler.__admin RequestHandlerClass from context returned com.github.tomakehurst.wiremock.http.AdminRequestHandler. Normalized mapped under returned 'null'
+2020-06-26T12:05:24.034 INFO  [Test worker] org.eclipse.jetty.server.AbstractConnector Stopped NetworkTrafficServerConnector@35ab525{HTTP/1.1, (http/1.1)}{0.0.0.0:4554}
+2020-06-26T12:05:24.035 INFO  [Test worker] org.eclipse.jetty.server.handler.ContextHandler Stopped o.e.j.s.ServletContextHandler@2a00de89{/,null,UNAVAILABLE}
+2020-06-26T12:05:24.035 INFO  [Test worker] org.eclipse.jetty.server.handler.ContextHandler Stopped o.e.j.s.ServletContextHandler@65941383{/__admin,null,UNAVAILABLE}
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

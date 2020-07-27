@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.31">
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/ConsolidationApplication.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/ConsolidationComponent.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/config/AuthConfig.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/config/CaseFieldMapping.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/config/FeignHeaderConfig.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/config/FeignInterceptorConfiguration.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/config/HttpConfiguration.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/config/ServiceConfigItem.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/config/ServiceConfigProvider.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/config/ServiceConfiguration.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/config/SwaggerConfiguration.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/controller/advice/ErrorResponse.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/controller/feign/PcqBackendFeignClient.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/controller/response/PcqAnswerResponse.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/controller/response/PcqAnswers.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/controller/response/PcqRecordWithoutCaseResponse.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/controller/response/PcqWithoutCaseResponse.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/controller/response/SubmitResponse.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/exception/ExternalApiException.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/exception/ServiceNotConfiguredException.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/security/SecurityConfiguration.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/service/PcqBackendService.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/service/impl/PcqBackendServiceImpl.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/services/ccd/CcdAuthenticator.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/services/ccd/CcdAuthenticatorFactory.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/services/ccd/CcdClientApi.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/services/idam/Credential.java">
+</file>
+<file name="/Users/manojkulkarni/pcq-consolidation-service/src/main/java/uk/gov/hmcts/reform/pcqconsolidationservice/utils/JsonFeignResponseUtil.java">
+</file>
+</checkstyle>
