@@ -29,8 +29,8 @@ public class PcqLoaderApplication implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
 
         try {
-            log.info("Starting the Pcq Loader job");
-            log.info("Completed the Pcq Loader job successfully");
+            log.info("Starting the Pcq Loader job.");
+            log.info("Completed the Pcq Loader job successfully.");
         } catch (Exception e) {
             log.error("Error executing Pcq Loader", e);
         } finally {
