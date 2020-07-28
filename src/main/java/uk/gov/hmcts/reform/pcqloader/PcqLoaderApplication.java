@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.pcqconsolidationservice;
+package uk.gov.hmcts.reform.pcqloader;
 
 import com.microsoft.applicationinsights.TelemetryClient;
 import lombok.extern.slf4j.Slf4j;
