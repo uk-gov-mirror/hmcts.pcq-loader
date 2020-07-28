@@ -1,0 +1,127 @@
+#!groovy
+
+properties([
+  // H allow predefined but random minute see https://en.wikipedia.org/wiki/Cron#Non-standard_characters
+  //pipelineTriggers([cron('H 05 * * *')])
+])
+
+@Library("Infrastructure")
+
+import uk.gov.hmcts.contino.GradleBuilder
+
+def type = "java"
+def product = "pcq"
+def component = "loader"
+
+def secrets = [
+        'pcq-${env}': [
+                secret( 'jwt-secret', 'JWT_SECRET')
+        ]
+]
+
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+  [ $class: 'AzureKeyVaultSecret',
+    secretType: 'Secret',
+    name: secretName,
+    version: '',
+    envVariable: envVar
+  ]
+}
+
+GradleBuilder builder = new GradleBuilder(this, product)
+
+def vaultOverrides = [
+        'preview' : 'aat'
+]
+
+withPipeline(type, product, component) {
+
+  overrideVaultEnvironments(vaultOverrides)
+  loadVaultSecrets(secrets)
+  after('test') {
+    builder.gradle('integration')
+  }
+  enableSlackNotifications('#pcq-builds')
+  enableAksStagingDeployment()
+  disableLegacyDeployment()
+  nonServiceApp()
+
+  env.TEST_URL = "http://pcq-loader-aat.service.core-compute-aat.internal"
+  env.PCQ_BACKEND_URL = "http://pcq-backend-aat.service.core-compute-aat.internal"
+
+  after('test') {
+
+    junit 'build/test-results/test/**/*.xml'
+    archiveArtifacts 'build/reports/tests/test/index.html'
+
+    publishHTML target: [
+      allowMissing         : true,
+      alwaysLinkToLastBuild: true,
+      keepAll              : true,
+      reportDir            : "build/reports/tests/test",
+      reportFiles          : "index.html",
+      reportName           : "pcq-loader Test Report"
+    ]
+
+    publishHTML target: [
+      allowMissing         : true,
+      alwaysLinkToLastBuild: true,
+      keepAll              : true,
+      reportDir            : "build/reports/jacoco",
+      reportFiles          : "index.html",
+      reportName           : "pcq-loader Code Coverage Report"
+    ]
+
+  }
+
+  after('akschartsinstall') {
+
+    echo "Overriding vault environment"
+    overrideVaultEnvironments(vaultOverrides)
+    echo "Loading the secrets again"
+    loadVaultSecrets(secrets)
+
+    // To run functional tests
+    env.S2S_NAME = 'pcq_loader'
+    env.PCQ_BACKEND_URL = "http://pcq-backend-aat.service.core-compute-aat.internal"
+
+    echo "Just waiting a while to ensure that the pod has run the job"
+    sh "sleep 120s"
+    echo "Verifying that functional test data was processed correctly"
+    try {
+      builder.gradle('functionalPostDeploy')
+    } finally {
+      junit '**/test-results/**/*.xml'
+    }
+  }
+
+  after('functionalTest:aat') {
+    junit 'build/test-results/functional/**/*.xml'
+    archiveArtifacts 'build/reports/tests/functional/index.html'
+
+    publishHTML target: [
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : "build/reports/tests/functional",
+            reportFiles          : "index.html",
+            reportName           : "pcq-loader Functional Test Report"
+    ]
+  }
+
+  after('functionalTest:preview') {
+    junit 'build/test-results/functional/**/*.xml'
+    archiveArtifacts 'build/reports/tests/functional/index.html'
+
+    publishHTML target: [
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : "build/reports/tests/functional",
+            reportFiles          : "index.html",
+            reportName           : "pcq-loader Functional Test Report"
+    ]
+  }
+
+
+}
