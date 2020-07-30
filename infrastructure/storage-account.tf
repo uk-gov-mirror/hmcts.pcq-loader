@@ -24,6 +24,12 @@ module "pcq_storage_account" {
   destroy_me   = "${var.destroy_me}"
 }
 
+resource "azurerm_storage_container" "pcq_containers" {
+  name                  = "pcq"
+  storage_account_name  = "${module.pcq_storage_account.storage_account_name}"
+  container_access_type = "private"
+}
+
 // pcq blob Storage Account Vault Secrets
 resource "azurerm_key_vault_secret" "pcq_storageaccount_id" {
   depends_on = ["module.vault"]
