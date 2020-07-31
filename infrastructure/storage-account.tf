@@ -4,7 +4,7 @@ provider "azurerm" {
 
 // pcq blob Storage Account
 module "pcq_storage_account" {
-  source                    = "git@github.com:hmcts/cnp-module-storage.git?ref=master"
+  source                    = "git@github.com:hmcts/cnp-module-storage-account?ref=master"
   env                       = "${var.env}"
   storage_account_name      = "${var.product}shared${var.env}"
   resource_group_name       = "${azurerm_resource_group.rg.name}"
