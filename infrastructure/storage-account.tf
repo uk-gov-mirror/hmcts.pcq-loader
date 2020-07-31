@@ -4,7 +4,7 @@ provider "azurerm" {
 
 // pcq blob Storage Account
 module "pcq_storage_account" {
-  source                    = "git@github.com:hmcts/cnp-module-storage-account.git?ref=0.0.1"
+  source                    = "git@github.com:hmcts/cnp-module-storage-account.git?ref=master"
   env                       = "${var.env}"
   storage_account_name      = "${var.product}shared${var.env}"
   resource_group_name       = "${azurerm_resource_group.rg.name}"
@@ -22,6 +22,12 @@ module "pcq_storage_account" {
   common_tags            = "${var.common_tags}"
   team_contact = "${var.team_contact}"
   destroy_me   = "${var.destroy_me}"
+}
+
+resource "azurerm_storage_container" "pcq_containers" {
+  name                  = "pcq"
+  storage_account_name  = "${module.pcq_storage_account.storage_account_name}"
+  container_access_type = "private"
 }
 
 // pcq blob Storage Account Vault Secrets
