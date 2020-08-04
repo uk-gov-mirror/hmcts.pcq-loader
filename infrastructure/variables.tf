@@ -3,6 +3,10 @@ variable "product" {
   default = "pcq"
 }
 
+variable "location" {
+  default = "UK South"
+}
+
 variable "env" {
   type = "string"
 }
