@@ -37,7 +37,7 @@ data "azurerm_key_vault" "key_vault" {
 
 resource "azurerm_storage_container" "pcq_containers" {
   name                  = "pcq"
-  storage_account_name  = "${local.storage_account_name}"
+  storage_account_name  = "{azurerm_storage_account.storage_account.name}"
   container_access_type = "private"
 }
 
