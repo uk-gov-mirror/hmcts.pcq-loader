@@ -74,9 +74,9 @@ withPipeline(type, product, component) {
 
   }
 
-  before('buildinfra:prod') {
-     error 'Deliberately breaking pipeline to prevent prod deployment'
-  }
+  //before('buildinfra:prod') {
+  //   error 'Deliberately breaking pipeline to prevent prod deployment'
+  //}
 
   after('akschartsinstall') {
 
