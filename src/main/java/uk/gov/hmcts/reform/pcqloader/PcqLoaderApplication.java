@@ -22,6 +22,9 @@ public class PcqLoaderApplication implements ApplicationRunner {
     @Autowired
     private TelemetryClient client;
 
+    @Autowired
+    private PcqLoaderComponent pcqLoaderComponent;
+
     @Value("${telemetry.wait.period:10000}")
     private int waitPeriod;
 
@@ -30,6 +33,7 @@ public class PcqLoaderApplication implements ApplicationRunner {
 
         try {
             log.info("Starting the Pcq Loader job.");
+            pcqLoaderComponent.execute();
             log.info("Completed the Pcq Loader job successfully.");
         } catch (Exception e) {
             log.error("Error executing Pcq Loader", e);
