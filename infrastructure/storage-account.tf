@@ -40,11 +40,11 @@ module "pcq_storage_account" {
   team_contact              = "${var.team_contact}"
   destroy_me                = "${var.destroy_me}"
 
-  network_rules {
-    virtual_network_subnet_ids = ["${data.azurerm_subnet.jenkins_subnet.id}"]
-    bypass                     = ["Logging", "Metrics", "AzureServices"]
-    default_action             = "Deny"
-  }
+  //network_rules {
+  //  virtual_network_subnet_ids = ["${data.azurerm_subnet.jenkins_subnet.id}"]
+  //  bypass                     = ["Logging", "Metrics", "AzureServices"]
+  //  default_action             = "Deny"
+  //}
 }
 
 data "azurerm_key_vault" "key_vault" {
@@ -52,11 +52,11 @@ data "azurerm_key_vault" "key_vault" {
   resource_group_name = "${local.vault_name}"
 }
 
-resource "azurerm_storage_container" "pcq_containers" {
-  name                  = "pcq"
-  storage_account_name  = "${module.pcq_storage_account.storageaccount_name}"
-  container_access_type = "private"
-}
+//resource "azurerm_storage_container" "pcq_containers" {
+//  name                  = "pcq"
+//  storage_account_name  = "${module.pcq_storage_account.storageaccount_name}"
+//  container_access_type = "private"
+//}
 
 // pcq blob Storage Account Vault Secrets
 resource "azurerm_key_vault_secret" "pcq_storageaccount_id" {
