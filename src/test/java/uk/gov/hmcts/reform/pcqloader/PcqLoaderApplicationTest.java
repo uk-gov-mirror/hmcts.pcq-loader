@@ -20,9 +20,13 @@ public class PcqLoaderApplicationTest {
     @Mock
     private TelemetryClient client;
 
+    @Mock
+    private PcqLoaderComponent pcqLoaderComponent;
+
     @Test
     public void testApplicationExecuted() throws Exception {
         testPcqLoaderApplication.run(null);
+        verify(pcqLoaderComponent, times(1)).execute();
         verify(client, times(1)).flush();
     }
 
