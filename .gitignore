@@ -17,6 +17,7 @@ git.properties
 .springBeans
 
 ### IntelliJ IDEA ###
+.idea/vcs.xml
 .idea
 /out
 *.iws
