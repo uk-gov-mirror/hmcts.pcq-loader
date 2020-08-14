@@ -6,6 +6,9 @@ locals {
   vault_name                = "${var.product}-${var.env}"
   resource_group_name       = "${var.product}-${var.env}"
   storage_account_name      = "${var.product}shared${var.env}"
+
+  mgmt_network_name     = "core-cftptl-intsvc-vnet"
+  mgmt_network_rg_name  = "aks-infra-cftptl-intsvc-rg"
 }
 
 // pcq blob Storage Account
@@ -20,14 +23,55 @@ module "pcq_storage_account" {
   account_replication_type  = "LRS"
   access_tier               = "Hot"
 
-  enable_blob_encryption    = true
-  enable_file_encryption    = true
+  // enable_blob_encryption    = true
+  // enable_file_encryption    = true
   enable_https_traffic_only = true
 
   // Tags
   common_tags               = "${var.common_tags}"
   team_contact              = "${var.team_contact}"
   destroy_me                = "${var.destroy_me}"
+
+  sa_subnets = ["${data.azurerm_subnet.aks-01.id}", "${data.azurerm_subnet.aks-00.id}", "${data.azurerm_subnet.jenkins_subnet.id}"]
+}
+
+data "azurerm_virtual_network" "mgmt_vnet" {
+  provider            = "azurerm.mgmt"
+  name                = "${local.mgmt_network_name}"
+  resource_group_name = "${local.mgmt_network_rg_name}"
+}
+
+data "azurerm_subnet" "jenkins_subnet" {
+  provider             = "azurerm.mgmt"
+  name                 = "iaas"
+  virtual_network_name = "${data.azurerm_virtual_network.mgmt_vnet.name}"
+  resource_group_name  = "${data.azurerm_virtual_network.mgmt_vnet.resource_group_name}"
+}
+
+data "azurerm_virtual_network" "aks_core_vnet" {
+  provider            = "azurerm.aks-infra"
+  name                = "core-${var.env}-vnet"
+  resource_group_name = "aks-infra-${var.env}-rg"
+}
+
+data "azurerm_subnet" "aks-00" {
+  provider             = "azurerm.aks-infra"
+  name                 = "aks-00"
+  virtual_network_name = "${data.azurerm_virtual_network.aks_core_vnet.name}"
+  resource_group_name  = "${data.azurerm_virtual_network.aks_core_vnet.resource_group_name}"
+}
+
+data "azurerm_subnet" "aks-01" {
+  provider             = "azurerm.aks-infra"
+  name                 = "aks-01"
+  virtual_network_name = "${data.azurerm_virtual_network.aks_core_vnet.name}"
+  resource_group_name  = "${data.azurerm_virtual_network.aks_core_vnet.resource_group_name}"
+}
+
+resource "azurerm_storage_container" "pcq_containers" {
+  name                 = "pcq"
+  storage_account_name = "${module.pcq_storage_account.storageaccount_name}"
+  container_access_type = "private"
 }
 
 data "azurerm_key_vault" "key_vault" {
