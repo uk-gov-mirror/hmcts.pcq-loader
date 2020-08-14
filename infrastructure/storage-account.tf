@@ -1,7 +1,3 @@
-provider "azurerm" {
-  version         = "=1.33.1"
-}
-
 locals {
   vault_name                = "${var.product}-${var.env}"
   resource_group_name       = "${var.product}-${var.env}"
