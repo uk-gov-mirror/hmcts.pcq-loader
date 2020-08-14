@@ -28,7 +28,7 @@ module "pcq_storage_account" {
   team_contact              = "${var.team_contact}"
   destroy_me                = "${var.destroy_me}"
 
-  sa_subnets = ["${data.azurerm_subnet.aks-01.id}", "${data.azurerm_subnet.aks-00.id}", "${data.azurerm_subnet.jenkins_subnet.id}"]
+  sa_subnets = ["${data.azurerm_subnet.jenkins_subnet.id}"]
 }
 
 data "azurerm_virtual_network" "mgmt_vnet" {
@@ -44,25 +44,25 @@ data "azurerm_subnet" "jenkins_subnet" {
   resource_group_name  = "${data.azurerm_virtual_network.mgmt_vnet.resource_group_name}"
 }
 
-data "azurerm_virtual_network" "aks_core_vnet" {
-  provider            = "azurerm.aks-infra"
-  name                = "core-${var.env}-vnet"
-  resource_group_name = "aks-infra-${var.env}-rg"
-}
+//data "azurerm_virtual_network" "aks_core_vnet" {
+//  provider            = "azurerm.aks-infra"
+//  name                = "core-${var.env}-vnet"
+//  resource_group_name = "aks-infra-${var.env}-rg"
+//}
 
-data "azurerm_subnet" "aks-00" {
-  provider             = "azurerm.aks-infra"
-  name                 = "aks-00"
-  virtual_network_name = "${data.azurerm_virtual_network.aks_core_vnet.name}"
-  resource_group_name  = "${data.azurerm_virtual_network.aks_core_vnet.resource_group_name}"
-}
+//data "azurerm_subnet" "aks-00" {
+//  provider             = "azurerm.aks-infra"
+//  name                 = "aks-00"
+//  virtual_network_name = "${data.azurerm_virtual_network.aks_core_vnet.name}"
+//  resource_group_name  = "${data.azurerm_virtual_network.aks_core_vnet.resource_group_name}"
+//}
 
-data "azurerm_subnet" "aks-01" {
-  provider             = "azurerm.aks-infra"
-  name                 = "aks-01"
-  virtual_network_name = "${data.azurerm_virtual_network.aks_core_vnet.name}"
-  resource_group_name  = "${data.azurerm_virtual_network.aks_core_vnet.resource_group_name}"
-}
+//data "azurerm_subnet" "aks-01" {
+//  provider             = "azurerm.aks-infra"
+//  name                 = "aks-01"
+//  virtual_network_name = "${data.azurerm_virtual_network.aks_core_vnet.name}"
+//  resource_group_name  = "${data.azurerm_virtual_network.aks_core_vnet.resource_group_name}"
+//}
 
 resource "azurerm_storage_container" "pcq_containers" {
   name                 = "pcq"
