@@ -1,0 +1,17 @@
+version: '2'
+#services:
+#  azure-storage:
+#    image: arafato/azurite:2.6.5
+#    ports:
+#        - 10000:10000
+#    environment:
+#        - executable=blob
+
+services:
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    command: "azurite-blob --loose --blobHost 0.0.0.0"
+    ports:
+      - "10000:10000"
+    volumes:
+      - ./test/azurite:/data

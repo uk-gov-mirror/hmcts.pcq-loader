@@ -7,3 +7,6 @@ spring:
       aliases:
         AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key
         jwt-secret: ${JWT_SECRET:JWT_SECRET}
+        pcq-storage-account-name: storage.account_name
+        pcq-storage-account-primary-access-key: storage.key
+        pcq-storage-account-primary-connection-string: storage.url
