@@ -1,17 +1,25 @@
 package uk.gov.hmcts.reform.pcqloader;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.pcqloader.services.BlobStorageManager;
 import uk.gov.hmcts.reform.pcqloader.utils.PcqLoaderUtils;
 
 @Component
 @Slf4j
 public class PcqLoaderComponent {
 
+    @Autowired
+    private BlobStorageManager blobStorageManager;
+
     public void execute() {
         log.info("PcqLoaderComponent started.");
 
         // Step 1. Connect and Authenticate with the PCQ Azure Blob Storage Account.
+
+        // TODO: PCQ-572 Fetch PCQ container connection validation - to be removed once actual code is in place.
+        blobStorageManager.fetchPcqStorageContainer();
 
         // Step 2. Check for zip files in the Pcq container.
 

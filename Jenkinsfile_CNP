@@ -15,7 +15,9 @@ def component = "loader"
 
 def secrets = [
         'pcq-${env}': [
-                secret( 'jwt-secret', 'JWT_SECRET')
+                secret( 'jwt-secret', 'JWT_SECRET'),
+                secret( 'pcq-storage-account-name', 'STORAGE_ACCOUNT_NAME'),
+                secret( 'pcq-storage-account-primary-access-key', 'STORAGE_KEY')
         ]
 ]
 

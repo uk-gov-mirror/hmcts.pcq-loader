@@ -44,26 +44,6 @@ data "azurerm_subnet" "jenkins_subnet" {
   resource_group_name  = "${data.azurerm_virtual_network.mgmt_vnet.resource_group_name}"
 }
 
-//data "azurerm_virtual_network" "aks_core_vnet" {
-//  provider            = "azurerm.aks-infra"
-//  name                = "core-${var.env}-vnet"
-//  resource_group_name = "aks-infra-${var.env}-rg"
-//}
-
-//data "azurerm_subnet" "aks-00" {
-//  provider             = "azurerm.aks-infra"
-//  name                 = "aks-00"
-//  virtual_network_name = "${data.azurerm_virtual_network.aks_core_vnet.name}"
-//  resource_group_name  = "${data.azurerm_virtual_network.aks_core_vnet.resource_group_name}"
-//}
-
-//data "azurerm_subnet" "aks-01" {
-//  provider             = "azurerm.aks-infra"
-//  name                 = "aks-01"
-//  virtual_network_name = "${data.azurerm_virtual_network.aks_core_vnet.name}"
-//  resource_group_name  = "${data.azurerm_virtual_network.aks_core_vnet.resource_group_name}"
-//}
-
 resource "azurerm_storage_container" "pcq_containers" {
   name                 = "pcq"
   storage_account_name = "${module.pcq_storage_account.storageaccount_name}"
@@ -76,9 +56,9 @@ data "azurerm_key_vault" "key_vault" {
 }
 
 // pcq blob Storage Account Vault Secrets
-resource "azurerm_key_vault_secret" "pcq_storageaccount_id" {
-  name      = "pcq-storage-account-id"
-  value     = "${module.pcq_storage_account.storageaccount_id}"
+resource "azurerm_key_vault_secret" "storage_account_name" {
+  name      = "pcq-storage-account-name"
+  value     = "${module.pcq_storage_account.storageaccount_name}"
   key_vault_id = "${data.azurerm_key_vault.key_vault.id}"
 }
 
