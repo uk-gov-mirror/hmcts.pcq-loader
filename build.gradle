@@ -257,10 +257,6 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
 
-    //testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
-    //testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: versions.junit
-    //testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
-
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: versions.junit
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
     testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: versions.junit
@@ -305,9 +301,7 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform {
-        includeEngines 'junit-jupiter', 'junit-vintage'
-    }
+    useJUnitPlatform()
     failFast = true
 }
 

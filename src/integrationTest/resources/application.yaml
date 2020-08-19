@@ -41,5 +41,4 @@ feign:
       - X-Correlation-Id
 
 pcqBackendUrl: ${PCQ_BACKEND_URL:http://localhost:4550}
-
 coRelationId: PCQ Loader Service

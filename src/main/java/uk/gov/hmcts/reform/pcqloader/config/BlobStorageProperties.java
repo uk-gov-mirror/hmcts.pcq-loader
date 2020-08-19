@@ -7,16 +7,25 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "storage")
 public class BlobStorageProperties {
 
+    private String blobPcqContainer;
+
     private Integer blobCopyTimeoutInMillis;
 
     private Integer blobLeaseTimeout;
 
     private Integer blobCopyPollingDelayInMillis;
 
-    private String blobPcqContainer;
-
     private Integer blobLeaseAcquireDelayInSeconds;
 
+    public String getBlobPcqContainer() {
+        return blobPcqContainer;
+    }
+
+    public void setBlobPcqContainer(String blobPcqContainer) {
+        this.blobPcqContainer = blobPcqContainer;
+    }
+
+    /*
     public Integer getBlobCopyTimeoutInMillis() {
         return blobCopyTimeoutInMillis;
     }
@@ -41,14 +50,6 @@ public class BlobStorageProperties {
         this.blobCopyPollingDelayInMillis = blobCopyPollingDelayInMillis;
     }
 
-    public String getBlobPcqContainer() {
-        return blobPcqContainer;
-    }
-
-    public void setBlobPcqContainer(String blobPcqContainer) {
-        this.blobPcqContainer = blobPcqContainer;
-    }
-
     public Integer getBlobLeaseAcquireDelayInSeconds() {
         return blobLeaseAcquireDelayInSeconds;
     }
@@ -56,4 +57,5 @@ public class BlobStorageProperties {
     public void setBlobLeaseAcquireDelayInSeconds(Integer blobLeaseAcquireDelayInSeconds) {
         this.blobLeaseAcquireDelayInSeconds = blobLeaseAcquireDelayInSeconds;
     }
+    */
 }
