@@ -9,6 +9,7 @@ public class BlobStorageProperties {
 
     private String blobPcqContainer;
 
+    /*
     private Integer blobCopyTimeoutInMillis;
 
     private Integer blobLeaseTimeout;
@@ -16,6 +17,7 @@ public class BlobStorageProperties {
     private Integer blobCopyPollingDelayInMillis;
 
     private Integer blobLeaseAcquireDelayInSeconds;
+    */
 
     public String getBlobPcqContainer() {
         return blobPcqContainer;
