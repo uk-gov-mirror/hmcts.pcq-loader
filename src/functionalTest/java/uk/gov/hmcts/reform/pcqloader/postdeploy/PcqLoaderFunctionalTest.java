@@ -21,7 +21,7 @@ public class PcqLoaderFunctionalTest extends PcqLoaderTestBase {
 
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     @Value("${pcqBackendUrl}")
-    private final String pcqBackendUrl;
+    private String pcqBackendUrl;
 
     @SuppressWarnings({"PMD.UnusedPrivateField"})
     @Value("${jwt_test_secret}")
@@ -29,11 +29,6 @@ public class PcqLoaderFunctionalTest extends PcqLoaderTestBase {
 
     @Autowired
     private PcqLoaderComponent pcqLoaderComponent;
-
-    public PcqLoaderFunctionalTest(String pcqBackendUrl) {
-        super();
-        this.pcqBackendUrl = pcqBackendUrl;
-    }
 
     @SuppressWarnings("unchecked")
     @Test
