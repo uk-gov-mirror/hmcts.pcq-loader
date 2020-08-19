@@ -31,7 +31,7 @@ pcqBackendUrl: ${PCQ_BACKEND_URL:http://localhost:4550}
 
 storage:
   account_name: ${STORAGE_ACCOUNT_NAME:pcqsharedaat}
-  key: ${STORAGE_KEY:/vCzpx/TO+z1Y3sU5/7GHrWVDm6OEicPA59Hz4iMDD9fCWf6uPXbAug45+VCEkzEbvILtvD4pB9vumk/zXPgSQ==} #Base 64 encoded
+  key: ${STORAGE_KEY:YV9rZXk=} #Base 64 encoded
   url: ${STORAGE_URL:https://pcqsharedaat.blob.core.windows.net/}
   blob_lease_timeout: ${STORAGE_BLOB_LEASE_TIMEOUT:15}
   blob_copy_timeout_in_millis: ${BLOB_COPY_TIMEOUT_IN_MILLIS:30000}
