@@ -9,4 +9,3 @@ spring:
         jwt-secret: ${JWT_SECRET:JWT_SECRET}
         pcq-storage-account-name: ${STORAGE_ACCOUNT_NAME:STORAGE_ACCOUNT_NAME}
         pcq-storage-account-primary-access-key: ${STORAGE_KEY:STORAGE_KEY}
-        pcq-storage-account-primary-connection-string: ${STORAGE_URL:STORAGE_URL}
