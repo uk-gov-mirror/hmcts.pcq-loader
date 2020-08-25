@@ -4,10 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 import uk.gov.hmcts.reform.pcqloader.model.PcqAnswers;
 import uk.gov.hmcts.reform.pcqloader.model.PcqAnswerRequest;
 import uk.gov.hmcts.reform.pcqloader.model.PcqMetaData;
@@ -175,7 +176,17 @@ public class PayloadMappingHelper {
             }
         }
 
+        //Prefix the month and day with 0 if the length is 1 and numeric.
+        if (!StringUtils.isEmpty(dobMonth) && dobMonth.length() == 1) {
+            dobMonth = "0" + dobMonth;
+        }
+
+        if (!StringUtils.isEmpty(dobDay) && dobDay.length() == 1) {
+            dobDay = "0" + dobDay;
+        }
+
         String dob = dobYear + "-" + dobMonth + "-" + dobDay;
+
         if (PcqLoaderUtils.isDobValid(dob)) {
             answers.setDobProvided(1);
             answers.setDob(PcqLoaderUtils.generateCompleteDobString(dob));

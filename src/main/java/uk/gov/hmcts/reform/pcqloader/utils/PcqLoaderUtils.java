@@ -19,7 +19,7 @@ public final class PcqLoaderUtils {
     private static final String SEPARATOR = "_";
     private static final String COMPLETED_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     private static final String DOB_REGEX = "\\d{4}-[01]\\d-[0-3]\\d";
-    private static final String DOB_TIME_CONSTANT = "'T'HH:mm:ss.SSS'Z'";
+    private static final String DOB_TIME_CONSTANT = "T00:00:00.000Z";
 
     private PcqLoaderUtils() {
 
@@ -54,6 +54,7 @@ public final class PcqLoaderUtils {
         if (matcher.matches()) {
             // Step 2 - Convert to Date object and confirm it is correct
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
+            dateFormat.setLenient(false);
             try {
                 dateFormat.parse(suppliedDob);
                 return true;
