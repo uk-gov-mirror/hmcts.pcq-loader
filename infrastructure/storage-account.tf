@@ -50,6 +50,12 @@ resource "azurerm_storage_container" "pcq_containers" {
   container_access_type = "private"
 }
 
+resource "azurerm_storage_container" "pcq_rejected_container" {
+  name                 = "pcq-rejected"
+  storage_account_name = "${module.pcq_storage_account.storageaccount_name}"
+  container_access_type = "private"
+}
+
 data "azurerm_key_vault" "key_vault" {
   name                = "${local.vault_name}"
   resource_group_name = "${local.vault_name}"
