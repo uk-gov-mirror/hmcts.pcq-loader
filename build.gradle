@@ -237,6 +237,11 @@ dependencies {
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
 
+    implementation group: 'com.microsoft.azure', name: 'azure-storage', version: '8.6.5'
+    implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.7.0'
+
+    implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: '11.0'
+
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.1.RELEASE'
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.1.RELEASE'
 
@@ -251,11 +256,12 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.0.4', withoutSpringCloudContext
     compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
-
     compile group: "com.gilecode.yagson", name:"j9-reflection-utils", version:"1.0"
 
+
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: versions.junit
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: versions.junit
+    testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: versions.junit
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
 
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
@@ -276,6 +282,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
     testImplementation group: "com.gilecode.yagson", name:"j9-reflection-utils", version:"1.0"
     testImplementation group: "io.jsonwebtoken", name: "jjwt", version: "0.9.1"
+    testImplementation group: "org.testcontainers", name: "junit-jupiter", version:"1.14.3"
 
     integrationTestCompile sourceSets.main.runtimeClasspath
     integrationTestCompile sourceSets.test.runtimeClasspath
