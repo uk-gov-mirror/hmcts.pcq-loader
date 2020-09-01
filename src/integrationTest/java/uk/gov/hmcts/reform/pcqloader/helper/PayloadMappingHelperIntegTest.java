@@ -10,6 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.pcqloader.model.PcqAnswerRequest;
 import uk.gov.hmcts.reform.pcqloader.model.PcqAnswers;
 import uk.gov.hmcts.reform.pcqloader.model.PcqMetaData;
+import uk.gov.hmcts.reform.pcqloader.model.PcqScannableItems;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +22,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PayloadMappingHelperIntegTest {
 
     private static final String FAIL_ASSERT_MSG = "Method call failed.";
-
+    private static final String FORM_ID_VALIDATION_MSG = "Form Id is not correct.";
+    private static final String SERVICE_ID_VALIDATION_MSG = "Service Id is not correct.";
+    private static final String EXPECTED_DOB = "2000-01-01T00:00:00.000Z";
+    private static final String DOB_VALIDATION_MSG = "Dob is not correct";
 
     private PayloadMappingHelper payloadMappingHelper;
 
@@ -103,6 +107,141 @@ public class PayloadMappingHelperIntegTest {
 
     }
 
+    @Test
+    @DisplayName("OtherWhite and OtherMixed Text Field entered but user has not ticked Only OtherWhite checkbox.")
+    public void testInvalidOtherWhiteTextInput() throws IOException {
+        String dcnNumber = "1100324402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidOtherWhitePayloadMetaFile.json");
+
+        PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
+        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity");
+        assertNull(mappedAnswers.getPcqAnswers().getEthnicityOther(), "Ethnicity Other is not correct.");
+
+    }
+
+    @Test
+    @DisplayName("OtherWhite and OtherMixed Text Field entered but user has not ticked Only OtherMixed checkbox.")
+    public void testInvalidOtherMixedTextInput() throws IOException {
+        String dcnNumber = "1100324402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidOtherMixedPayloadMetaFile.json");
+
+        PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
+        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity");
+        assertNull(mappedAnswers.getPcqAnswers().getEthnicityOther(), "Ethnicity Other is not correct.");
+
+    }
+
+    @Test
+    @DisplayName("OtherWhite and OtherAsian Text Field entered but user has not ticked Only OtherAsian checkbox.")
+    public void testInvalidOtherAsianTextInput() throws IOException {
+        String dcnNumber = "1100324402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidOtherAsianPayloadMetaFile.json");
+
+        PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
+        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity");
+        assertNull(mappedAnswers.getPcqAnswers().getEthnicityOther(), "Ethnicity Other is not correct.");
+
+    }
+
+    @Test
+    @DisplayName("OtherWhite and OtherCarib Text Field entered but user has not ticked Only OtherCarib checkbox.")
+    public void testInvalidOtherCaribTextInput() throws IOException {
+        String dcnNumber = "1100324402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidOtherCaribPayloadMetaFile.json");
+
+        PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
+        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity");
+        assertNull(mappedAnswers.getPcqAnswers().getEthnicityOther(), "Ethnicity Other is not correct.");
+
+    }
+
+    @Test
+    @DisplayName("Valid other white ethnicity test")
+    public void testValidOtherWhiteTextInput() throws IOException {
+        String dcnNumber = "1100324402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/validOtherWhitePayloadMetaFile.json");
+
+        PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
+        assertEquals(4, mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity not correct");
+        assertEquals("OtherWhite", mappedAnswers.getPcqAnswers().getEthnicityOther(),
+                     "Ethnicity Other is not correct.");
+
+    }
+
+    @Test
+    @DisplayName("Valid other mixed ethnicity test")
+    public void testValidOtherMixedTextInput() throws IOException {
+        String dcnNumber = "1100324402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/validOtherMixedPayloadMetaFile.json");
+
+        PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
+        assertEquals(8, mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity not correct");
+        assertEquals("Other Mixed", mappedAnswers.getPcqAnswers().getEthnicityOther(),
+                     "Ethnicity Other is not correct.");
+
+    }
+
+    @Test
+    @DisplayName("Valid other Asian ethnicity test")
+    public void testValidOtherAsianTextInput() throws IOException {
+        String dcnNumber = "1100324402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/validOtherAsianPayloadMetaFile.json");
+
+        PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
+        assertEquals(13, mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity not correct");
+        assertEquals("Other Asian", mappedAnswers.getPcqAnswers().getEthnicityOther(),
+                     "Ethnicity Other is not correct.");
+
+    }
+
+    @Test
+    @DisplayName("Valid other Carib ethnicity test")
+    public void testValidOtherCaribTextInput() throws IOException {
+        String dcnNumber = "1100324402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/validOtherCaribPayloadMetaFile.json");
+
+        PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
+        assertEquals(16, mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity not correct");
+        assertEquals("Other Carib", mappedAnswers.getPcqAnswers().getEthnicityOther(),
+                     "Ethnicity Other is not correct.");
+
+    }
+
+    @Test
+    @DisplayName("Valid other ethnicity test")
+    public void testValidOtherEthnicityTextInput() throws IOException {
+        String dcnNumber = "1100324402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/validOtherEthnicityPayloadMetaFile.json");
+
+        PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
+        assertEquals(18, mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity not correct");
+        assertEquals("Other Ethnicity", mappedAnswers.getPcqAnswers().getEthnicityOther(),
+                     "Ethnicity Other is not correct.");
+
+    }
+
+    @Test
+    @DisplayName("A valid scenario test where user has supplied a valid form.")
+    public void testValidFormSubmission() throws IOException {
+        String dcnNumber = "1100324402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/validPayloadMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
+
+        assertSuccessMapping(mappedAnswers, metaData, dcnNumber);
+    }
+
     private PcqAnswerRequest invokeMappingHelper(String dcnNumber, String metaDataPayLoad) {
         PcqAnswerRequest mappedAnswers = null;
         try {
@@ -148,6 +287,70 @@ public class PayloadMappingHelperIntegTest {
         assertNull(answers.getDisabilityMemory(), "Disability_Memory is not correct.");
         assertNull(answers.getDisabilityNone(), "Disability_None is not correct.");
         assertNull(answers.getPregnancy(), "Pregnancy is not correct.");
+    }
+
+    public void assertSuccessMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData, String dcnNumber) {
+        assertDefaultAndGeneratedFields(mappedAnswers, dcnNumber);
+
+        //Check the information that matches the meta-data information.
+        PcqScannableItems[] pcqScannedItems = pcqMetaData.getScannableItems();
+        assertEquals(pcqScannedItems[0].getDocumentType(), mappedAnswers.getFormId(), FORM_ID_VALIDATION_MSG);
+        assertEquals(pcqMetaData.getJurisdiction(), mappedAnswers.getServiceId(), SERVICE_ID_VALIDATION_MSG);
+
+        //Check the answers matches the payload supplied.
+        PcqAnswers answers = mappedAnswers.getPcqAnswers();
+        assertEquals(1, answers.getLanguageMain(), "Language_Main is not correct.");
+        assertNull(answers.getLanguageOther(), "Language_Other is not correct.");
+        assertEquals(2, answers.getEnglishLanguageLevel(), "English_Language_level is not correct.");
+        assertEquals(3, answers.getReligion(), "Religion is not correct.");
+        assertNull(answers.getReligionOther(), "Religion_Other is not correct.");
+        assertEquals(EXPECTED_DOB, answers.getDob(),  DOB_VALIDATION_MSG);
+        assertEquals(1, answers.getDobProvided(), "Dob_Provided is not correct.");
+        assertEquals(5, answers.getEthnicity(), "Ethnicity is not correct.");
+        assertNull(answers.getEthnicityOther(), "Ethnicity_Other is not correct.");
+        assertEquals(0, answers.getDisabilityConditions(), "Disability_Conditions is not correct.");
+        assertEquals(3, answers.getDisabilityImpact(), "Disability_Impact is not correct.");
+        assertEquals(1, answers.getDisabilityVision(), "Disability_Vision is not correct.");
+        assertEquals(0, answers.getDisabilityHearing(), "Disability_Hearing is not correct.");
+        assertEquals(1, answers.getDisabilityMobility(), "Disability_Mobility is not correct.");
+        assertEquals(0, answers.getDisabilityDexterity(), "Disability_Dexterity is not correct.");
+        assertEquals(1, answers.getDisabilityLearning(), "Disability_Learning is not correct.");
+        assertEquals(0, answers.getDisabilityMemory(), "Disability_Memory is not correct.");
+        assertEquals(1, answers.getDisabilityMentalHealth(), "Disability_Mental is not correct.");
+        assertEquals(0, answers.getDisabilityStamina(), "Disability_Stamina is not correct.");
+        assertEquals(1, answers.getDisabilitySocial(), "Disability_Social is not correct.");
+        assertEquals(1, answers.getDisabilityOther(), "Disability_Other is not correct.");
+        assertEquals("Other disability", answers.getDisabilityConditionOther(),
+                     "Disability_Condition_Other is not correct.");
+        assertEquals(0, answers.getDisabilityNone(), "Disability_None is not correct.");
+        assertEquals(2, answers.getPregnancy(), "Pregnancy is not correct.");
+        assertEquals(1, answers.getSexuality(), "Sexuality is not correct.");
+        assertNull(answers.getSexualityOther(), "Sexuality_Other is not correct.");
+        assertEquals(1, answers.getSex(), "Sex is not correct.");
+        assertEquals(1, answers.getGenderDifferent(), "Gender_Different is not correct.");
+        assertNull(answers.getGenderOther(), "Gender_other is not correct.");
+        assertEquals(2, answers.getMarriage(), "Marriage is not correct.");
+    }
+
+    public void assertDefaultAndGeneratedFields(PcqAnswerRequest mappedAnswers, String dcnNumber) {
+        //Check the primary key generated field is not missing.
+        assertNotNull(mappedAnswers.getPcqId(), "PCQ Id is Null");
+
+        //Check the correct DCN Number is populated.
+        assertEquals(dcnNumber, mappedAnswers.getDcnNumber(), "DCN Number is not correct.");
+
+        //Check the default values are set correctly for paper channel
+        assertNull(mappedAnswers.getCaseId(), "Case Id is not correct.");
+        String expectedPartyId = "PaperForm";
+        assertEquals(expectedPartyId, mappedAnswers.getPartyId(), "Party Id is not correct.");
+        int expectedChannel = 2;
+        assertEquals(expectedChannel, mappedAnswers.getChannel(), "Channel is not correct.");
+        assertNotNull(mappedAnswers.getCompletedDate(), "Completed Date is empty");
+        String expectedActor = "UNKNOWN";
+        assertEquals(expectedActor, mappedAnswers.getActor(), "Actor is not correct.");
+        int expectedVersion = 1;
+        assertEquals(expectedVersion, mappedAnswers.getVersionNo(), "Version Number is not correct.");
+        assertNull(mappedAnswers.getOptOut(), "Opt Out is not correct.");
     }
 
 
