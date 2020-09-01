@@ -38,8 +38,12 @@ public class PayloadMappingHelper {
         "disabilityLearning", "disabilityMemory", "disabilityMentalHealth", "disabilityStamina",
         "disabilitySocial", "disabilityOther", "disabilityNone", "pregnancy"};
 
-    @Autowired
     private PayloadValidationHelper payloadValidationHelper;
+
+    @Autowired
+    public PayloadMappingHelper(PayloadValidationHelper payloadValidationHelper) {
+        this.payloadValidationHelper = payloadValidationHelper;
+    }
 
     public PcqAnswerRequest mapPayLoadToPcqAnswers(String dcnNumber, String metaDataString) throws
         NoSuchFieldException, IllegalAccessException {
@@ -212,7 +216,7 @@ public class PayloadMappingHelper {
 
 
     private void setEthnicity(PcqPayloadContents payloadContent, PcqAnswers answers) {
-        if (answers.getEthnicityOther() == null && answers.getEthnicity() != -1) {
+        if (answers.getEthnicityOther() == null && answers.getEthnicity() != null && answers.getEthnicity() != -1) {
             // Only set the value if ethnicity is not already set.
             answers.setEthnicityOther(nullIfEmpty(payloadContent.getFieldValue()));
         } else {
