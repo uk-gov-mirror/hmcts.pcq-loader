@@ -1,51 +1,222 @@
 package uk.gov.hmcts.reform.pcqloader.helper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.Base64Utils;
 import uk.gov.hmcts.reform.pcqloader.config.TestSupportUtils;
-import uk.gov.hmcts.reform.pcqloader.model.PcqAnswers;
 import uk.gov.hmcts.reform.pcqloader.model.PcqAnswerRequest;
 import uk.gov.hmcts.reform.pcqloader.model.PcqMetaData;
 import uk.gov.hmcts.reform.pcqloader.model.PcqPayLoad;
-import uk.gov.hmcts.reform.pcqloader.model.PcqPayloadContents;
-import uk.gov.hmcts.reform.pcqloader.model.PcqScannableItems;
+import uk.gov.hmcts.reform.pcqloader.utils.AssertionUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-@ExtendWith(MockitoExtension.class)
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.DataflowAnomalyAnalysis"})
 public class PayloadMappingHelperTest {
 
-    private static String EXPECTED_PARTY_ID = "PaperForm";
-    private static String EXPECTED_ACTOR = "UNKNOWN";
-    private static int EXPECTED_CHANNEL = 2;
-    private static int EXPECTED_VERSION = 1;
+    private static final String FAIL_ASSERT_MSG = "Method call failed.";
+
+    @Spy
+    @SuppressWarnings("PMD.UnusedPrivateField")
+    private final PayloadValidationHelper payloadValidationHelper = new PayloadValidationHelper();
 
     @InjectMocks
     private PayloadMappingHelper payloadMappingHelper;
 
+    private final AssertionUtils assertUtils = new AssertionUtils();
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+
     @Test
     public void mapPayLoadSuccess() throws IOException {
         String dcnNumber = "11003402";
+
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/successMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
-        PcqAnswerRequest mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.SUCCESS_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
 
-        PcqPayLoad pcqPayload = (PcqPayLoad) jsonObjectFromString(TestSupportUtils.SUCCESS_PAYLOAD, PcqPayLoad.class);
-        PcqMetaData metaData = (PcqMetaData) jsonObjectFromString(metaDataPayLoad, PcqMetaData.class);
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
 
-        assertMapping(mappedAnswers, pcqPayload, metaData, dcnNumber);
+
+        assertUtils.assertSuccessMapping(mappedAnswers, metaData, dcnNumber);
     }
+
+    @Test
+    public void mapPayLoadMultipleIntElements() throws IOException {
+        String dcnNumber = "12003402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/multipleReligionMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.MULTIPLE_RELIGION_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+
+        assertUtils.assertReligionInvalidMapping(mappedAnswers, metaData, dcnNumber);
+    }
+
+    @Test
+    public void mapPayLoadInvalidDob() throws IOException {
+        String dcnNumber = "13003402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidDobMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.INVALID_DOB_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+
+        assertUtils.assertDobInvalidMapping(mappedAnswers, metaData, dcnNumber);
+    }
+
+    @Test
+    public void mapPayLoadDisabilityNone() throws IOException {
+        String dcnNumber = "14103402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/disabilityNoneMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.DISABILITY_NONE_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+
+        assertUtils.assertDisabilityNoneMapping(mappedAnswers, metaData, dcnNumber);
+    }
+
+    @Test
+    public void mapMultipleEthnicity() throws IOException {
+        String dcnNumber = "26103402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/multipleEthnicityMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.MULTIPLE_ETHNICITY_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+
+        assertUtils.assertMultipleEthnicityMapping(mappedAnswers, metaData, dcnNumber);
+    }
+
+    @Test
+    public void mapInvalidOtherValues() throws IOException {
+        String dcnNumber = "287103402";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidOtherValuesMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.INVALID_OTHER_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+        assertUtils.assertInvalidOtherMapping(mappedAnswers, metaData, dcnNumber);
+    }
+
+    @Test
+    public void payloadScannableItemMissing() throws IOException {
+        String dcnNumber = "11003403";
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/noScannableItemsMetaFile.json");
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+        assertNull(mappedAnswers, "Mapped Answers should be null");
+
+    }
+
+    @Test
+    public void jsonProcessingError()  {
+        String dcnNumber = "11003403";
+
+        String metaDataPayLoad = "{Test:asdsad}";
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+        assertNull(mappedAnswers, "Mapped Answers should be null");
+
+    }
+
 
     /**
      * Obtains a JSON String from a JSON file in the classpath (Resources directory).
@@ -59,90 +230,12 @@ public class PayloadMappingHelperTest {
         return new String(Files.readAllBytes(resource.toPath()));
     }
 
-    public static Object jsonObjectFromString(String jsonString, Class clazz) throws IOException {
-        return new ObjectMapper().readValue(jsonString, clazz);
+    public static PcqPayLoad jsonPayloadObjectFromString(String jsonString) throws IOException {
+        return new ObjectMapper().readValue(jsonString, PcqPayLoad.class);
     }
 
-    private void assertMapping(PcqAnswerRequest mappedAnswers, PcqPayLoad pcqPayLoad,
-                                            PcqMetaData pcqMetaData, String dcnNumber) {
-        //Check the primary key generated field is not missing.
-        assertNotNull(mappedAnswers.getPcqId(), "PCQ Id is Null");
-
-        //Check the correct DCN Number is populated.
-        assertEquals(dcnNumber, mappedAnswers.getDcnNumber(), "DCN Number is not correct.");
-
-        //Check the default values are set correctly for paper channel
-        assertNull(mappedAnswers.getCaseId(), "Case Id is not correct.");
-        assertEquals(EXPECTED_PARTY_ID, mappedAnswers.getPartyId(), "Party Id is not correct.");
-        assertEquals(EXPECTED_CHANNEL, mappedAnswers.getChannel(), "Channel is not correct.");
-        assertNotNull(mappedAnswers.getCompletedDate(), "Completed Date is empty");
-        assertEquals(EXPECTED_ACTOR, mappedAnswers.getActor(), "Actor is not correct.");
-        assertEquals(EXPECTED_VERSION, mappedAnswers.getVersionNo(), "Version Number is not correct.");
-        assertNull(mappedAnswers.getOptOut(), "Opt Out is not correct.");
-
-
-        //Check the information that matches the meta-data information.
-        PcqScannableItems[] pcqScannedItems = pcqMetaData.getScannableItems();
-        assertEquals(pcqScannedItems[0].getDocumentType(), mappedAnswers.getFormId(), "Form Id is not correct.");
-        assertEquals(pcqMetaData.getJurisdiction(), mappedAnswers.getServiceId(), "Service Id is not correct.");
-
-        //Check the answers matches the payload supplied.
-        PcqPayloadContents[] payloadContents = pcqPayLoad.getMetaDataContents();
-        PcqAnswers answers = mappedAnswers.getPcqAnswers();
-
-        StringBuilder dob = new StringBuilder();
-        String expectedLanguageMain = "";
-        String languageOther = "";
-
-        for (int i = 0; i < payloadContents.length; i++) {
-            PcqPayloadContents payloadContent = payloadContents[i];
-            switch (payloadContent.getFieldName()) {
-                case "language_main" :
-                    expectedLanguageMain = payloadContent.getFieldValue();
-                    break;
-                case "language_other" :
-                    languageOther = payloadContent.getFieldValue();
-                    break;
-                case "english_language_level" :
-                    assertCustomEquals(payloadContent.getFieldValue(), answers.getEnglishLanguageLevel(),
-                                       "English_Language_Level is not correct.");
-                    break;
-                case "religion" :
-                    assertCustomEquals(payloadContent.getFieldValue(), answers.getReligion(),
-                                       "Religion is not correct.");
-                    break;
-                case "other_religion_text" :
-                    assertEquals(payloadContent.getFieldValue(), answers.getReligionOther(),
-                                 "Other Religion is not correct.");
-                    break;
-                case "dob_day" :
-                    dob = new StringBuilder(StringUtils.defaultString(payloadContent.getFieldValue()));
-                    break;
-                case "dob_month" :
-                case "dob_year" :
-                    dob.insert(0, StringUtils.defaultString(payloadContent.getFieldValue()) + "_");
-                    break;
-                case "dob_provided" :
-                    assertCustomEquals(payloadContent.getFieldValue(), answers.getDobProvided(),
-                                       "Dob Provided is not correct.");
-                    break;
-                default :
-                    break;
-            }
-        }
-
-    }
-
-    private void checkLanguageMain(String expected, String expectedOther, String actual, String actualOther) {
-
-    }
-
-    private void assertCustomEquals(String expected, Integer actual, String message) {
-        if (actual == null) {
-            assertEquals(expected, null, message);
-        } else {
-            assertEquals(expected, String.valueOf(actual), message);
-        }
+    public static PcqMetaData jsonMetaDataObjectFromString(String jsonString) throws IOException {
+        return new ObjectMapper().readValue(jsonString, PcqMetaData.class);
     }
 
 

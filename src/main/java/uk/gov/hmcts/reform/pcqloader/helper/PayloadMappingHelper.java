@@ -5,10 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 import uk.gov.hmcts.reform.pcqloader.model.PcqAnswers;
 import uk.gov.hmcts.reform.pcqloader.model.PcqAnswerRequest;
 import uk.gov.hmcts.reform.pcqloader.model.PcqMetaData;
@@ -19,17 +20,29 @@ import uk.gov.hmcts.reform.pcqloader.utils.PcqLoaderUtils;
 
 import java.lang.reflect.Field;
 
+import static uk.gov.hmcts.reform.pcqloader.utils.PcqLoaderUtils.nullIfEmpty;
+
 @Component
 @Slf4j
 public class PayloadMappingHelper {
 
     private final String[] submitAnswerIntElements = {"dob_provided", "language_main", "english_language_level", "sex",
-        "gender_different", "sexuality", "marriage", "ethnicity", "religion", "disability_conditions",
+        "gender_different", "sexuality", "marriage", "ethnicity", "religion", "disability_condition",
         "disability_impact", "disability_vision", "disability_hearing", "disability_mobility", "disability_dexterity",
         "disability_learning", "disability_memory", "disability_mental_health", "disability_stamina",
         "disability_social", "disability_other", "disability_none", "pregnancy"};
 
-    public PcqAnswerRequest mapPayLoadToPcqAnswers(String dcnNumber, String metaDataString) {
+    private final String[] submitAnswerIntFields = {"dobProvided", "languageMain", "englishLanguageLevel", "sex",
+        "genderDifferent", "sexuality", "marriage", "ethnicity", "religion", "disabilityConditions",
+        "disabilityImpact", "disabilityVision", "disabilityHearing", "disabilityMobility", "disabilityDexterity",
+        "disabilityLearning", "disabilityMemory", "disabilityMentalHealth", "disabilityStamina",
+        "disabilitySocial", "disabilityOther", "disabilityNone", "pregnancy"};
+
+    @Autowired
+    private PayloadValidationHelper payloadValidationHelper;
+
+    public PcqAnswerRequest mapPayLoadToPcqAnswers(String dcnNumber, String metaDataString) throws
+        NoSuchFieldException, IllegalAccessException {
 
         try {
             // Step 1. Convert the JSon String into an Java Object
@@ -56,15 +69,13 @@ public class PayloadMappingHelper {
 
         } catch (JsonProcessingException e) {
             log.error("JsonProcessingException during payload parsing - " + e.getMessage());
-        } catch (IllegalAccessException e) {
-            log.error("IllegalAccessException during payload parsing - " + e.getMessage());
         }
 
         return null;
     }
 
     private PcqAnswerRequest performMapping(PcqMetaData metaData, PcqPayLoad payLoad, String dcnNumber)
-        throws IllegalAccessException {
+        throws IllegalAccessException, NoSuchFieldException {
         PcqAnswerRequest pcqAnswerRequest = new PcqAnswerRequest();
 
         //Set the default values
@@ -91,7 +102,10 @@ public class PayloadMappingHelper {
         mapDateOfBirth(payloadContents, answers);
 
         //Validate and check disability_none.
-        validateDisabilityNone(answers);
+        payloadValidationHelper.validateDisabilityNone(answers);
+
+        //Validate and correct other fields.
+        payloadValidationHelper.validateAndCorrectOtherFields(answers);
 
         pcqAnswerRequest.setPcqAnswers(answers);
 
@@ -100,13 +114,16 @@ public class PayloadMappingHelper {
 
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private void mapIntegerElements(PcqPayloadContents[] payloadContents, PcqAnswers answers)
-        throws IllegalAccessException {
+        throws IllegalAccessException, NoSuchFieldException {
         for (String schemaElement : submitAnswerIntElements) {
 
             for (PcqPayloadContents payloadContent : payloadContents) {
                 if (payloadContent.getFieldName().equals(schemaElement)) {
                     // Find the field name of the element in the SubmitAnswers object.
-                    Field schemaField = ReflectionUtils.findField(PcqAnswers.class, schemaElement);
+                    int index = ArrayUtils.indexOf(submitAnswerIntElements, schemaElement);
+                    Field schemaField = PcqAnswers.class.getDeclaredField(submitAnswerIntFields[index]);
+                    // Make the field accessible
+                    PcqLoaderUtils.makeFieldAccessible(schemaField);
                     // If the element value has been already set in answers object i.e. more than one check-box
                     // has been ticked by the user, then set the answer to "-1".
                     if (schemaField.get(answers) == null) {
@@ -128,10 +145,10 @@ public class PayloadMappingHelper {
         for (PcqPayloadContents payloadContent : payloadContents) {
             switch (payloadContent.getFieldName()) {
                 case "language_other" :
-                    answers.setLanguageOther(payloadContent.getFieldValue());
+                    answers.setLanguageOther(nullIfEmpty(payloadContent.getFieldValue()));
                     break;
                 case "other_religion_text" :
-                    answers.setReligionOther(payloadContent.getFieldValue());
+                    answers.setReligionOther(nullIfEmpty(payloadContent.getFieldValue()));
                     break;
                 case "other_white_ethnicity_text" :
                 case "other_mixed_ethnicity_text" :
@@ -141,13 +158,13 @@ public class PayloadMappingHelper {
                     setEthnicity(payloadContent, answers);
                     break;
                 case "other_disability_details" :
-                    answers.setDisabilityConditionOther(payloadContent.getFieldValue());
+                    answers.setDisabilityConditionOther(nullIfEmpty(payloadContent.getFieldValue()));
                     break;
                 case "other_sexuality_text" :
-                    answers.setSexualityOther(payloadContent.getFieldValue());
+                    answers.setSexualityOther(nullIfEmpty(payloadContent.getFieldValue()));
                     break;
                 case "gender_different_text" :
-                    answers.setGenderOther(payloadContent.getFieldValue());
+                    answers.setGenderOther(nullIfEmpty(payloadContent.getFieldValue()));
                     break;
                 default:
                     break;
@@ -177,13 +194,8 @@ public class PayloadMappingHelper {
         }
 
         //Prefix the month and day with 0 if the length is 1 and numeric.
-        if (!StringUtils.isEmpty(dobMonth) && dobMonth.length() == 1) {
-            dobMonth = "0" + dobMonth;
-        }
-
-        if (!StringUtils.isEmpty(dobDay) && dobDay.length() == 1) {
-            dobDay = "0" + dobDay;
-        }
+        dobMonth = PcqLoaderUtils.formatDobField(dobMonth);
+        dobDay = PcqLoaderUtils.formatDobField(dobDay);
 
         String dob = dobYear + "-" + dobMonth + "-" + dobDay;
 
@@ -198,33 +210,20 @@ public class PayloadMappingHelper {
 
     }
 
-    private void validateDisabilityNone(PcqAnswers answers) {
-        // If the disability_none has value of "1" then all other disabilities should be set to null.
-        if (answers.getDisabilityNone() != null && answers.getDisabilityNone() > 0) {
-            answers.setDisabilityVision(null);
-            answers.setDisabilityHearing(null);
-            answers.setDisabilityMobility(null);
-            answers.setDisabilityDexterity(null);
-            answers.setDisabilityLearning(null);
-            answers.setDisabilityMemory(null);
-            answers.setDisabilityMentalHealth(null);
-            answers.setDisabilityStamina(null);
-            answers.setDisabilitySocial(null);
-            answers.setDisabilityOther(null);
-            answers.setDisabilityConditionOther(null);
-        }
-    }
 
     private void setEthnicity(PcqPayloadContents payloadContent, PcqAnswers answers) {
         if (answers.getEthnicityOther() == null && answers.getEthnicity() != -1) {
             // Only set the value if ethnicity is not already set.
-            answers.setEthnicityOther(payloadContent.getFieldValue());
+            answers.setEthnicityOther(nullIfEmpty(payloadContent.getFieldValue()));
         } else {
-            // Invalid answer supplied as ethnicity is already set in the payload.
-            log.error("Invalid answer for " + payloadContent.getFieldName() + ", found more than one "
-                          + "other value in payload.");
-            answers.setEthnicityOther(null);
-            answers.setEthnicity(-1);
+            if (!payloadContent.getFieldValue().equals("")) {
+                // Invalid answer supplied as ethnicity is already set in the payload.
+                log.error("Invalid answer for " + payloadContent.getFieldName() + ", found more than one "
+                              + "other value in payload.");
+                answers.setEthnicityOther(null);
+                answers.setEthnicity(-1);
+            }
         }
     }
+
 }

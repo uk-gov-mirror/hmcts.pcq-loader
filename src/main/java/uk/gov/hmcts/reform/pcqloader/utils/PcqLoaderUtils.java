@@ -1,8 +1,12 @@
 package uk.gov.hmcts.reform.pcqloader.utils;
 
+import com.gilecode.reflection.ReflectionAccessUtils;
+import com.gilecode.reflection.ReflectionAccessor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
+
+import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,4 +75,21 @@ public final class PcqLoaderUtils {
         return suppliedDob + DOB_TIME_CONSTANT;
     }
 
+    @SuppressWarnings("PMD.UseStringBufferForStringAppends")
+    public static String formatDobField(String field) {
+        String returnField = field;
+        if (!StringUtils.isEmpty(field) && field.length() == 1) {
+            returnField = "0" + returnField;
+        }
+        return returnField;
+    }
+
+    public static void makeFieldAccessible(Field field) {
+        ReflectionAccessor accessor = ReflectionAccessUtils.getReflectionAccessor();
+        accessor.makeAccessible(field);
+    }
+
+    public static String nullIfEmpty(String strObject) {
+        return StringUtils.defaultIfEmpty(strObject, null);
+    }
 }

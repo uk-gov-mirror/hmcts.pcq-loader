@@ -12,8 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
+@SuppressWarnings("PMD.TooManyMethods")
 public class PcqLoaderUtilsTest {
+
+    private static final String DOB_VALIDATION_MSG = "Dob validation should not return true";
 
     @Test
     public void testExtractDcnNumberSuccess() {
@@ -66,27 +68,27 @@ public class PcqLoaderUtilsTest {
         // User has not supplied any dob data. So the day, month and year will be empty strings.
         String invalidDob = "--";
         boolean isDobValid = PcqLoaderUtils.isDobValid(invalidDob);
-        assertFalse(isDobValid, "Dob validation should not return true");
+        assertFalse(isDobValid, DOB_VALIDATION_MSG);
 
         // User supplied invalid characters in the day field.
         String invalidDob2 = "--Abba";
         isDobValid = PcqLoaderUtils.isDobValid(invalidDob2);
-        assertFalse(isDobValid, "Dob validation should not return true");
+        assertFalse(isDobValid, DOB_VALIDATION_MSG);
 
         // User supplied invalid characters in the month field.
         String invalidDob3 = "-asdsd-";
         isDobValid = PcqLoaderUtils.isDobValid(invalidDob3);
-        assertFalse(isDobValid, "Dob validation should not return true");
+        assertFalse(isDobValid, DOB_VALIDATION_MSG);
 
         // User supplied invalid characters in the year field.
         String invalidDob4 = "ipip--01";
         isDobValid = PcqLoaderUtils.isDobValid(invalidDob4);
-        assertFalse(isDobValid, "Dob validation should not return true");
+        assertFalse(isDobValid, DOB_VALIDATION_MSG);
 
         // User supplied invalid characters in the all fields.
         String invalidDob5 = "ipip-asdsd-Abba";
         isDobValid = PcqLoaderUtils.isDobValid(invalidDob5);
-        assertFalse(isDobValid, "Dob validation should not return true");
+        assertFalse(isDobValid, DOB_VALIDATION_MSG);
     }
 
     @Test
@@ -94,15 +96,15 @@ public class PcqLoaderUtilsTest {
         //User has supplied an numeric but invalid day field
         String invalidDobDay = "1900-01-00";
         boolean isDobValid = PcqLoaderUtils.isDobValid(invalidDobDay);
-        assertFalse(isDobValid, "Dob validation should not return true");
+        assertFalse(isDobValid, DOB_VALIDATION_MSG);
 
         String invalidDobDay2 = "1900-01-32";
         isDobValid = PcqLoaderUtils.isDobValid(invalidDobDay2);
-        assertFalse(isDobValid, "Dob validation should not return true");
+        assertFalse(isDobValid, DOB_VALIDATION_MSG);
 
         String invalidDobDay3 = "1900-02-30";
         isDobValid = PcqLoaderUtils.isDobValid(invalidDobDay3);
-        assertFalse(isDobValid, "Dob validation should not return true");
+        assertFalse(isDobValid, DOB_VALIDATION_MSG);
     }
 
     @Test
@@ -110,11 +112,11 @@ public class PcqLoaderUtilsTest {
         //User has supplied an numeric but invalid month field
         String invalidDobMonth = "1900-00-01";
         boolean isDobValid = PcqLoaderUtils.isDobValid(invalidDobMonth);
-        assertFalse(isDobValid, "Dob validation should not return true");
+        assertFalse(isDobValid, DOB_VALIDATION_MSG);
 
         String invalidDobMonth2 = "1900-13-30";
         isDobValid = PcqLoaderUtils.isDobValid(invalidDobMonth2);
-        assertFalse(isDobValid, "Dob validation should not return true");
+        assertFalse(isDobValid, DOB_VALIDATION_MSG);
     }
 
     @Test
@@ -122,11 +124,11 @@ public class PcqLoaderUtilsTest {
         //User has supplied an numeric but invalid year field
         String invalidDobYear = "01-01-01";
         boolean isDobValid = PcqLoaderUtils.isDobValid(invalidDobYear);
-        assertFalse(isDobValid, "Dob validation should not return true");
+        assertFalse(isDobValid, DOB_VALIDATION_MSG);
 
         String invalidDobYear2 = "21234-12-30";
         isDobValid = PcqLoaderUtils.isDobValid(invalidDobYear2);
-        assertFalse(isDobValid, "Dob validation should not return true");
+        assertFalse(isDobValid, DOB_VALIDATION_MSG);
     }
 
     @Test
