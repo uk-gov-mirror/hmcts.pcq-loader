@@ -38,7 +38,7 @@ public class PayloadMappingHelper {
         "disabilityLearning", "disabilityMemory", "disabilityMentalHealth", "disabilityStamina",
         "disabilitySocial", "disabilityOther", "disabilityNone", "pregnancy"};
 
-    private PayloadValidationHelper payloadValidationHelper;
+    private final PayloadValidationHelper payloadValidationHelper;
 
     @Autowired
     public PayloadMappingHelper(PayloadValidationHelper payloadValidationHelper) {

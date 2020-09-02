@@ -12,8 +12,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class PayloadValidationHelperTest {
 
+    private static final String OTHER_LANGUAGE = "Other Language";
+    private static final String OTHER_GENDER = "Other Gender";
+    private static final String OTHER_SEXUALITY = "Other Sexuality";
+    private static final String OTHER_RELIGION = "Other Religion";
+    private static final String OTHER_ETHNICITY = "Other Ethnicity";
+
     @InjectMocks
-    PayloadValidationHelper payloadValidationHelper;
+    private PayloadValidationHelper payloadValidationHelper;
 
     @BeforeEach
     public void setUp() {
@@ -23,7 +29,7 @@ public class PayloadValidationHelperTest {
     @Test
     public void testLanguageMainOtherFields() {
         PcqAnswers answers = new PcqAnswers();
-        answers.setLanguageOther("Other Language");
+        answers.setLanguageOther(OTHER_LANGUAGE);
 
         for (int i = 0; i < 2; i++) {
             answers.setLanguageMain(i);
@@ -32,21 +38,21 @@ public class PayloadValidationHelperTest {
             assertEquals(-1, answers.getLanguageMain(), "Language_Main is not correct");
 
             //re-set the other language for the next text.
-            answers.setLanguageOther("Other Language");
+            answers.setLanguageOther(OTHER_LANGUAGE);
         }
 
         //Valid test
         answers.setLanguageMain(2);
-        answers.setLanguageOther("Other Language");
+        answers.setLanguageOther(OTHER_LANGUAGE);
         payloadValidationHelper.validateAndCorrectOtherFields(answers);
         assertEquals(2, answers.getLanguageMain(), "Language_Main is not correct");
-        assertEquals("Other Language", answers.getLanguageOther(), "Language_Other is not correct");
+        assertEquals(OTHER_LANGUAGE, answers.getLanguageOther(), "Language_Other is not correct");
     }
 
     @Test
     public void testGenderOtherFields() {
         PcqAnswers answers = new PcqAnswers();
-        answers.setGenderOther("Other Gender");
+        answers.setGenderOther(OTHER_GENDER);
 
         for (int i = 0; i < 2; i++) {
             answers.setGenderDifferent(i);
@@ -55,21 +61,21 @@ public class PayloadValidationHelperTest {
             assertEquals(-1, answers.getGenderDifferent(), "Gender_Different is not correct");
 
             //re-set the other gender for the next text.
-            answers.setGenderOther("Other Gender");
+            answers.setGenderOther(OTHER_GENDER);
         }
 
         //Valid test
         answers.setGenderDifferent(2);
-        answers.setGenderOther("Other Gender");
+        answers.setGenderOther(OTHER_GENDER);
         payloadValidationHelper.validateAndCorrectOtherFields(answers);
         assertEquals(2, answers.getGenderDifferent(), "Gender_Different is not correct");
-        assertEquals("Other Gender", answers.getGenderOther(), "Gender_Other is not correct");
+        assertEquals(OTHER_GENDER, answers.getGenderOther(), "Gender_Other is not correct");
     }
 
     @Test
     public void testSexualityOtherFields() {
         PcqAnswers answers = new PcqAnswers();
-        answers.setSexualityOther("Other Sexuality");
+        answers.setSexualityOther(OTHER_SEXUALITY);
 
         for (int i = 0; i < 4; i++) {
             answers.setSexuality(i);
@@ -78,21 +84,21 @@ public class PayloadValidationHelperTest {
             assertEquals(-1, answers.getSexuality(), "Sexuality is not correct");
 
             //re-set the other sexuality for the next text.
-            answers.setSexualityOther("Other Sexuality");
+            answers.setSexualityOther(OTHER_SEXUALITY);
         }
 
         //Valid test
         answers.setSexuality(4);
-        answers.setSexualityOther("Other Sexuality");
+        answers.setSexualityOther(OTHER_SEXUALITY);
         payloadValidationHelper.validateAndCorrectOtherFields(answers);
         assertEquals(4, answers.getSexuality(), "Sexuality is not correct");
-        assertEquals("Other Sexuality", answers.getSexualityOther(), "Sexuality_Other is not correct");
+        assertEquals(OTHER_SEXUALITY, answers.getSexualityOther(), "Sexuality_Other is not correct");
     }
 
     @Test
     public void testReligionOtherFields() {
         PcqAnswers answers = new PcqAnswers();
-        answers.setReligionOther("Other Religion");
+        answers.setReligionOther(OTHER_RELIGION);
 
         for (int i = 0; i < 8; i++) {
             answers.setReligion(i);
@@ -101,21 +107,21 @@ public class PayloadValidationHelperTest {
             assertEquals(-1, answers.getReligion(), "Religion is not correct");
 
             //re-set the other Religion for the next text.
-            answers.setReligionOther("Other Religion");
+            answers.setReligionOther(OTHER_RELIGION);
         }
 
         //Valid test
         answers.setReligion(8);
-        answers.setReligionOther("Other Religion");
+        answers.setReligionOther(OTHER_RELIGION);
         payloadValidationHelper.validateAndCorrectOtherFields(answers);
         assertEquals(8, answers.getReligion(), "Religion is not correct");
-        assertEquals("Other Religion", answers.getReligionOther(), "Religion_Other is not correct");
+        assertEquals(OTHER_RELIGION, answers.getReligionOther(), "Religion_Other is not correct");
     }
 
     @Test
     public void tesEthnicityOtherFields() {
         PcqAnswers answers = new PcqAnswers();
-        answers.setEthnicityOther("Other Ethnicity");
+        answers.setEthnicityOther(OTHER_ETHNICITY);
 
         //Test the Other White scenario.
         checkAndAssertEthnicity(0, 4, answers);
@@ -138,15 +144,15 @@ public class PayloadValidationHelperTest {
             assertEquals(-1, answers.getEthnicity(), "Ethnicity is not correct");
 
             //re-set the other sexuality for the next text.
-            answers.setEthnicityOther("Other Ethnicity");
+            answers.setEthnicityOther(OTHER_ETHNICITY);
         }
 
         //Valid test
         answers.setEthnicity(endIndex);
-        answers.setEthnicityOther("Other Ethnicity");
+        answers.setEthnicityOther(OTHER_ETHNICITY);
         payloadValidationHelper.validateAndCorrectOtherFields(answers);
         assertEquals(endIndex, answers.getEthnicity(), "Ethnicity is not correct");
-        assertEquals("Other Ethnicity", answers.getEthnicityOther(), "Ethnicity_Other is not correct");
+        assertEquals(OTHER_ETHNICITY, answers.getEthnicityOther(), "Ethnicity_Other is not correct");
     }
 
 }

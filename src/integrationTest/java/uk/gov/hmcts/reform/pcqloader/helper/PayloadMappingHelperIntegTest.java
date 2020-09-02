@@ -16,9 +16,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @ExtendWith(SpringExtension.class)
+@SuppressWarnings("PMD.TooManyMethods")
 public class PayloadMappingHelperIntegTest {
 
     private static final String FAIL_ASSERT_MSG = "Method call failed.";
@@ -26,10 +30,13 @@ public class PayloadMappingHelperIntegTest {
     private static final String SERVICE_ID_VALIDATION_MSG = "Service Id is not correct.";
     private static final String EXPECTED_DOB = "2000-01-01T00:00:00.000Z";
     private static final String DOB_VALIDATION_MSG = "Dob is not correct";
+    private static final String ETHNICITY_MSG = "Ethnicity not correct";
+    private static final String ETHNICITY_OTHER_MSG = "Ethnicity Other is not correct.";
+    private static final String ETHNICITY_STRING = "Ethnicity";
 
     private PayloadMappingHelper payloadMappingHelper;
 
-    private PayloadValidationHelper payloadValidationHelper = new PayloadValidationHelper();
+    private final PayloadValidationHelper payloadValidationHelper = new PayloadValidationHelper();
 
     @BeforeEach
     public void setUp() {
@@ -59,7 +66,7 @@ public class PayloadMappingHelperIntegTest {
 
         assertInvalid(mappedAnswers.getPcqAnswers().getLanguageMain(), "Language_Main");
         assertInvalid(mappedAnswers.getPcqAnswers().getEnglishLanguageLevel(), "English Language Level");
-        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity");
+        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), ETHNICITY_STRING);
         assertInvalid(mappedAnswers.getPcqAnswers().getDisabilityConditions(), "Disability Conditions");
         assertInvalid(mappedAnswers.getPcqAnswers().getDisabilityImpact(), "Disability Impact");
         assertInvalid(mappedAnswers.getPcqAnswers().getPregnancy(), "Pregnancy");
@@ -98,7 +105,7 @@ public class PayloadMappingHelperIntegTest {
     @Test
     @DisplayName("Other Text Field entered but user has not ticked the Other checkbox.")
     public void testInvalidOtherTextInput() throws IOException {
-        String dcnNumber = "1100324402";
+        String dcnNumber = "2100324402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidOtherPayloadMetaFile.json");
 
@@ -110,129 +117,129 @@ public class PayloadMappingHelperIntegTest {
     @Test
     @DisplayName("OtherWhite and OtherMixed Text Field entered but user has not ticked Only OtherWhite checkbox.")
     public void testInvalidOtherWhiteTextInput() throws IOException {
-        String dcnNumber = "1100324402";
+        String dcnNumber = "3100324402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidOtherWhitePayloadMetaFile.json");
 
         PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
-        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity");
-        assertNull(mappedAnswers.getPcqAnswers().getEthnicityOther(), "Ethnicity Other is not correct.");
+        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), ETHNICITY_STRING);
+        assertNull(mappedAnswers.getPcqAnswers().getEthnicityOther(), ETHNICITY_OTHER_MSG);
 
     }
 
     @Test
     @DisplayName("OtherWhite and OtherMixed Text Field entered but user has not ticked Only OtherMixed checkbox.")
     public void testInvalidOtherMixedTextInput() throws IOException {
-        String dcnNumber = "1100324402";
+        String dcnNumber = "4100324402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidOtherMixedPayloadMetaFile.json");
 
         PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
-        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity");
-        assertNull(mappedAnswers.getPcqAnswers().getEthnicityOther(), "Ethnicity Other is not correct.");
+        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), ETHNICITY_STRING);
+        assertNull(mappedAnswers.getPcqAnswers().getEthnicityOther(), ETHNICITY_OTHER_MSG);
 
     }
 
     @Test
     @DisplayName("OtherWhite and OtherAsian Text Field entered but user has not ticked Only OtherAsian checkbox.")
     public void testInvalidOtherAsianTextInput() throws IOException {
-        String dcnNumber = "1100324402";
+        String dcnNumber = "5100324402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidOtherAsianPayloadMetaFile.json");
 
         PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
-        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity");
-        assertNull(mappedAnswers.getPcqAnswers().getEthnicityOther(), "Ethnicity Other is not correct.");
+        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), ETHNICITY_STRING);
+        assertNull(mappedAnswers.getPcqAnswers().getEthnicityOther(), ETHNICITY_OTHER_MSG);
 
     }
 
     @Test
     @DisplayName("OtherWhite and OtherCarib Text Field entered but user has not ticked Only OtherCarib checkbox.")
     public void testInvalidOtherCaribTextInput() throws IOException {
-        String dcnNumber = "1100324402";
+        String dcnNumber = "6100324402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidOtherCaribPayloadMetaFile.json");
 
         PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
-        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity");
-        assertNull(mappedAnswers.getPcqAnswers().getEthnicityOther(), "Ethnicity Other is not correct.");
+        assertInvalid(mappedAnswers.getPcqAnswers().getEthnicity(), ETHNICITY_STRING);
+        assertNull(mappedAnswers.getPcqAnswers().getEthnicityOther(), ETHNICITY_OTHER_MSG);
 
     }
 
     @Test
     @DisplayName("Valid other white ethnicity test")
     public void testValidOtherWhiteTextInput() throws IOException {
-        String dcnNumber = "1100324402";
+        String dcnNumber = "7100324402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/validOtherWhitePayloadMetaFile.json");
 
         PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
-        assertEquals(4, mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity not correct");
+        assertEquals(4, mappedAnswers.getPcqAnswers().getEthnicity(), ETHNICITY_MSG);
         assertEquals("OtherWhite", mappedAnswers.getPcqAnswers().getEthnicityOther(),
-                     "Ethnicity Other is not correct.");
+                     ETHNICITY_OTHER_MSG);
 
     }
 
     @Test
     @DisplayName("Valid other mixed ethnicity test")
     public void testValidOtherMixedTextInput() throws IOException {
-        String dcnNumber = "1100324402";
+        String dcnNumber = "8100324402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/validOtherMixedPayloadMetaFile.json");
 
         PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
-        assertEquals(8, mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity not correct");
+        assertEquals(8, mappedAnswers.getPcqAnswers().getEthnicity(), ETHNICITY_MSG);
         assertEquals("Other Mixed", mappedAnswers.getPcqAnswers().getEthnicityOther(),
-                     "Ethnicity Other is not correct.");
+                     ETHNICITY_OTHER_MSG);
 
     }
 
     @Test
     @DisplayName("Valid other Asian ethnicity test")
     public void testValidOtherAsianTextInput() throws IOException {
-        String dcnNumber = "1100324402";
+        String dcnNumber = "9100324402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/validOtherAsianPayloadMetaFile.json");
 
         PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
-        assertEquals(13, mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity not correct");
+        assertEquals(13, mappedAnswers.getPcqAnswers().getEthnicity(), ETHNICITY_MSG);
         assertEquals("Other Asian", mappedAnswers.getPcqAnswers().getEthnicityOther(),
-                     "Ethnicity Other is not correct.");
+                     ETHNICITY_OTHER_MSG);
 
     }
 
     @Test
     @DisplayName("Valid other Carib ethnicity test")
     public void testValidOtherCaribTextInput() throws IOException {
-        String dcnNumber = "1100324402";
+        String dcnNumber = "1200324402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/validOtherCaribPayloadMetaFile.json");
 
         PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
-        assertEquals(16, mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity not correct");
+        assertEquals(16, mappedAnswers.getPcqAnswers().getEthnicity(), ETHNICITY_MSG);
         assertEquals("Other Carib", mappedAnswers.getPcqAnswers().getEthnicityOther(),
-                     "Ethnicity Other is not correct.");
+                     ETHNICITY_OTHER_MSG);
 
     }
 
     @Test
     @DisplayName("Valid other ethnicity test")
     public void testValidOtherEthnicityTextInput() throws IOException {
-        String dcnNumber = "1100324402";
+        String dcnNumber = "1300324402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/validOtherEthnicityPayloadMetaFile.json");
 
         PcqAnswerRequest mappedAnswers = invokeMappingHelper(dcnNumber, metaDataPayLoad);
-        assertEquals(18, mappedAnswers.getPcqAnswers().getEthnicity(), "Ethnicity not correct");
+        assertEquals(18, mappedAnswers.getPcqAnswers().getEthnicity(), ETHNICITY_MSG);
         assertEquals("Other Ethnicity", mappedAnswers.getPcqAnswers().getEthnicityOther(),
-                     "Ethnicity Other is not correct.");
+                     ETHNICITY_OTHER_MSG);
 
     }
 
     @Test
     @DisplayName("A valid scenario test where user has supplied a valid form.")
     public void testValidFormSubmission() throws IOException {
-        String dcnNumber = "1100324402";
+        String dcnNumber = "1400324402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/validPayloadMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -242,6 +249,7 @@ public class PayloadMappingHelperIntegTest {
         assertSuccessMapping(mappedAnswers, metaData, dcnNumber);
     }
 
+    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private PcqAnswerRequest invokeMappingHelper(String dcnNumber, String metaDataPayLoad) {
         PcqAnswerRequest mappedAnswers = null;
         try {
