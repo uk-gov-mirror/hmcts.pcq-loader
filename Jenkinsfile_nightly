@@ -18,7 +18,7 @@ withNightlyPipeline(type, product, component) {
   env.TEST_URL = "http://pcq-loader-aat.service.core-compute-aat.internal"
   env.PCQ_BACKEND_URL = "http://pcq-backend-aat.service.core-compute-aat.internal"
   env.STORAGE_URL = "https://pcqsharedaat.blob.core.windows.net"
-  
+
   //enableMutationTest()
     //enableFullFunctionalTest()
     //enableSecurityScan()
