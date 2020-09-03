@@ -33,7 +33,10 @@ public class PcqLoaderComponent {
             final String dcnNumber = PcqLoaderUtils.extractDcnNumberFromFile(tmpZipFileName);
             log.info("DCN Number extracted is " + dcnNumber);
 
-            // Step 6. Unzip the zip file and extract the JSON Payload.
+            // Step 6. Unzip the zip file
+
+            // Step 7. Read the file and generate the mapping to the PcqAnswers object.
+
         }
 
         log.info("PcqLoaderComponent finished.");

@@ -1,0 +1,19 @@
+{
+  "po_box": "E1 5JL",
+  "jurisdiction": "PROBATE",
+  "delivery_date": "2018-01-12T10:10:10.100Z",
+  "opening_date": "2018-01-12T10:10:10.100Z",
+  "zip_file_createddate": "2018-01-12T10:10:10.100Z",
+  "zip_file_name": "1_24-02-2017-00-00-00.zip",
+  "scannable_items": [
+    {
+      "document_control_number": "1111001",
+      "document_type": "PCQ-A",
+      "scanning_date": "2018-01-12T10:10:10.100Z",
+      "ocr_accuracy": "string",
+      "ocr_data": "ewogICAgIk1ldGFkYXRhX2ZpbGUiOiBbCiAgICBdCn0=",
+      "file_name": "1111001.pdf",
+      "notes": "The document had ink spilled on it"
+    }
+  ]
+}
