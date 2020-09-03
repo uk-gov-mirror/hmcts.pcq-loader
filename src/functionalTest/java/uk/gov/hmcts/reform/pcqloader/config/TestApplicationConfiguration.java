@@ -19,8 +19,5 @@ import org.springframework.context.annotation.FilterType;
 })
 @EnableAutoConfiguration
 public class TestApplicationConfiguration {
-
-    // Add Sample Documents for Blob Storage
-
-
+    
 }
