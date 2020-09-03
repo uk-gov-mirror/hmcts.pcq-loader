@@ -40,9 +40,9 @@ public class BlobStorageManager {
     }
 
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
-    public List<String> collectPcqContainerBlobFileNames() {
+    public List<String> collectBlobFileNamesFromContainer(BlobContainerClient blobContainerClient) {
         List<String> zipFilenames = new ArrayList<>();
-        for (BlobItem blob : getPcqContainer().listBlobs()) {
+        for (BlobItem blob : blobContainerClient.listBlobs()) {
             String fileName = FilenameUtils.getName(blob.getName());
             if (Strings.isNullOrEmpty(fileName)) {
                 log.error("Unable to retrieve blob filename from container: {}", blob.getName());

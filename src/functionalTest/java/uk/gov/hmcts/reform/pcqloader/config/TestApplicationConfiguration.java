@@ -19,5 +19,5 @@ import org.springframework.context.annotation.FilterType;
 })
 @EnableAutoConfiguration
 public class TestApplicationConfiguration {
-    
+
 }

@@ -81,7 +81,8 @@ public class BlobStorageManagerTest {
 
     @Test
     public void testCollectBlobFileNames() {
-        List<String> response = blobStorageManager.collectPcqContainerBlobFileNames();
+        List<String> response =
+            blobStorageManager.collectBlobFileNamesFromContainer(blobStorageManager.getPcqContainer());
         Assertions.assertEquals(2, response.size(), "Correct number of blob names");
         Assertions.assertTrue(response.contains(BLOB_FILENAME_1), "Correct filename 1");
         Assertions.assertTrue(response.contains(BLOB_FILENAME_2), "Correct filename 2");
