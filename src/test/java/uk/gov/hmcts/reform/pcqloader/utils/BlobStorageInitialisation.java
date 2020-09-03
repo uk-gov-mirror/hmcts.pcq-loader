@@ -20,9 +20,9 @@ public class BlobStorageInitialisation {
     private static final String DEV_PCQ_CONTAINER_REJECTED_NAME = "pcq-rejected";
 
     private static final String SAMPLE_DOCUMENT_PATH_1
-        = "src/test/resources/pcq_blob_examples/1579002492_31-08-2020-11-35-10.zip";
+        = "src/integrationTest/resources/blobTestFiles/1579002492_31-08-2020-11-35-10.zip";
     private static final String SAMPLE_DOCUMENT_PATH_2
-        = "src/test/resources/pcq_blob_examples/1579002493_31-08-2020-11-48-42.zip";
+        = "src/integrationTest/resources/blobTestFiles/1579002493_31-08-2020-11-48-42.zip";
 
     private static List<String> availableContaimers = new ArrayList<>();
 

@@ -11,24 +11,28 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.util.ResourceUtils;
 import org.testcontainers.containers.DockerComposeContainer;
 import uk.gov.hmcts.reform.pcqloader.config.BlobStorageProperties;
 
 import java.io.File;
+import java.util.List;
 
 @Slf4j
 @TestPropertySource(locations = "/application.properties")
 public class BlobStorageManagerTest {
 
-    private BlobStorageProperties blobStorageProperties;
+    protected static final String CONTAINER_NAME = "pcq";
+    private static final String BLOB_FILENAME_1 = "1579002492_31-08-2020-11-35-10.zip";
+    private static final String BLOB_FILENAME_2 = "1579002493_31-08-2020-11-48-42.zip";
 
     private static DockerComposeContainer dockerComposeContainer;
 
     protected BlobContainerClient testContainer;
 
-    protected static final String CONTAINER_NAME = "pcq";
-
     protected BlobServiceClient blobServiceClient;
+
+    protected BlobStorageManager blobStorageManager;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -37,8 +41,15 @@ public class BlobStorageManagerTest {
                 .buildClient();
 
         testContainer = blobServiceClient.createBlobContainer(CONTAINER_NAME);
-        blobStorageProperties = new BlobStorageProperties();
+        BlobStorageProperties blobStorageProperties = new BlobStorageProperties();
         blobStorageProperties.setBlobPcqContainer(CONTAINER_NAME);
+
+        File blobFile1 = ResourceUtils.getFile("classpath:BlobTestFiles/" + BLOB_FILENAME_1);
+        File blobFile2 = ResourceUtils.getFile("classpath:BlobTestFiles/" + BLOB_FILENAME_2);
+
+        blobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
+        blobStorageManager.uploadFileToBlobStorage(testContainer, blobFile1.getPath());
+        blobStorageManager.uploadFileToBlobStorage(testContainer, blobFile2.getPath());
     }
 
     @AfterEach
@@ -64,9 +75,16 @@ public class BlobStorageManagerTest {
 
     @Test
     public void testFetchPcqStorageContainerSuccess() {
-        BlobStorageManager blobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
-        BlobContainerClient container = blobStorageManager.fetchPcqStorageContainer();
+        BlobContainerClient container = blobStorageManager.getPcqContainer();
         Assertions.assertNotNull(container);
+    }
+
+    @Test
+    public void testCollectBlobFileNames() {
+        List<String> response = blobStorageManager.collectPcqContainerBlobFileNames();
+        Assertions.assertEquals(2, response.size(), "Correct number of blob names");
+        Assertions.assertTrue(response.contains(BLOB_FILENAME_1), "Correct filename 1");
+        Assertions.assertTrue(response.contains(BLOB_FILENAME_2), "Correct filename 2");
     }
 
 }

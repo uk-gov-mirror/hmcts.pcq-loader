@@ -23,10 +23,10 @@ public class PcqLoaderComponentTest {
     @Mock
     private BlobContainerClient blobContainerClient;
 
-
     @Test
     public void executeSuccess() {
-        when(blobStorageManager.fetchPcqStorageContainer()).thenReturn(blobContainerClient);
+        when(blobStorageManager.getPcqContainer()).thenReturn(blobContainerClient);
+        when(blobContainerClient.exists()).thenReturn(true);
         pcqLoaderComponent.execute();
     }
 }
