@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "storage")
 public class BlobStorageProperties {
 
+    private String blobStorageDownloadPath;
+
     private String blobPcqContainer;
 
     /*
@@ -27,6 +29,14 @@ public class BlobStorageProperties {
 
     public void setBlobPcqContainer(String blobPcqContainer) {
         this.blobPcqContainer = blobPcqContainer;
+    }
+
+    public String getBlobStorageDownloadPath() {
+        return blobStorageDownloadPath;
+    }
+
+    public void setBlobStorageDownloadPath(String blobStorageDownloadPath) {
+        this.blobStorageDownloadPath = blobStorageDownloadPath;
     }
 
     /*

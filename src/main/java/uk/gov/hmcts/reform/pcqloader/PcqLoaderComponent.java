@@ -28,17 +28,22 @@ public class PcqLoaderComponent {
         // Step 2. Check for zip files in the Pcq container.
         List<String> blobZipNamesList = blobStorageManager.collectBlobFileNamesFromContainer(blobContainerClient);
         for (String tmpZipFileName : blobZipNamesList) {
-            // Step 4. Download the zip file to local storage.
 
-            // Step 5. Retrieve the DCN Number from the Zip File Name. Pass the actual zip file name in the
-            // method call below
-            final String dcnNumber = PcqLoaderUtils.extractDcnNumberFromFile(tmpZipFileName);
-            log.info("DCN Number extracted is " + dcnNumber);
+            try {
+                // Step 4. Download the zip file to local storage.
+                blobStorageManager.downloadFileFromBlobStorage(blobContainerClient, tmpZipFileName);
 
-            // Step 6. Unzip the zip file
+                // Step 5. Retrieve the DCN Number from the Zip File Name. Pass the actual zip file name in the
+                // method call below
+                final String dcnNumber = PcqLoaderUtils.extractDcnNumberFromFile(tmpZipFileName);
+                log.info("DCN Number extracted is " + dcnNumber);
 
-            // Step 7. Read the file and generate the mapping to the PcqAnswers object.
+                // Step 6. Unzip the zip file
 
+                // Step 7. Read the file and generate the mapping to the PcqAnswers object.
+            } catch (Exception ioe) {
+                log.error(ioe.getMessage());
+            }
         }
 
         log.info("PcqLoaderComponent finished.");
