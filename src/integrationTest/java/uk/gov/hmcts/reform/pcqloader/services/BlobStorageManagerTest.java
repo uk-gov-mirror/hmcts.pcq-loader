@@ -34,6 +34,10 @@ public class BlobStorageManagerTest {
 
     protected BlobStorageManager blobStorageManager;
 
+    protected File blobFile1;
+
+    protected File blobFile2;
+
     @BeforeEach
     public void setUp() throws Exception {
         blobServiceClient = new BlobServiceClientBuilder()
@@ -44,12 +48,9 @@ public class BlobStorageManagerTest {
         BlobStorageProperties blobStorageProperties = new BlobStorageProperties();
         blobStorageProperties.setBlobPcqContainer(CONTAINER_NAME);
 
-        File blobFile1 = ResourceUtils.getFile("classpath:BlobTestFiles/" + BLOB_FILENAME_1);
-        File blobFile2 = ResourceUtils.getFile("classpath:BlobTestFiles/" + BLOB_FILENAME_2);
-
         blobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
-        blobStorageManager.uploadFileToBlobStorage(testContainer, blobFile1.getPath());
-        blobStorageManager.uploadFileToBlobStorage(testContainer, blobFile2.getPath());
+        blobFile1 = ResourceUtils.getFile("classpath:BlobTestFiles/" + BLOB_FILENAME_1);
+        blobFile2 = ResourceUtils.getFile("classpath:BlobTestFiles/" + BLOB_FILENAME_2);
     }
 
     @AfterEach
@@ -81,6 +82,8 @@ public class BlobStorageManagerTest {
 
     @Test
     public void testCollectBlobFileNames() {
+        blobStorageManager.uploadFileToBlobStorage(testContainer, blobFile1.getPath());
+        blobStorageManager.uploadFileToBlobStorage(testContainer, blobFile2.getPath());
         List<String> response =
             blobStorageManager.collectBlobFileNamesFromContainer(blobStorageManager.getPcqContainer());
         Assertions.assertEquals(2, response.size(), "Correct number of blob names");
@@ -88,4 +91,10 @@ public class BlobStorageManagerTest {
         Assertions.assertTrue(response.contains(BLOB_FILENAME_2), "Correct filename 2");
     }
 
+    @Test
+    public void testCollectBlobFileNamesWhenNoFilesExist() {
+        List<String> response =
+            blobStorageManager.collectBlobFileNamesFromContainer(blobStorageManager.getPcqContainer());
+        Assertions.assertEquals(0, response.size(), "Correct number of blob names");
+    }
 }
