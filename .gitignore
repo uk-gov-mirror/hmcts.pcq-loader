@@ -3,6 +3,7 @@
 /target/
 !gradle/wrapper/gradle-wrapper.jar
 *.class
+.DS_Store
 bin/main/application.yaml
 functional-output/
 

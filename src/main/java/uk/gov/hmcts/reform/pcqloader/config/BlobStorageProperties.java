@@ -10,6 +10,8 @@ public class BlobStorageProperties {
     private String blobPcqContainer;
 
     /*
+    private String blobPcqRejectedContainer;
+
     private Integer blobCopyTimeoutInMillis;
 
     private Integer blobLeaseTimeout;
@@ -28,6 +30,14 @@ public class BlobStorageProperties {
     }
 
     /*
+    public String getBlobPcqRejectedContainer() {
+        return blobPcqRejectedContainer;
+    }
+
+    public void setBlobPcqRejectedContainer(String blobPcqRejectedContainer) {
+        this.blobPcqRejectedContainer = blobPcqRejectedContainer;
+    }
+
     public Integer getBlobCopyTimeoutInMillis() {
         return blobCopyTimeoutInMillis;
     }
