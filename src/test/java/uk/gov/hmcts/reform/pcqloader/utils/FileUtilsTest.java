@@ -44,7 +44,7 @@ public class FileUtilsTest {
         File mockedFile = Mockito.mock(File.class);
 
         try {
-            when(mockedFile.exists()).thenThrow(new BlobProcessingException("Failed to create temp blob file."));
+            when(mockedFile.exists()).thenReturn(false);
             when(mockedFile.getPath()).thenReturn("/var/tmp/pcq-bloba");
             fileUtils.confirmEmptyFileCanBeCreated(mockedFile);
             fail("Should be throwing BlobProcessingException.");

@@ -12,15 +12,11 @@ public class FileUtils {
     public Boolean confirmEmptyFileCanBeCreated(File blobFilePath) throws IOException {
         String blobFolderPath = blobFilePath.getPath();
         File blobFolder = new File(blobFolderPath);
-        if (blobFolder.exists() || blobFolder.mkdirs()) {
-            if (blobFilePath.exists() || blobFilePath.createNewFile()) {
-                blobFilePath.delete();
-                return Boolean.TRUE;
-            } else {
-                throw new BlobProcessingException("Failed to create temp blob file.");
-            }
+        if ((blobFolder.exists() || blobFolder.mkdirs())
+            && (blobFilePath.exists() || blobFilePath.createNewFile())) {
+            return true;
         } else {
-            throw new BlobProcessingException("Failed to create temp blob dir.");
+            throw new BlobProcessingException("Failed to create temp blob file.");
         }
     }
 }
