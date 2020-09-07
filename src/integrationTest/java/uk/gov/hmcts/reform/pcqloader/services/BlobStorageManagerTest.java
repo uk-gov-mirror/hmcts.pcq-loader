@@ -105,7 +105,7 @@ public class BlobStorageManagerTest {
     @Test
     public void testDownloadFileFromBlobStorageNotFoundError() {
         try {
-            File fileResponse = blobStorageManager
+            blobStorageManager
                 .downloadFileFromBlobStorage(blobStorageManager.getPcqContainer(), BLOB_FILENAME_DOES_NOT_EXIST);
             Assertions.fail("Should generate BlobProcessingException for missing file");
         } catch (BlobProcessingException bpe) {
