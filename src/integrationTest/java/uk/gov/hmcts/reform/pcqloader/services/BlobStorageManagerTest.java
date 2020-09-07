@@ -14,6 +14,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.ResourceUtils;
 import org.testcontainers.containers.DockerComposeContainer;
 import uk.gov.hmcts.reform.pcqloader.config.BlobStorageProperties;
+import uk.gov.hmcts.reform.pcqloader.exceptions.BlobProcessingException;
 
 import java.io.File;
 import java.util.List;
@@ -25,6 +26,7 @@ public class BlobStorageManagerTest {
     protected static final String CONTAINER_NAME = "pcq";
     private static final String BLOB_FILENAME_1 = "1579002492_31-08-2020-11-35-10.zip";
     private static final String BLOB_FILENAME_2 = "1579002493_31-08-2020-11-48-42.zip";
+    private static final String BLOB_FILENAME_DOES_NOT_EXIST = "NOT_FOOUND.zip";
 
     private static DockerComposeContainer dockerComposeContainer;
 
@@ -98,5 +100,16 @@ public class BlobStorageManagerTest {
             blobStorageManager.downloadFileFromBlobStorage(blobStorageManager.getPcqContainer(), BLOB_FILENAME_1);
         Assertions.assertNotNull(fileResponse,"File returned is not null");
         Assertions.assertTrue(fileResponse.getPath().contains(BLOB_FILENAME_1), "File has correct path");
+    }
+
+    @Test
+    public void testDownloadFileFromBlobStorageNotFoundError() {
+        try {
+            File fileResponse = blobStorageManager
+                .downloadFileFromBlobStorage(blobStorageManager.getPcqContainer(), BLOB_FILENAME_DOES_NOT_EXIST);
+            Assertions.fail("Should generate BlobProcessingException for missing file");
+        } catch (BlobProcessingException bpe) {
+            Assertions.assertNotNull(bpe, "Successfully generated exception for missing file.");
+        }
     }
 }
