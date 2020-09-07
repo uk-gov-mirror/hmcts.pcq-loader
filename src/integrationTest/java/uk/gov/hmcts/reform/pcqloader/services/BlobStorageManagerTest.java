@@ -27,6 +27,7 @@ public class BlobStorageManagerTest {
     private static final String BLOB_FILENAME_1 = "1579002492_31-08-2020-11-35-10.zip";
     private static final String BLOB_FILENAME_2 = "1579002493_31-08-2020-11-48-42.zip";
     private static final String BLOB_FILENAME_DOES_NOT_EXIST = "NOT_FOOUND.zip";
+    private static final String BLOB_DOWNLOAD_FILE_PATH = "/var/tmp/pcq-loader/download/blobs";
 
     private static DockerComposeContainer dockerComposeContainer;
 
@@ -49,6 +50,7 @@ public class BlobStorageManagerTest {
         testContainer = blobServiceClient.createBlobContainer(CONTAINER_NAME);
         BlobStorageProperties blobStorageProperties = new BlobStorageProperties();
         blobStorageProperties.setBlobPcqContainer(CONTAINER_NAME);
+        blobStorageProperties.setBlobStorageDownloadPath(BLOB_DOWNLOAD_FILE_PATH);
 
         File blobFile1 = ResourceUtils.getFile("classpath:blobTestFiles/" + BLOB_FILENAME_1);
         File blobFile2 = ResourceUtils.getFile("classpath:blobTestFiles/" + BLOB_FILENAME_2);

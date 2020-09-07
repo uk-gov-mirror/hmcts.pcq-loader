@@ -66,6 +66,7 @@ public class BlobStorageManager {
         File localFile = new File(filePath);
         try {
             if (fileUtils.confirmEmptyFileCanBeCreated(localFile)) {
+                log.info("Writing blob file to location: {}", localFile.getAbsoluteFile());
                 blobContainerClient.getBlobClient(blobName).downloadToFile(filePath, true);
                 if (localFile.exists()) {
                     log.info("Succeessfully downloaded blob file to path: {}", localFile.getPath());

@@ -48,7 +48,7 @@ public class BlobStorageManagerTest {
     private static final String TEST_BLOB_FILENAME1 = "1579002492_31-08-2020-11-35-10.zip";
     private static final String TEST_BLOB_FILENAME2 = "1579002493_31-08-2020-11-48-42.zip";
     private static final String TEST_PCQ_BLOB_PATH = "http://0.0.0.0:10000/" + TEST_PCQ_CONTAINER_NAME;
-    private static final String TEST_PCQ_FILE_PATH = "/var/tmp";
+    private static final String TEST_PCQ_FILE_PATH = "/var/tmp/pcq-blobs";
 
     @BeforeEach
     public void setUp() {
