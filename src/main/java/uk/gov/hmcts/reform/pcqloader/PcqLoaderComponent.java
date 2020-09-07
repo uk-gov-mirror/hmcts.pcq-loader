@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import uk.gov.hmcts.reform.pcqloader.services.BlobStorageManager;
+import uk.gov.hmcts.reform.pcqloader.utils.ZipFileUtils;
 import uk.gov.hmcts.reform.pcqloader.utils.PcqLoaderUtils;
 
+import java.io.File;
 import java.util.List;
 
 @Component
@@ -16,6 +18,9 @@ public class PcqLoaderComponent {
 
     @Autowired
     private BlobStorageManager blobStorageManager;
+
+    @Autowired
+    private ZipFileUtils fileUtil;
 
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     public void execute() {
@@ -31,7 +36,8 @@ public class PcqLoaderComponent {
 
             try {
                 // Step 4. Download the zip file to local storage.
-                blobStorageManager.downloadFileFromBlobStorage(blobContainerClient, tmpZipFileName);
+                File blobZipDirectory =
+                    blobStorageManager.downloadFileFromBlobStorage(blobContainerClient, tmpZipFileName);
 
                 // Step 5. Retrieve the DCN Number from the Zip File Name. Pass the actual zip file name in the
                 // method call below
@@ -39,6 +45,7 @@ public class PcqLoaderComponent {
                 log.info("DCN Number extracted is " + dcnNumber);
 
                 // Step 6. Unzip the zip file
+                fileUtil.unzipBlobDownloadZipFile(blobZipDirectory);
 
                 // Step 7. Read the file and generate the mapping to the PcqAnswers object.
             } catch (Exception ioe) {

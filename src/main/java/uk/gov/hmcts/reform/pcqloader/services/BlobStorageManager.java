@@ -10,7 +10,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.pcqloader.config.BlobStorageProperties;
 import uk.gov.hmcts.reform.pcqloader.exceptions.BlobProcessingException;
-import uk.gov.hmcts.reform.pcqloader.utils.FileUtils;
+import uk.gov.hmcts.reform.pcqloader.utils.ZipFileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,13 +59,13 @@ public class BlobStorageManager {
 
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     public File downloadFileFromBlobStorage(BlobContainerClient blobContainerClient, String blobName) {
-        FileUtils fileUtils = new FileUtils();
+        ZipFileUtils zipFileUtils = new ZipFileUtils();
         log.debug("Downloading blob name {} to {} path",
                   blobName, blobStorageProperties.getBlobStorageDownloadPath());
         String filePath = blobStorageProperties.getBlobStorageDownloadPath() + File.separator + blobName;
         File localFile = new File(filePath);
         try {
-            if (fileUtils.confirmEmptyFileCanBeCreated(localFile)) {
+            if (zipFileUtils.confirmEmptyFileCanBeCreated(localFile)) {
                 log.info("Writing blob file to location: {}", localFile.getAbsoluteFile());
                 blobContainerClient.getBlobClient(blobName).downloadToFile(filePath, true);
                 if (localFile.exists()) {

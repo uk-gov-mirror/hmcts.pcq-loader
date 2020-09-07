@@ -17,25 +17,25 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class FileUtilsTest {
+public class ZipFileUtilsTest {
 
     private static final String BLOB_FILE_PATH = "/var/tmp/pcq-blobs/test-pcq.zip";
 
     @Mock
     private File tempFile;
 
-    public FileUtils fileUtils;
+    public ZipFileUtils zipFileUtils;
 
     @BeforeEach
     public void setUp() {
-        fileUtils = new FileUtils();
+        zipFileUtils = new ZipFileUtils();
         tempFile = new File(BLOB_FILE_PATH);
-        MockitoAnnotations.initMocks(fileUtils);
+        MockitoAnnotations.initMocks(zipFileUtils);
     }
 
     @Test
     public void testConfirmEmptyFileCanBeCreated() throws IOException {
-        boolean result = fileUtils.confirmEmptyFileCanBeCreated(tempFile);
+        boolean result = zipFileUtils.confirmEmptyFileCanBeCreated(tempFile);
         Assertions.assertTrue(result, "Should be ok to create file");
     }
 
@@ -46,7 +46,7 @@ public class FileUtilsTest {
         try {
             when(mockedFile.exists()).thenReturn(false);
             when(mockedFile.getParentFile()).thenReturn(mockedFile);
-            fileUtils.confirmEmptyFileCanBeCreated(mockedFile);
+            zipFileUtils.confirmEmptyFileCanBeCreated(mockedFile);
             fail("Should be throwing BlobProcessingException.");
         } catch (BlobProcessingException bpe) {
             Assertions.assertNotNull(bpe, "Should raise BlobProcessingException");
