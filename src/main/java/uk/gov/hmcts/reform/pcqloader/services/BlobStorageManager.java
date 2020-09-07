@@ -10,9 +10,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.pcqloader.config.BlobStorageProperties;
 import uk.gov.hmcts.reform.pcqloader.exceptions.BlobProcessingException;
+import uk.gov.hmcts.reform.pcqloader.utils.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -59,15 +59,14 @@ public class BlobStorageManager {
 
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     public File downloadFileFromBlobStorage(BlobContainerClient blobContainerClient, String blobName) {
-        File localFile = null;
+        FileUtils fileUtils = new FileUtils();
         log.debug("Downloading blob name {} to {} path",
                   blobName, blobStorageProperties.getBlobStorageDownloadPath());
         String filePath = blobStorageProperties.getBlobStorageDownloadPath() + File.separator + blobName;
-
+        File localFile = new File(filePath);
         try {
-            if (confirmEmptyFileCanBeCreated(filePath)) {
+            if (fileUtils.confirmEmptyFileCanBeCreated(localFile)) {
                 blobContainerClient.getBlobClient(blobName).downloadToFile(filePath, true);
-                localFile = new File(filePath);
                 if (localFile.exists()) {
                     log.info("Succeessfully downloaded blob file to path: {}", localFile.getPath());
                 }
@@ -98,20 +97,5 @@ public class BlobStorageManager {
 
     public void deleteContainer(String containerName) {
         blobServiceClient.deleteBlobContainer(containerName);
-    }
-
-    private boolean confirmEmptyFileCanBeCreated(String filePath) throws IOException {
-        File dirPath = new File(filePath);
-        if (dirPath.exists() || dirPath.mkdirs()) {
-            File tempFile = new File(filePath);
-            if (tempFile.exists() || tempFile.createNewFile()) {
-                tempFile.delete();
-                return true;
-            } else {
-                throw new BlobProcessingException("Failed to create temp blob file.");
-            }
-        } else {
-            throw new BlobProcessingException("Failed to create temp blob dir.");
-        }
     }
 }
