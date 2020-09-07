@@ -45,7 +45,7 @@ public class FileUtilsTest {
 
         try {
             when(mockedFile.exists()).thenReturn(false);
-            when(mockedFile.getPath()).thenReturn("/var/tmp/pcq-bloba");
+            when(mockedFile.getParentFile()).thenReturn(mockedFile);
             fileUtils.confirmEmptyFileCanBeCreated(mockedFile);
             fail("Should be throwing BlobProcessingException.");
         } catch (BlobProcessingException bpe) {

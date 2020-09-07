@@ -8,8 +8,7 @@ import java.io.IOException;
 public class FileUtils {
 
     public Boolean confirmEmptyFileCanBeCreated(File blobFilePath) throws IOException {
-        String blobFolderPath = blobFilePath.getPath();
-        File blobFolder = new File(blobFolderPath);
+        File blobFolder = blobFilePath.getParentFile();
         if ((blobFolder.exists() || blobFolder.mkdirs())
             && (blobFilePath.exists() || blobFilePath.createNewFile())) {
             return true;
