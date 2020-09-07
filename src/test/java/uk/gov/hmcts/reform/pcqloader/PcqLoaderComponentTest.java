@@ -11,6 +11,8 @@ import uk.gov.hmcts.reform.pcqloader.services.BlobStorageManager;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -38,5 +40,9 @@ public class PcqLoaderComponentTest {
         when(blobStorageManager.collectBlobFileNamesFromContainer(blobContainerClient)).thenReturn(blobFileNames);
 
         pcqLoaderComponent.execute();
+
+        verify(blobStorageManager, times(1)).collectBlobFileNamesFromContainer(blobContainerClient);
+        verify(blobStorageManager, times(1)).downloadFileFromBlobStorage(blobContainerClient, TEST_BLOB_FILENAME1);
+        verify(blobStorageManager, times(1)).downloadFileFromBlobStorage(blobContainerClient, TEST_BLOB_FILENAME2);
     }
 }

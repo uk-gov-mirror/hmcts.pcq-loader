@@ -1,12 +1,19 @@
 package uk.gov.hmcts.reform.pcqloader.utils;
 
-import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
+import com.azure.storage.blob.sas.BlobContainerSasPermission;
+import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
+import com.azure.storage.blob.specialized.BlockBlobClient;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,14 +54,29 @@ public class BlobStorageInitialisation {
         BlobContainerClient blobContainerClient =  blobServiceClient.getBlobContainerClient(DEV_PCQ_CONTAINER_NAME);
         uploadFileToBlobStorage(blobContainerClient, SAMPLE_DOCUMENT_PATH_1);
         uploadFileToBlobStorage(blobContainerClient, SAMPLE_DOCUMENT_PATH_2);
+
+        BlobServiceSasSignatureValues policy = new BlobServiceSasSignatureValues(
+            OffsetDateTime.now(ZoneOffset.UTC).plusSeconds(300_000),
+            BlobContainerSasPermission.parse("cwl"));
+
+        log.info("TEST URL: {}?comp=list&restype=container&{}",
+                 blobContainerClient.getBlobContainerUrl(),
+                 blobContainerClient.generateSas(policy));
     }
 
     private static void uploadFileToBlobStorage(BlobContainerClient blobContainerClient, String filePath) {
         File localFileUpload = new File(filePath);
         log.info("Uploading file {} to {} container",
-                 localFileUpload.getName(), blobContainerClient.getBlobContainerName());
-        BlobClient blobClient = blobContainerClient.getBlobClient(localFileUpload.getName());
-        log.info("Uploading to Blob storage as blob: {}", blobClient.getBlobUrl());
-        blobClient.uploadFromFile(filePath);
+                 localFileUpload.getAbsoluteFile(), blobContainerClient.getBlobContainerName());
+        BlockBlobClient blockBlobClient =
+            blobContainerClient.getBlobClient(localFileUpload.getName()).getBlockBlobClient();
+        log.info("Uploading to Blob storage as blob: {}", blobContainerClient.getBlobContainerUrl());
+        try {
+            byte[] fileBytes = FileUtils.readFileToByteArray(localFileUpload);
+            ByteArrayInputStream dataStream = new ByteArrayInputStream(fileBytes);
+            blockBlobClient.upload(dataStream, fileBytes.length, true);
+        } catch (IOException ioe) {
+            log.error("Unable to upload file to blob storage.", ioe);
+        }
     }
 }

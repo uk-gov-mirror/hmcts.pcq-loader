@@ -44,8 +44,8 @@ public class BlobStorageManagerTest {
         BlobStorageProperties blobStorageProperties = new BlobStorageProperties();
         blobStorageProperties.setBlobPcqContainer(CONTAINER_NAME);
 
-        File blobFile1 = ResourceUtils.getFile("classpath:BlobTestFiles/" + BLOB_FILENAME_1);
-        File blobFile2 = ResourceUtils.getFile("classpath:BlobTestFiles/" + BLOB_FILENAME_2);
+        File blobFile1 = ResourceUtils.getFile("classpath:blobTestFiles/" + BLOB_FILENAME_1);
+        File blobFile2 = ResourceUtils.getFile("classpath:blobTestFiles/" + BLOB_FILENAME_2);
 
         blobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
         blobStorageManager.uploadFileToBlobStorage(testContainer, blobFile1.getPath());
