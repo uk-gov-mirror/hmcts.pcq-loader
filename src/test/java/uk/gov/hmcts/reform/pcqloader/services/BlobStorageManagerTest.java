@@ -116,7 +116,7 @@ public class BlobStorageManagerTest {
     public void testCollectBlobFileNamesSuccess() {
         BlobItem blobItem1 = new BlobItem().setName(TEST_BLOB_FILENAME1);
         BlobItem blobItem2 = new BlobItem().setName(TEST_BLOB_FILENAME2);
-        var blobs = Arrays.asList(blobItem1, blobItem2);
+        List<BlobItem> blobs = Arrays.asList(blobItem1, blobItem2);
 
         when(pcqContainer.listBlobs()).thenReturn(pageIterableBlobs);
         when(pageIterableBlobs.iterator()).thenReturn(blobs.iterator());
@@ -128,6 +128,20 @@ public class BlobStorageManagerTest {
         Assertions.assertEquals(2, response.size(), "Correct number of blob names");
         Assertions.assertTrue(response.contains(TEST_BLOB_FILENAME1), "Correct filename 1");
         Assertions.assertTrue(response.contains(TEST_BLOB_FILENAME2), "Correct filename 2");
+    }
+
+    @Test
+    public void testCollectBlobFileNamesEmptyListSuccess() {
+        List<BlobItem> blobs = new ArrayList<>();
+
+        when(pcqContainer.listBlobs()).thenReturn(pageIterableBlobs);
+        when(pageIterableBlobs.iterator()).thenReturn(blobs.iterator());
+
+        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
+        List<String> response = testBlobStorageManager.collectBlobFileNamesFromContainer(pcqContainer);
+
+        verify(pageIterableBlobs, times(1)).iterator();
+        Assertions.assertEquals(0, response.size(), "Correct number of blob names");
     }
 
     @Test

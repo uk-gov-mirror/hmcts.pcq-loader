@@ -34,6 +34,10 @@ public class BlobStorageManagerTest {
 
     protected BlobStorageManager blobStorageManager;
 
+    protected File blobFile1;
+
+    protected File blobFile2;
+
     @BeforeEach
     public void setUp() throws Exception {
         blobServiceClient = new BlobServiceClientBuilder()
