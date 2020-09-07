@@ -88,4 +88,11 @@ public class BlobStorageManagerTest {
         Assertions.assertTrue(response.contains(BLOB_FILENAME_2), "Correct filename 2");
     }
 
+    @Test
+    public void testDownloadFileFromBlobStorage() {
+        File fileResponse =
+            blobStorageManager.downloadFileFromBlobStorage(blobStorageManager.getPcqContainer(), BLOB_FILENAME_1);
+        Assertions.assertNotNull(fileResponse,"File returned is not null");
+        Assertions.assertTrue(fileResponse.getPath().contains(BLOB_FILENAME_1), "File has correct path");
+    }
 }
