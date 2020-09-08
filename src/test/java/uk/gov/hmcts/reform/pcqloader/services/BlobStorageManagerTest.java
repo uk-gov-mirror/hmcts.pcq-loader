@@ -12,7 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.pcqloader.config.BlobStorageProperties;
+import uk.gov.hmcts.reform.pcqloader.exceptions.BlobProcessingException;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("PMD.TooManyMethods")
 @ExtendWith(MockitoExtension.class)
 public class BlobStorageManagerTest {
 
@@ -45,11 +48,13 @@ public class BlobStorageManagerTest {
     private static final String TEST_BLOB_FILENAME1 = "1579002492_31-08-2020-11-35-10.zip";
     private static final String TEST_BLOB_FILENAME2 = "1579002493_31-08-2020-11-48-42.zip";
     private static final String TEST_PCQ_BLOB_PATH = "http://0.0.0.0:10000/" + TEST_PCQ_CONTAINER_NAME;
+    private static final String TEST_PCQ_FILE_PATH = "/var/tmp/pcq-blobs";
 
     @BeforeEach
     public void setUp() {
         blobStorageProperties = new BlobStorageProperties();
         blobStorageProperties.setBlobPcqContainer(TEST_PCQ_CONTAINER_NAME);
+        blobStorageProperties.setBlobStorageDownloadPath(TEST_PCQ_FILE_PATH);
         testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
     }
 
@@ -153,5 +158,33 @@ public class BlobStorageManagerTest {
 
         verify(pageIterableBlobs, times(1)).iterator();
         Assertions.assertEquals(0, response.size(), "No files added as no name was provided");
+    }
+
+    @Test
+    public void testDownloadFileFromBlobStorageSuccess() {
+        when(pcqContainer.getBlobClient(TEST_BLOB_FILENAME1)).thenReturn(blobClient);
+        when(blobClient.downloadToFile(TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_FILENAME1, true)).thenReturn(null);
+
+        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
+        File fileResponse = testBlobStorageManager.downloadFileFromBlobStorage(pcqContainer, TEST_BLOB_FILENAME1);
+
+        verify(blobClient, times(1)).downloadToFile(TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_FILENAME1, true);
+        Assertions.assertNotNull(fileResponse, "File response is not null");
+    }
+
+    @Test
+    public void testDownloadFileFromBlobStorageError() {
+        when(pcqContainer.getBlobClient(TEST_BLOB_FILENAME1)).thenReturn(blobClient);
+        when(blobClient.downloadToFile(TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_FILENAME1, true))
+            .thenThrow(new RuntimeException("Error"));
+
+        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
+
+        try {
+            testBlobStorageManager.downloadFileFromBlobStorage(pcqContainer, TEST_BLOB_FILENAME1);
+            Assertions.fail("BlobProcessingException should be thrown");
+        } catch (BlobProcessingException bpe) {
+            verify(blobClient, times(1)).downloadToFile(TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_FILENAME1, true);
+        }
     }
 }
