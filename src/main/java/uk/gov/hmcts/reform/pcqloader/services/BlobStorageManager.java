@@ -64,12 +64,13 @@ public class BlobStorageManager {
                   blobName, blobStorageProperties.getBlobStorageDownloadPath());
         String filePath = blobStorageProperties.getBlobStorageDownloadPath() + File.separator + blobName;
         File localFile = new File(filePath);
+
         try {
-            if (zipFileUtils.confirmEmptyFileCanBeCreated(localFile)) {
-                log.info("Writing blob file to location: {}", localFile.getAbsoluteFile());
+            if (zipFileUtils.confirmFileCanBeCreated(localFile)) {
                 blobContainerClient.getBlobClient(blobName).downloadToFile(filePath, true);
                 if (localFile.exists()) {
                     log.info("Succeessfully downloaded blob file to path: {}", localFile.getPath());
+                    return localFile;
                 }
             }
         } catch (Exception exp) {
@@ -77,7 +78,8 @@ public class BlobStorageManager {
             throw new BlobProcessingException("Unable to download blob file.", exp);
         }
 
-        return localFile;
+        log.error("Error downloading {} from Blob Storage", blobName);
+        throw new BlobProcessingException("Unknown error downloading blob file.");
     }
 
     public void uploadFileToBlobStorage(BlobContainerClient blobContainerClient, String filePath) {

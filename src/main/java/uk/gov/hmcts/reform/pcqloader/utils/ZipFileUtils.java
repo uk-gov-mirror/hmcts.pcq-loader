@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.pcqloader.exceptions.BlobProcessingException;
 import uk.gov.hmcts.reform.pcqloader.exceptions.ZipProcessingException;
 
 import java.io.File;
@@ -21,21 +20,31 @@ public class ZipFileUtils {
 
     private static final String ZIP_FOLDER_POSTFIX = ".zip";
 
-    public Boolean confirmEmptyFileCanBeCreated(File blobFilePath) throws IOException {
-        File blobFolder = blobFilePath.getParentFile();
-        if ((blobFolder.exists() || blobFolder.mkdirs())
-            && (blobFilePath.exists() || blobFilePath.createNewFile())) {
-            return true;
-        } else {
-            throw new BlobProcessingException("Failed to create temp blob file.");
+    public Boolean confirmFileCanBeCreated(File blobFile) {
+        File blobFolder = blobFile.getParentFile();
+        if ((blobFolder.exists() || blobFolder.mkdirs()) && blobFolder.isDirectory()) {
+            try {
+                if (!blobFile.exists()) {
+                    blobFile.createNewFile();
+                    blobFile.delete();
+                }
+                return true;
+
+            } catch (IOException e) {
+                log.error(
+                    "Unable to confirm if {} can be created.",
+                    blobFile.getName()
+                );
+            }
         }
+        return false;
     }
 
     public File unzipBlobDownloadZipFile(File blobDownload) {
         if (blobDownload.exists()
             && blobDownload.isFile()
             && blobDownload.getPath().toLowerCase(Locale.ENGLISH).endsWith(ZIP_FOLDER_POSTFIX)) {
-            try (ZipFile zipFile = new ZipFile(blobDownload)) {
+            try (ZipFile zipFile = new ZipFile(blobDownload.getAbsoluteFile())) {
                 File outputDir = new File(FilenameUtils.removeExtension(blobDownload.getPath()));
                 initialiseDirectory(outputDir);
                 Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
@@ -47,10 +56,10 @@ public class ZipFileUtils {
                             var fileToCreate = outputDir.toPath().resolve(simpleName);
                             Files.copy(zipFile.getInputStream(entry), fileToCreate);
                         }
-                    } catch (IOException ioeinner) {
-                        log.error("An error occured while unzipping file from blob storage",ioeinner);
+                    } catch (IOException ioe) {
+                        log.error("An error occured while unzipping file from blob storage",ioe);
                         throw new ZipProcessingException("Unable to unpack zip file "
-                                                             + blobDownload.getName(), ioeinner);
+                                                             + blobDownload.getName(), ioe);
                     }
                 });
                 return outputDir;
@@ -67,13 +76,6 @@ public class ZipFileUtils {
     private void initialiseDirectory(File directory) throws IOException {
         if (directory.exists() || directory.mkdirs()) {
             FileUtils.cleanDirectory(directory);
-        }
-    }
-
-    @SuppressWarnings("PMD.UnusedPrivateMethod")
-    private void deleteDirectory(File directory) throws IOException {
-        if (directory.exists()) {
-            FileUtils.deleteDirectory(directory);
         }
     }
 }
