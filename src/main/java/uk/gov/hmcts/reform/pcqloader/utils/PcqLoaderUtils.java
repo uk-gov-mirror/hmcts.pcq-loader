@@ -2,6 +2,8 @@ package uk.gov.hmcts.reform.pcqloader.utils;
 
 import com.gilecode.reflection.ReflectionAccessUtils;
 import com.gilecode.reflection.ReflectionAccessor;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 
@@ -11,8 +13,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -91,5 +92,19 @@ public final class PcqLoaderUtils {
 
     public static String nullIfEmpty(String strObject) {
         return StringUtils.defaultIfEmpty(strObject, null);
+    }
+
+    public static String generateAuthorizationToken(String secretKey, String subject) {
+        List<String> authorities = new ArrayList<>();
+        long currentTime = System.currentTimeMillis();
+        authorities.add("Pcq_Loader");
+
+        return Jwts.builder()
+            .setSubject(subject)
+            .claim("authorities", authorities)
+            .setIssuedAt(new Date(currentTime))
+            .setExpiration(new Date(currentTime + 500_000))  // in milliseconds
+            .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+            .compact();
     }
 }

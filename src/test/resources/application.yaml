@@ -30,4 +30,7 @@ azure:
 
 pcqBackendUrl: ${PCQ_BACKEND_URL:http://localhost:4550}
 coRelationId: PCQ Loader Service
+security:
+  jwt:
+    secret: jwtSecretKey
 
