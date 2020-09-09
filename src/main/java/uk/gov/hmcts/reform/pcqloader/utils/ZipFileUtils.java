@@ -25,8 +25,7 @@ public class ZipFileUtils {
         if ((blobFolder.exists() || blobFolder.mkdirs()) && blobFolder.isDirectory()) {
             try {
                 if (!blobFile.exists()) {
-                    blobFile.createNewFile();
-                    blobFile.delete();
+                    return blobFile.createNewFile() && blobFile.delete();
                 }
                 return true;
 
