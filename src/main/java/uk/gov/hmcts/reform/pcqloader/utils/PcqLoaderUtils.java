@@ -6,9 +6,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.core.io.ClassPathResource;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -106,5 +110,10 @@ public final class PcqLoaderUtils {
             .setExpiration(new Date(currentTime + 500_000))  // in milliseconds
             .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
             .compact();
+    }
+
+    public static String jsonStringFromFile(String fileName) throws IOException {
+        File resource = new ClassPathResource(fileName).getFile();
+        return new String(Files.readAllBytes(resource.toPath()));
     }
 }

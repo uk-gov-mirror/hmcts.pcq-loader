@@ -99,4 +99,21 @@ public class BlobStorageManager {
     public void deleteContainer(String containerName) {
         blobServiceClient.deleteBlobContainer(containerName);
     }
+
+    public void moveFileToRejectedContainer(String fileName, BlobContainerClient sourceContainer) {
+        BlobContainerClient rejectedContainer = createContainer(blobStorageProperties.getBlobPcqRejectedContainer());
+        BlobClient sourceClient = sourceContainer.getBlobClient(fileName);
+        BlobClient destinationClient = rejectedContainer.getBlobClient(fileName);
+
+        destinationClient.copyFromUrl(sourceClient.getBlobUrl());
+        sourceClient.delete();
+    }
+
+    public void moveFileToProcessedFolder(String fileName, BlobContainerClient sourceContainer) {
+        BlobClient sourceClient = sourceContainer.getBlobClient(fileName);
+        BlobClient destinationClient = sourceContainer.getBlobClient(blobStorageProperties.getProcessedFolderName()
+                                                                           + "/" + fileName);
+        destinationClient.copyFromUrl(sourceClient.getBlobUrl());
+        sourceClient.delete();
+    }
 }

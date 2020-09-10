@@ -11,9 +11,9 @@ public class BlobStorageProperties {
 
     private String blobPcqContainer;
 
-    /*
     private String blobPcqRejectedContainer;
 
+    /*
     private Integer blobCopyTimeoutInMillis;
 
     private Integer blobLeaseTimeout;
@@ -22,6 +22,8 @@ public class BlobStorageProperties {
 
     private Integer blobLeaseAcquireDelayInSeconds;
     */
+
+    private String processedFolderName;
 
     public String getBlobPcqContainer() {
         return blobPcqContainer;
@@ -39,7 +41,6 @@ public class BlobStorageProperties {
         this.blobStorageDownloadPath = blobStorageDownloadPath;
     }
 
-    /*
     public String getBlobPcqRejectedContainer() {
         return blobPcqRejectedContainer;
     }
@@ -47,6 +48,8 @@ public class BlobStorageProperties {
     public void setBlobPcqRejectedContainer(String blobPcqRejectedContainer) {
         this.blobPcqRejectedContainer = blobPcqRejectedContainer;
     }
+
+    /*
 
     public Integer getBlobCopyTimeoutInMillis() {
         return blobCopyTimeoutInMillis;
@@ -80,4 +83,12 @@ public class BlobStorageProperties {
         this.blobLeaseAcquireDelayInSeconds = blobLeaseAcquireDelayInSeconds;
     }
     */
+
+    public String getProcessedFolderName() {
+        return processedFolderName;
+    }
+
+    public void setProcessedFolderName(String processedFolderName) {
+        this.processedFolderName = processedFolderName;
+    }
 }

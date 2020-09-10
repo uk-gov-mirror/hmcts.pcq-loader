@@ -40,6 +40,7 @@ storage:
   blob_pcq_container: ${STORAGE_BLOB_PCQ_CONTAINER:pcq}
   blob_pcq_rejected-container: ${STORAGE_BLOB_PCQ_REJECTED-CONTAINER:pcq-rejected}
   blob_lease_acquire_delay_in_seconds: ${LEASE_ACQUIRE_DELAY_IN_SECONDS:30}
+  processed_folder_name: processed
 
 feign:
   allow:

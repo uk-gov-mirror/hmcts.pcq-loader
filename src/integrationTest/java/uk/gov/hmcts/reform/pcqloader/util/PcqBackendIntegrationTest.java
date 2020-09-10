@@ -6,7 +6,8 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Rule;
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
@@ -21,7 +22,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.junit.Assert.assertNotNull;
 
 @TestPropertySource(properties = {"PCQ_BACKEND_URL:http://127.0.0.1:4554"})
-@TestPropertySource(locations = "/application.properties")
 @Slf4j
 public class PcqBackendIntegrationTest extends SpringBootIntegrationTest {
 
@@ -30,7 +30,7 @@ public class PcqBackendIntegrationTest extends SpringBootIntegrationTest {
     private static final String CONNECTION_HEADER_VAL = "close";
     private static final String TEST_PCQ_ID = "UNIT_TEST_PCQ_1";
     private static final String TEST_DCN_NUMBER = "UNIT_TEST_DCN_1";
-    private static final String HEADER_VALUE = "Test_Loader";
+    private static final String HEADER_VALUE = "PCQ Loader Service";
     private static final String BEARER_TOKEN = "Bearer test";
     private static final String HEADER_CO_RELATION_KEY = "X-Correlation-Id";
     private static final String HEADER_AUTH_KEY = "Authorization";
@@ -39,9 +39,29 @@ public class PcqBackendIntegrationTest extends SpringBootIntegrationTest {
     @Rule
     public WireMockRule pcqBackendService = new WireMockRule(WireMockConfiguration.options().port(4554));
 
+
+
     @Test
     public void testSubmitAnswersSuccess() {
         pcqSubmitAnswersWireMockSuccess();
+
+        ResponseEntity responseEntity = pcqBackendServiceImpl.submitAnswers(generateTestRequest());
+        assertNotNull(RESPONSE_ENTITY_NULL_MSG, responseEntity);
+
+    }
+
+    @Test
+    public void testSubmitAnswersInvalidRequest() {
+        pcqSubmitAnswersWireMockInvalid();
+
+        ResponseEntity responseEntity = pcqBackendServiceImpl.submitAnswers(generateTestRequest());
+        assertNotNull(RESPONSE_ENTITY_NULL_MSG, responseEntity);
+
+    }
+
+    @Test
+    public void testSubmitAnswersUnknownError() {
+        pcqSubmitAnswersWireMockUnknownError();
 
         ResponseEntity responseEntity = pcqBackendServiceImpl.submitAnswers(generateTestRequest());
         assertNotNull(RESPONSE_ENTITY_NULL_MSG, responseEntity);
@@ -65,12 +85,33 @@ public class PcqBackendIntegrationTest extends SpringBootIntegrationTest {
         pcqBackendService.stubFor(post(urlPathMatching("/pcq/backend/submitAnswers"))
                                       .withRequestBody(equalToJson(jsonFromObject(generateTestRequest())))
                                       .withHeader(HEADER_CO_RELATION_KEY, containing(HEADER_VALUE))
-                                      .withHeader(HEADER_AUTH_KEY, containing(BEARER_TOKEN))
                                       .willReturn(aResponse()
                                                       .withHeader(CONTENT_TYPE, MEDIA_TYPE)
                                                       .withHeader(HttpHeaders.CONNECTION, CONNECTION_HEADER_VAL)
                                                       .withStatus(200)
                                                       .withBody(getResponseBody("200", "Successfully Created"))));
+    }
+
+    private void pcqSubmitAnswersWireMockInvalid() {
+        pcqBackendService.stubFor(post(urlPathMatching("/pcq/backend/submitAnswers"))
+                                      .withRequestBody(equalToJson(jsonFromObject(generateTestRequest())))
+                                      .withHeader(HEADER_CO_RELATION_KEY, containing(HEADER_VALUE))
+                                      .willReturn(aResponse()
+                                                      .withHeader(CONTENT_TYPE, MEDIA_TYPE)
+                                                      .withHeader(HttpHeaders.CONNECTION, CONNECTION_HEADER_VAL)
+                                                      .withStatus(400)
+                                                      .withBody(getResponseBody("400", "Invalid Request"))));
+    }
+
+    private void pcqSubmitAnswersWireMockUnknownError() {
+        pcqBackendService.stubFor(post(urlPathMatching("/pcq/backend/submitAnswers"))
+                                      .withRequestBody(equalToJson(jsonFromObject(generateTestRequest())))
+                                      .withHeader(HEADER_CO_RELATION_KEY, containing(HEADER_VALUE))
+                                      .willReturn(aResponse()
+                                                      .withHeader(CONTENT_TYPE, MEDIA_TYPE)
+                                                      .withHeader(HttpHeaders.CONNECTION, CONNECTION_HEADER_VAL)
+                                                      .withStatus(500)
+                                                      .withBody(getResponseBody("500", "Unknown error occurred"))));
     }
 
     private String jsonFromObject(PcqAnswerRequest pcqAnswerRequest) {

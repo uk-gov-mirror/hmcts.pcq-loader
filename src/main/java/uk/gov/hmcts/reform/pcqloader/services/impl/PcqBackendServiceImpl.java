@@ -47,7 +47,8 @@ public class PcqBackendServiceImpl implements PcqBackendService {
                                                                                 answerRequest.getPartyId());
 
         //Invoke the API
-        try (Response response = pcqBackendFeignClient.submitAnswers(jwtToken, coRelationHeader, answerRequest)) {
+        try (Response response = pcqBackendFeignClient.submitAnswers(coRelationHeader + answerRequest.getDcnNumber(),
+                                                                     jwtToken, answerRequest)) {
             responseEntity = JsonFeignResponseUtil.toResponseEntity(response, HashMap.class);
         } catch (FeignException ex) {
             throw new ExternalApiException(HttpStatus.valueOf(ex.status()), ex.getMessage());
