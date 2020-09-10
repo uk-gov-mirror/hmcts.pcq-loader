@@ -1,8 +1,5 @@
 provider "azurerm" {
-  version = "=1.44.0"
-}
-
-provider "azurerm" {
+  features {}
   alias           = "mgmt"
-  subscription_id = "${var.mgmt_subscription_id}"
+  subscription_id = var.mgmt_subscription_id
 }

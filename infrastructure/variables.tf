@@ -1,5 +1,4 @@
 variable "product" {
-  type = "string"
   default = "pcq"
 }
 
@@ -7,9 +6,7 @@ variable "location" {
   default = "UK South"
 }
 
-variable "env" {
-  type = "string"
-}
+variable "env" {}
 
 variable "subscription" {}
 
@@ -17,7 +14,7 @@ variable "mgmt_subscription_id" {}
 
 // TAG SPECIFIC VARIABLES
 variable "common_tags" {
-  type = "map"
+  type = map(string)
 }
 
 variable "team_contact" {
