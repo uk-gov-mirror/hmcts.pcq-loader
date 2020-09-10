@@ -10,11 +10,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.pcqloader.config.BlobStorageProperties;
 import uk.gov.hmcts.reform.pcqloader.exceptions.BlobProcessingException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +43,7 @@ public class BlobStorageManagerTest {
 
     private BlobStorageProperties blobStorageProperties;
 
-    public BlobStorageManager testBlobStorageManager;
+    private BlobStorageManager testBlobStorageManager;
 
     private static final String TEST_PCQ_CONTAINER_NAME = "PCQ_1";
     private static final String TEST_CUSTOM_CONTAINER_NAME = "PCQ_2";
@@ -51,11 +53,12 @@ public class BlobStorageManagerTest {
     private static final String TEST_PCQ_FILE_PATH = "/var/tmp/pcq-blobs";
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IOException {
         blobStorageProperties = new BlobStorageProperties();
         blobStorageProperties.setBlobPcqContainer(TEST_PCQ_CONTAINER_NAME);
         blobStorageProperties.setBlobStorageDownloadPath(TEST_PCQ_FILE_PATH);
         testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
+        MockitoAnnotations.openMocks(testBlobStorageManager);
     }
 
     @Test
@@ -161,22 +164,29 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void testDownloadFileFromBlobStorageSuccess() {
+    public void testDownloadFileFromBlobStorageSuccess() throws IOException {
+
         when(pcqContainer.getBlobClient(TEST_BLOB_FILENAME1)).thenReturn(blobClient);
-        when(blobClient.downloadToFile(TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_FILENAME1, true)).thenReturn(null);
+        when(blobClient.downloadToFile(TEST_PCQ_FILE_PATH + File.separator + TEST_BLOB_FILENAME1,
+                                       true)).thenReturn(null);
+        File downloadFile = new File(TEST_PCQ_FILE_PATH + File.separator + TEST_BLOB_FILENAME1);
+        downloadFile.createNewFile();
 
         testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
         File fileResponse = testBlobStorageManager.downloadFileFromBlobStorage(pcqContainer, TEST_BLOB_FILENAME1);
 
-        verify(blobClient, times(1)).downloadToFile(TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_FILENAME1, true);
+        verify(blobClient, times(1)).downloadToFile(
+            TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_FILENAME1, true);
         Assertions.assertNotNull(fileResponse, "File response is not null");
     }
 
     @Test
-    public void testDownloadFileFromBlobStorageError() {
+    public void testDownloadFileFromBlobStorageError() throws IOException {
         when(pcqContainer.getBlobClient(TEST_BLOB_FILENAME1)).thenReturn(blobClient);
-        when(blobClient.downloadToFile(TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_FILENAME1, true))
-            .thenThrow(new RuntimeException("Error"));
+        when(blobClient.downloadToFile(TEST_PCQ_FILE_PATH + File.separator + TEST_BLOB_FILENAME1,
+                                       true)).thenReturn(null);
+        File downloadFile = new File(TEST_PCQ_FILE_PATH + File.separator + TEST_BLOB_FILENAME1);
+        downloadFile.delete();
 
         testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
 
@@ -184,7 +194,8 @@ public class BlobStorageManagerTest {
             testBlobStorageManager.downloadFileFromBlobStorage(pcqContainer, TEST_BLOB_FILENAME1);
             Assertions.fail("BlobProcessingException should be thrown");
         } catch (BlobProcessingException bpe) {
-            verify(blobClient, times(1)).downloadToFile(TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_FILENAME1, true);
+            verify(blobClient, times(1)).downloadToFile(
+                TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_FILENAME1, true);
         }
     }
 }
