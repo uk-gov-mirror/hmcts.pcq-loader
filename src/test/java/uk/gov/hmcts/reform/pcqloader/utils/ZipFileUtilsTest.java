@@ -92,6 +92,23 @@ public class ZipFileUtilsTest {
     }
 
     @Test
+    public void testConfirmFileCanNotBeDeleted() throws IOException {
+        when(mockedFile.getParentFile()).thenReturn(mockedFolder);
+        when(mockedFolder.exists()).thenReturn(false);
+        when(mockedFolder.mkdirs()).thenReturn(true);
+        when(mockedFolder.isDirectory()).thenReturn(true);
+        when(mockedFile.exists()).thenReturn(false);
+        when(mockedFile.createNewFile()).thenReturn(true);
+        when(mockedFile.delete()).thenReturn(false);
+
+        boolean result = zipFileUtils.confirmFileCanBeCreated(mockedFile);
+
+        assertFalse(result, "Should not be able to create file");
+        verify(mockedFile, times(1)).createNewFile();
+        verify(mockedFile, times(1)).delete();
+    }
+
+    @Test
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     public void testUnzipBlobDownloadZipFileSuccess() {
         File result = zipFileUtils.unzipBlobDownloadZipFile(actualZip);
@@ -107,6 +124,17 @@ public class ZipFileUtilsTest {
     public void testUnzipBlobDownloadZipFileError() {
         try {
             zipFileUtils.unzipBlobDownloadZipFile(badZip);
+            fail("ZipProcessingException exception should be thrown.");
+        } catch (ZipProcessingException zpe) {
+            assertNotNull(zpe, "ZipProcessingException exception is thrown.");
+        }
+    }
+
+    @Test
+    public void testUnzipBlobDownloadFileMissingError() {
+        when(mockedFile.exists()).thenReturn(false);
+        try {
+            zipFileUtils.unzipBlobDownloadZipFile(mockedFile);
             fail("ZipProcessingException exception should be thrown.");
         } catch (ZipProcessingException zpe) {
             assertNotNull(zpe, "ZipProcessingException exception is thrown.");
