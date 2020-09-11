@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
@@ -37,6 +38,9 @@ public class PcqLoaderFunctionalTest extends PcqLoaderTestBase {
     private static final String BLOB_FILENAME_1 = "1579002492_31-08-2020-11-35-10.zip";
     private static final String BLOB_FILENAME_2 = "1579002493_31-08-2020-11-48-42.zip";
     private static final String FAIL_ASSERT_MSG = "Method call failed.";
+
+    @Value("${pcqBackendUrl}")
+    private String pcqBackendUrl;
 
     @Autowired
     private PcqLoaderComponent pcqLoaderComponent;
@@ -91,6 +95,10 @@ public class PcqLoaderFunctionalTest extends PcqLoaderTestBase {
             ResponseEntity responseEntity = pcqBackendService.submitAnswers(mappedAnswers);
             Assertions.assertEquals(201, responseEntity.getStatusCode().value(),
                                     "Invalid Response");
+
+            PcqAnswerRequest answerRecord = getTestAnswerRecord(mappedAnswers.getPcqId(), pcqBackendUrl);
+            Assertions.assertNotNull(answerRecord, "Answer Record is null");
+            checkAssertionsOnResponse(answerRecord, mappedAnswers);
         }
     }
 
@@ -113,6 +121,10 @@ public class PcqLoaderFunctionalTest extends PcqLoaderTestBase {
             ResponseEntity responseEntity = pcqBackendService.submitAnswers(mappedAnswers);
             Assertions.assertEquals(201, responseEntity.getStatusCode().value(),
                                     "Invalid Response");
+
+            PcqAnswerRequest answerRecord = getTestAnswerRecord(mappedAnswers.getPcqId(), pcqBackendUrl);
+            Assertions.assertNotNull(answerRecord, "Answer Record is null");
+            checkAssertionsOnResponse(answerRecord, mappedAnswers);
         }
     }
 
@@ -122,4 +134,6 @@ public class PcqLoaderFunctionalTest extends PcqLoaderTestBase {
         //Invoke the executor
         pcqLoaderComponent.execute();
     }
+
+
 }
