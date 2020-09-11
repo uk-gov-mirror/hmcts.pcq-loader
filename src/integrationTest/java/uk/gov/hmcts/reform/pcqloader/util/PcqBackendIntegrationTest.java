@@ -31,9 +31,7 @@ public class PcqBackendIntegrationTest extends SpringBootIntegrationTest {
     private static final String TEST_PCQ_ID = "UNIT_TEST_PCQ_1";
     private static final String TEST_DCN_NUMBER = "UNIT_TEST_DCN_1";
     private static final String HEADER_VALUE = "PCQ Loader Service";
-    private static final String BEARER_TOKEN = "Bearer test";
     private static final String HEADER_CO_RELATION_KEY = "X-Correlation-Id";
-    private static final String HEADER_AUTH_KEY = "Authorization";
     private static final String RESPONSE_ENTITY_NULL_MSG = "Response is Null";
 
     @Rule
@@ -114,6 +112,7 @@ public class PcqBackendIntegrationTest extends SpringBootIntegrationTest {
                                                       .withBody(getResponseBody("500", "Unknown error occurred"))));
     }
 
+    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private String jsonFromObject(PcqAnswerRequest pcqAnswerRequest) {
         String json = "{}";
         ObjectMapper objectMapper = new ObjectMapper();

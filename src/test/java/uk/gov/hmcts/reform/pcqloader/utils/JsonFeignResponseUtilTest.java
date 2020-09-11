@@ -9,12 +9,17 @@ import org.springframework.util.MultiValueMap;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,7 +46,7 @@ public class JsonFeignResponseUtilTest {
         Optional<Object> responseOptional = Optional.empty();
         try {
             responseOptional = JsonFeignResponseUtil.decode(response,
-                    HashMap.class);
+                    Map.class);
         } catch (IOException e) {
             log.error("IOException occurred {} ", e.getMessage());
             fail("Not expected to get IO Exception here");
@@ -75,7 +80,7 @@ public class JsonFeignResponseUtilTest {
         Optional<Object> createUserProfileResponseOptional = Optional.empty();
         try {
             createUserProfileResponseOptional = JsonFeignResponseUtil.decode(response,
-                    HashMap.class);
+                    Map.class);
         } catch (IOException e) {
             log.error("Error during execution {}", e.getMessage());
         } finally {

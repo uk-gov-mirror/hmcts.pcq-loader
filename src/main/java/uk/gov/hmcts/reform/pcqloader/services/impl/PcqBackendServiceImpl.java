@@ -21,6 +21,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 public class PcqBackendServiceImpl implements PcqBackendService {
 
     private final PcqBackendFeignClient pcqBackendFeignClient;
@@ -38,7 +39,7 @@ public class PcqBackendServiceImpl implements PcqBackendService {
 
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "PMD.PreserveStackTrace"})
     public ResponseEntity<Map<String, String>> submitAnswers(PcqAnswerRequest answerRequest) {
         ResponseEntity<Map<String, String>> responseEntity;
 

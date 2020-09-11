@@ -21,14 +21,18 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 public class PcqBackendServiceImplTest {
 
     private static final String HEADER_VALUE = "Test_Loader";
     private static final String RESPONSE_INCORRECT = "Not the correct response";
-    private static final int STATUS_OK = 200;
     private static final String TEST_PCQ_ID = "UNIT_TEST_PCQ_1";
     private static final String TEST_DCN_NUMBER = "UNIT_TEST_DCN_1";
     private static final String EXPECTED_MSG_1 = "PcqIds don't match";
@@ -48,7 +52,7 @@ public class PcqBackendServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(pcqBackendService, "jwtSecretKey", "TestKey");
         ReflectionTestUtils.setField(pcqBackendService, "coRelationHeader", HEADER_VALUE);
     }
