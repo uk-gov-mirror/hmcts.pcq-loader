@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-import uk.gov.hmcts.reform.pcqloader.exception.ExternalApiException;
+import uk.gov.hmcts.reform.pcqloader.exceptions.ExternalApiException;
 import uk.gov.hmcts.reform.pcqloader.helper.PayloadMappingHelper;
 import uk.gov.hmcts.reform.pcqloader.model.PcqAnswerRequest;
 import uk.gov.hmcts.reform.pcqloader.services.BlobStorageManager;
@@ -65,6 +65,7 @@ public class PcqLoaderComponent {
                 // Step 5. Retrieve the DCN Number from the Zip File Name. Pass the actual zip file name in the
                 // method call below
                 final String fileDcnNumber = PcqLoaderUtils.extractDcnNumberFromFile(tmpZipFileName);
+                log.info("Starting to process file {}", fileDcnNumber);
 
                 // Step 6. Unzip the zip file
                 unzippedFiles = fileUtil.unzipBlobDownloadZipFile(blobZipDirectory);
@@ -72,8 +73,8 @@ public class PcqLoaderComponent {
                 // Step 7. Read the file and generate the mapping to the PcqAnswers object.
                 File metaDataFile = fileUtil.getMetaDataFile(Objects.requireNonNull(unzippedFiles.listFiles()));
                 String jsonMetaData = jsonStringFromFile(Objects.requireNonNull(metaDataFile));
-                PcqAnswerRequest mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(fileDcnNumber,
-                                                                                             jsonMetaData);
+                PcqAnswerRequest mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(
+                    jsonMetaData);
 
                 if (mappedAnswers == null) {
                     log.error("Mapping failed, moving the zip file to Rejected container");

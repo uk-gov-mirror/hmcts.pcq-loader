@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.pcqloader.exception;
+package uk.gov.hmcts.reform.pcqloader.exceptions;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

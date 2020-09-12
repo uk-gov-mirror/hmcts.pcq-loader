@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.pcqloader.exception;
 
 import org.junit.Test;
+import uk.gov.hmcts.reform.pcqloader.exceptions.ExternalApiException;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;

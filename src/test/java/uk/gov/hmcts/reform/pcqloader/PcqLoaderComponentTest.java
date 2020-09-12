@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import uk.gov.hmcts.reform.pcqloader.exception.ExternalApiException;
+import uk.gov.hmcts.reform.pcqloader.exceptions.ExternalApiException;
 import uk.gov.hmcts.reform.pcqloader.exceptions.BlobProcessingException;
 import uk.gov.hmcts.reform.pcqloader.exceptions.ZipProcessingException;
 import uk.gov.hmcts.reform.pcqloader.helper.PayloadMappingHelper;
@@ -39,8 +39,6 @@ public class PcqLoaderComponentTest {
 
     private static final String TEST_BLOB_FILENAME1 = "1579002492_31-08-2020-11-35-10.zip";
     private static final String TEST_BLOB_FILENAME2 = "1579002493_31-08-2020-11-48-42.zip";
-    private static final String TEST_DCN_1 = "1579002492";
-    private static final String TEST_DCN_2 = "1579002493";
     private static final String TEST_EXCEPTION_MSG = "Test Exception";
     private static final String SUCCESS_MSG = "Successfully created";
     private static final String HTTP_CREATED = "201";
@@ -93,9 +91,8 @@ public class PcqLoaderComponentTest {
 
         try {
             when(fileUtil.readAllBytesFromFile(metaDataFile)).thenReturn(jsonTestMetaData);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_1, jsonTestMetaData))
-                .thenReturn(answerRequest);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_2, jsonTestMetaData))
+            when(payloadMappingHelper.mapPayLoadToPcqAnswers(jsonTestMetaData))
+                .thenReturn(answerRequest)
                 .thenReturn(answerRequest);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
@@ -119,10 +116,8 @@ public class PcqLoaderComponentTest {
         verify(fileUtil, times(2)).getMetaDataFile(listedFiles);
         try {
             verify(fileUtil, times(2)).readAllBytesFromFile(metaDataFile);
-            verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
-                TEST_DCN_1, jsonTestMetaData);
-            verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
-                TEST_DCN_2, jsonTestMetaData);
+            verify(payloadMappingHelper, times(2)).mapPayLoadToPcqAnswers(
+                jsonTestMetaData);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
         }
@@ -186,7 +181,7 @@ public class PcqLoaderComponentTest {
 
         try {
             when(fileUtil.readAllBytesFromFile(metaDataFile)).thenReturn(jsonTestMetaData);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_2, jsonTestMetaData))
+            when(payloadMappingHelper.mapPayLoadToPcqAnswers(jsonTestMetaData))
                 .thenReturn(answerRequest);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
@@ -210,7 +205,7 @@ public class PcqLoaderComponentTest {
         try {
             verify(fileUtil, times(1)).readAllBytesFromFile(metaDataFile);
             verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
-                TEST_DCN_2, jsonTestMetaData);
+                jsonTestMetaData);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
         }
@@ -245,7 +240,7 @@ public class PcqLoaderComponentTest {
 
         try {
             when(fileUtil.readAllBytesFromFile(metaDataFile)).thenReturn(jsonTestMetaData);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_1, jsonTestMetaData))
+            when(payloadMappingHelper.mapPayLoadToPcqAnswers(jsonTestMetaData))
                 .thenReturn(answerRequest);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
@@ -270,7 +265,7 @@ public class PcqLoaderComponentTest {
         try {
             verify(fileUtil, times(1)).readAllBytesFromFile(metaDataFile);
             verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
-                TEST_DCN_1, jsonTestMetaData);
+                jsonTestMetaData);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
         }
@@ -307,7 +302,7 @@ public class PcqLoaderComponentTest {
 
         try {
             when(fileUtil.readAllBytesFromFile(metaDataFile)).thenReturn(jsonTestMetaData);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_1, jsonTestMetaData))
+            when(payloadMappingHelper.mapPayLoadToPcqAnswers(jsonTestMetaData))
                 .thenReturn(answerRequest);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
@@ -334,7 +329,7 @@ public class PcqLoaderComponentTest {
         try {
             verify(fileUtil, times(1)).readAllBytesFromFile(metaDataFile);
             verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
-                TEST_DCN_1, jsonTestMetaData);
+                jsonTestMetaData);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
         }
@@ -396,9 +391,8 @@ public class PcqLoaderComponentTest {
 
         try {
             when(fileUtil.readAllBytesFromFile(metaDataFile)).thenReturn(jsonTestMetaData);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_1, jsonTestMetaData))
-                .thenReturn(null);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_2, jsonTestMetaData))
+            when(payloadMappingHelper.mapPayLoadToPcqAnswers(jsonTestMetaData))
+                .thenReturn(null)
                 .thenReturn(answerRequest);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
@@ -422,10 +416,8 @@ public class PcqLoaderComponentTest {
         verify(fileUtil, times(2)).getMetaDataFile(listedFiles);
         try {
             verify(fileUtil, times(2)).readAllBytesFromFile(metaDataFile);
-            verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
-                TEST_DCN_1, jsonTestMetaData);
-            verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
-                TEST_DCN_2, jsonTestMetaData);
+            verify(payloadMappingHelper, times(2)).mapPayLoadToPcqAnswers(
+                jsonTestMetaData);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
         }
@@ -456,9 +448,8 @@ public class PcqLoaderComponentTest {
 
         try {
             when(fileUtil.readAllBytesFromFile(metaDataFile)).thenReturn(jsonTestMetaData);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_1, jsonTestMetaData))
-                .thenThrow(new NoSuchFieldException(TEST_EXCEPTION_MSG));
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_2, jsonTestMetaData))
+            when(payloadMappingHelper.mapPayLoadToPcqAnswers(jsonTestMetaData))
+                .thenThrow(new NoSuchFieldException(TEST_EXCEPTION_MSG))
                 .thenThrow(new NoSuchFieldException(TEST_EXCEPTION_MSG));
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
@@ -477,6 +468,7 @@ public class PcqLoaderComponentTest {
         verify(fileUtil, times(2)).getMetaDataFile(listedFiles);
         try {
             verify(fileUtil, times(2)).readAllBytesFromFile(metaDataFile);
+            verify(payloadMappingHelper, times(2)).mapPayLoadToPcqAnswers(jsonTestMetaData);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
         }
@@ -504,9 +496,8 @@ public class PcqLoaderComponentTest {
 
         try {
             when(fileUtil.readAllBytesFromFile(metaDataFile)).thenReturn(jsonTestMetaData);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_1, jsonTestMetaData))
-                .thenThrow(new IllegalAccessException(TEST_EXCEPTION_MSG));
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_2, jsonTestMetaData))
+            when(payloadMappingHelper.mapPayLoadToPcqAnswers(jsonTestMetaData))
+                .thenThrow(new IllegalAccessException(TEST_EXCEPTION_MSG))
                 .thenThrow(new IllegalAccessException(TEST_EXCEPTION_MSG));
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
@@ -525,6 +516,7 @@ public class PcqLoaderComponentTest {
         verify(fileUtil, times(2)).getMetaDataFile(listedFiles);
         try {
             verify(fileUtil, times(2)).readAllBytesFromFile(metaDataFile);
+            verify(payloadMappingHelper, times(2)).mapPayLoadToPcqAnswers(jsonTestMetaData);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
         }
@@ -553,9 +545,8 @@ public class PcqLoaderComponentTest {
 
         try {
             when(fileUtil.readAllBytesFromFile(metaDataFile)).thenReturn(jsonTestMetaData);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_1, jsonTestMetaData))
-                .thenReturn(answerRequest);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_2, jsonTestMetaData))
+            when(payloadMappingHelper.mapPayLoadToPcqAnswers(jsonTestMetaData))
+                .thenReturn(answerRequest)
                 .thenReturn(answerRequest);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
@@ -580,10 +571,8 @@ public class PcqLoaderComponentTest {
         verify(fileUtil, times(2)).getMetaDataFile(listedFiles);
         try {
             verify(fileUtil, times(2)).readAllBytesFromFile(metaDataFile);
-            verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
-                TEST_DCN_1, jsonTestMetaData);
-            verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
-                TEST_DCN_2, jsonTestMetaData);
+            verify(payloadMappingHelper, times(2)).mapPayLoadToPcqAnswers(
+                jsonTestMetaData);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
         }
@@ -615,9 +604,8 @@ public class PcqLoaderComponentTest {
 
         try {
             when(fileUtil.readAllBytesFromFile(metaDataFile)).thenReturn(jsonTestMetaData);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_1, jsonTestMetaData))
-                .thenReturn(answerRequest);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_2, jsonTestMetaData))
+            when(payloadMappingHelper.mapPayLoadToPcqAnswers(jsonTestMetaData))
+                .thenReturn(answerRequest)
                 .thenReturn(answerRequest);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
@@ -642,10 +630,8 @@ public class PcqLoaderComponentTest {
         verify(fileUtil, times(2)).getMetaDataFile(listedFiles);
         try {
             verify(fileUtil, times(2)).readAllBytesFromFile(metaDataFile);
-            verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
-                TEST_DCN_1, jsonTestMetaData);
-            verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
-                TEST_DCN_2, jsonTestMetaData);
+            verify(payloadMappingHelper, times(2)).mapPayLoadToPcqAnswers(
+                jsonTestMetaData);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
         }
@@ -676,7 +662,7 @@ public class PcqLoaderComponentTest {
 
         try {
             when(fileUtil.readAllBytesFromFile(metaDataFile)).thenReturn(jsonTestMetaData);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_1, jsonTestMetaData))
+            when(payloadMappingHelper.mapPayLoadToPcqAnswers(jsonTestMetaData))
                 .thenReturn(answerRequest);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
@@ -697,7 +683,7 @@ public class PcqLoaderComponentTest {
         try {
             verify(fileUtil, times(1)).readAllBytesFromFile(metaDataFile);
             verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
-                TEST_DCN_1, jsonTestMetaData);
+                jsonTestMetaData);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
         }
@@ -726,7 +712,7 @@ public class PcqLoaderComponentTest {
 
         try {
             when(fileUtil.readAllBytesFromFile(metaDataFile)).thenReturn(jsonTestMetaData);
-            when(payloadMappingHelper.mapPayLoadToPcqAnswers(TEST_DCN_1, jsonTestMetaData))
+            when(payloadMappingHelper.mapPayLoadToPcqAnswers(jsonTestMetaData))
                 .thenReturn(answerRequest);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
@@ -754,7 +740,7 @@ public class PcqLoaderComponentTest {
         try {
             verify(fileUtil, times(1)).readAllBytesFromFile(metaDataFile);
             verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
-                TEST_DCN_1, jsonTestMetaData);
+                jsonTestMetaData);
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
         }

@@ -11,7 +11,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.pcqloader.controller.feign.PcqBackendFeignClient;
-import uk.gov.hmcts.reform.pcqloader.exception.ExternalApiException;
+import uk.gov.hmcts.reform.pcqloader.exceptions.ExternalApiException;
 import uk.gov.hmcts.reform.pcqloader.model.PcqAnswerRequest;
 import uk.gov.hmcts.reform.pcqloader.model.PcqAnswers;
 

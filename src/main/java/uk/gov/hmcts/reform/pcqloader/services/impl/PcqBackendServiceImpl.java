@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.pcqloader.controller.feign.PcqBackendFeignClient;
-import uk.gov.hmcts.reform.pcqloader.exception.ExternalApiException;
+import uk.gov.hmcts.reform.pcqloader.exceptions.ExternalApiException;
 import uk.gov.hmcts.reform.pcqloader.model.PcqAnswerRequest;
 import uk.gov.hmcts.reform.pcqloader.services.PcqBackendService;
 import uk.gov.hmcts.reform.pcqloader.utils.JsonFeignResponseUtil;

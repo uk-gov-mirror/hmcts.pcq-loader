@@ -81,13 +81,13 @@ public class PcqLoaderFunctionalTest extends PcqLoaderTestBase {
     public void testAllSuccessfulPcqInvocation() throws IOException {
         String metaDataPayLoad = jsonStringFromFile("JsonTestFiles/successMetaFile.json");
         PcqAnswerRequest mappedAnswers = null;
-        String dcnNumber = "test_dcn";
         try {
-            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail(FAIL_ASSERT_MSG, e);
         }
 
+        Assertions.assertNotNull(mappedAnswers.getDcnNumber(), "DCN Number is invalid");
         if (mappedAnswers != null) {
             mappedAnswers.setPcqId(UUID.randomUUID().toString());
             mappedAnswers.setDcnNumber("DCN " + UUID.randomUUID().toString());
@@ -107,13 +107,13 @@ public class PcqLoaderFunctionalTest extends PcqLoaderTestBase {
     public void testAllMultiplePcqInvocation() throws IOException {
         String metaDataPayLoad = jsonStringFromFile("JsonTestFiles/multipleReligionMetaFile.json");
         PcqAnswerRequest mappedAnswers = null;
-        String dcnNumber = "test_dcn";
         try {
-            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail(FAIL_ASSERT_MSG, e);
         }
 
+        Assertions.assertNotNull(mappedAnswers.getDcnNumber(), "DCN Number is invalid");
         if (mappedAnswers != null) {
             mappedAnswers.setPcqId(UUID.randomUUID().toString());
             mappedAnswers.setDcnNumber("DCN " + UUID.randomUUID().toString());
