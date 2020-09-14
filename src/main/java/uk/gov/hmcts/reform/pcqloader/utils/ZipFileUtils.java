@@ -77,10 +77,9 @@ public class ZipFileUtils {
 
     @SuppressWarnings({"PMD.DataflowAnomalyAnalysis", "PMD.CollapsibleIfStatements"})
     public void deleteFilesFromLocalStorage(File zipFile, File unzippedFiles) {
-        if (zipFile != null) {
-            if (!zipFile.delete()) {
-                log.warn("Zip file {} not removed from local storage.", zipFile.getName());
-            }
+
+        if (zipFile != null && !zipFile.delete()) {
+            log.warn("Zip file {} not removed from local storage.", zipFile.getName());
         }
 
         if (unzippedFiles != null) {
@@ -94,6 +93,7 @@ public class ZipFileUtils {
                 log.warn("File {} not removed from local storage.", unzippedFiles.getName());
             }
         }
+
     }
 
     @SuppressWarnings({"PMD.DataflowAnomalyAnalysis", "PMD.UseVarargs"})

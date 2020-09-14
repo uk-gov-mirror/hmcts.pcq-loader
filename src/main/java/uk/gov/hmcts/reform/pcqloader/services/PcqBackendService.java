@@ -3,8 +3,10 @@ package uk.gov.hmcts.reform.pcqloader.services;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.pcqloader.model.PcqAnswerRequest;
 
+import java.util.Map;
+
 public interface PcqBackendService {
 
-    ResponseEntity submitAnswers(PcqAnswerRequest answerRequest);
+    ResponseEntity<Map<String, String>> submitAnswers(PcqAnswerRequest answerRequest);
 
 }
