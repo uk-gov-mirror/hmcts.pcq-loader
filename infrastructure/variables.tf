@@ -15,6 +15,8 @@ variable "subscription" {}
 
 variable "mgmt_subscription_id" {}
 
+variable "aks_infra_subscription_id" {}
+
 // TAG SPECIFIC VARIABLES
 variable "common_tags" {
   type = "map"
