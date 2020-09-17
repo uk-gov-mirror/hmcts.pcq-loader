@@ -30,10 +30,10 @@ module "pcq_storage_account" {
 
   sa_subnets = [
     "${data.azurerm_subnet.jenkins_subnet.id}",
-    "${data.azurerm_subnet.aks-00-mgmt}",
-    "${data.azurerm_subnet.aks-01-mgmt}",
-    "${data.azurerm_subnet.aks-00-infra}",
-    "${data.azurerm_subnet.aks-01-infra}"]
+    "${data.azurerm_subnet.aks-00-mgmt.id}",
+    "${data.azurerm_subnet.aks-01-mgmt.id}",
+    "${data.azurerm_subnet.aks-00-infra.id}",
+    "${data.azurerm_subnet.aks-01-infra.id}"]
 }
 
 data "azurerm_virtual_network" "mgmt_vnet" {
