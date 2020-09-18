@@ -33,7 +33,9 @@ module "pcq_storage_account" {
     "${data.azurerm_subnet.aks-00-mgmt.id}",
     "${data.azurerm_subnet.aks-01-mgmt.id}",
     "${data.azurerm_subnet.aks-00-infra.id}",
-    "${data.azurerm_subnet.aks-01-infra.id}"]
+    "${data.azurerm_subnet.aks-01-infra.id}",
+    "${data.azurerm_subnet.aks-00-preview.id}",
+    "${data.azurerm_subnet.aks-01-preview.id}"]
 }
 
 data "azurerm_virtual_network" "mgmt_vnet" {
@@ -83,6 +85,25 @@ data "azurerm_subnet" "aks-01-infra" {
   resource_group_name  = "${data.azurerm_virtual_network.aks_core_vnet.resource_group_name}"
 }
 
+data "azurerm_virtual_network" "aks_preview_vnet" {
+  provider            = "azurerm.aks-preview"
+  name                = "core-${var.env}-vnet"
+  resource_group_name = "aks-infra-${var.env}-rg"
+}
+
+data "azurerm_subnet" "aks-00-preview" {
+  provider             = "azurerm.aks-preview"
+  name                 = "aks-00"
+  virtual_network_name = "${data.azurerm_virtual_network.aks_preview_vnet.name}"
+  resource_group_name  = "${data.azurerm_virtual_network.aks_preview_vnet.resource_group_name}"
+}
+
+data "azurerm_subnet" "aks-01-preview" {
+  provider             = "azurerm.aks-preview"
+  name                 = "aks-01"
+  virtual_network_name = "${data.azurerm_virtual_network.aks_preview_vnet.name}"
+  resource_group_name  = "${data.azurerm_virtual_network.aks_preview_vnet.resource_group_name}"
+}
 
 resource "azurerm_storage_container" "pcq_containers" {
   name                 = "pcq"
