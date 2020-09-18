@@ -87,7 +87,7 @@ data "azurerm_subnet" "aks-01-infra" {
 
 data "azurerm_virtual_network" "aks_preview_vnet" {
   provider            = "azurerm.aks-preview"
-  name                = "core-${var.env}-vnet"
+  name                = "core-preview-vnet"
   resource_group_name = "aks-infra-preview-rg"
 }
 
