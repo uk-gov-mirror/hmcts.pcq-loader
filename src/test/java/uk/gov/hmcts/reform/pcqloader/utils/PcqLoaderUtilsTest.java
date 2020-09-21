@@ -156,4 +156,10 @@ public class PcqLoaderUtilsTest {
         assertTrue(matcher.matches(), "Dob string is not valid.");
     }
 
+    @Test
+    public void testAuthorisationToken() {
+        String token = PcqLoaderUtils.generateAuthorizationToken("Test", "TestSubject");
+        assertNotNull(token, "Authorisation token is null");
+    }
+
 }

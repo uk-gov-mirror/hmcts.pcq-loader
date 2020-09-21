@@ -42,7 +42,6 @@ public class PayloadMappingHelperTest {
 
     @Test
     public void mapPayLoadSuccess() throws IOException {
-        String dcnNumber = "11003402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/successMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -55,18 +54,17 @@ public class PayloadMappingHelperTest {
 
         PcqAnswerRequest mappedAnswers = null;
         try {
-            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail(FAIL_ASSERT_MSG, e);
         }
 
 
-        assertUtils.assertSuccessMapping(mappedAnswers, metaData, dcnNumber);
+        assertUtils.assertSuccessMapping(mappedAnswers, metaData);
     }
 
     @Test
     public void mapPayLoadMultipleIntElements() throws IOException {
-        String dcnNumber = "12003402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/multipleReligionMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -79,18 +77,17 @@ public class PayloadMappingHelperTest {
 
         PcqAnswerRequest mappedAnswers = null;
         try {
-            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail(FAIL_ASSERT_MSG, e);
         }
 
 
-        assertUtils.assertReligionInvalidMapping(mappedAnswers, metaData, dcnNumber);
+        assertUtils.assertReligionInvalidMapping(mappedAnswers, metaData);
     }
 
     @Test
     public void mapPayLoadInvalidDob() throws IOException {
-        String dcnNumber = "13003402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidDobMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -103,18 +100,17 @@ public class PayloadMappingHelperTest {
 
         PcqAnswerRequest mappedAnswers = null;
         try {
-            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail(FAIL_ASSERT_MSG, e);
         }
 
 
-        assertUtils.assertDobInvalidMapping(mappedAnswers, metaData, dcnNumber);
+        assertUtils.assertDobInvalidMapping(mappedAnswers, metaData);
     }
 
     @Test
     public void mapPayLoadDisabilityNone() throws IOException {
-        String dcnNumber = "14103402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/disabilityNoneMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -127,18 +123,17 @@ public class PayloadMappingHelperTest {
 
         PcqAnswerRequest mappedAnswers = null;
         try {
-            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail(FAIL_ASSERT_MSG, e);
         }
 
 
-        assertUtils.assertDisabilityNoneMapping(mappedAnswers, metaData, dcnNumber);
+        assertUtils.assertDisabilityNoneMapping(mappedAnswers, metaData);
     }
 
     @Test
     public void mapMultipleEthnicity() throws IOException {
-        String dcnNumber = "26103402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/multipleEthnicityMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -151,18 +146,17 @@ public class PayloadMappingHelperTest {
 
         PcqAnswerRequest mappedAnswers = null;
         try {
-            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail(FAIL_ASSERT_MSG, e);
         }
 
 
-        assertUtils.assertMultipleEthnicityMapping(mappedAnswers, metaData, dcnNumber);
+        assertUtils.assertMultipleEthnicityMapping(mappedAnswers, metaData);
     }
 
     @Test
     public void mapInvalidOtherValues() throws IOException {
-        String dcnNumber = "287103402";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidOtherValuesMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -175,23 +169,22 @@ public class PayloadMappingHelperTest {
 
         PcqAnswerRequest mappedAnswers = null;
         try {
-            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail(FAIL_ASSERT_MSG, e);
         }
 
-        assertUtils.assertInvalidOtherMapping(mappedAnswers, metaData, dcnNumber);
+        assertUtils.assertInvalidOtherMapping(mappedAnswers, metaData);
     }
 
     @Test
     public void payloadScannableItemMissing() throws IOException {
-        String dcnNumber = "11003403";
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/noScannableItemsMetaFile.json");
 
         PcqAnswerRequest mappedAnswers = null;
         try {
-            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail(FAIL_ASSERT_MSG, e);
         }
@@ -202,13 +195,12 @@ public class PayloadMappingHelperTest {
 
     @Test
     public void jsonProcessingError()  {
-        String dcnNumber = "11003403";
 
         String metaDataPayLoad = "{Test:asdsad}";
 
         PcqAnswerRequest mappedAnswers = null;
         try {
-            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(dcnNumber, metaDataPayLoad);
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail(FAIL_ASSERT_MSG, e);
         }

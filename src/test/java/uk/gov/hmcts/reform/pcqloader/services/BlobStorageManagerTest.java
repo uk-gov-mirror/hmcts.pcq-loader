@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,6 +42,15 @@ public class BlobStorageManagerTest {
     @Mock
     private BlobClient blobClient;
 
+    @Mock
+    private BlobContainerClient rejectedPcqContainer;
+
+    @Mock
+    private BlobClient rejectedBlobClient;
+
+    @Mock
+    private BlobClient processedBlobClient;
+
     private BlobStorageProperties blobStorageProperties;
 
     private BlobStorageManager testBlobStorageManager;
@@ -51,12 +61,16 @@ public class BlobStorageManagerTest {
     private static final String TEST_BLOB_FILENAME2 = "1579002493_31-08-2020-11-48-42.zip";
     private static final String TEST_PCQ_BLOB_PATH = "http://0.0.0.0:10000/" + TEST_PCQ_CONTAINER_NAME;
     private static final String TEST_PCQ_FILE_PATH = "/var/tmp/pcq-blobs";
+    private static final String TEST_REJECTED_PCQ_CONTAINER_NAME = "PCQ_REJECTED";
+    private static final String PROCESSED_FOLDER = "processed";
 
     @BeforeEach
     public void setUp() throws IOException {
         blobStorageProperties = new BlobStorageProperties();
         blobStorageProperties.setBlobPcqContainer(TEST_PCQ_CONTAINER_NAME);
         blobStorageProperties.setBlobStorageDownloadPath(TEST_PCQ_FILE_PATH);
+        blobStorageProperties.setBlobPcqRejectedContainer(TEST_REJECTED_PCQ_CONTAINER_NAME);
+        blobStorageProperties.setProcessedFolderName(PROCESSED_FOLDER);
         testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
         MockitoAnnotations.openMocks(testBlobStorageManager);
     }
@@ -197,5 +211,78 @@ public class BlobStorageManagerTest {
             verify(blobClient, times(1)).downloadToFile(
                 TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_FILENAME1, true);
         }
+    }
+
+    @Test
+    public void testMoveFileToRejectedContainer1() {
+        String testFileName = "Test1212.zip";
+        when(blobServiceClient.getBlobContainerClient(TEST_REJECTED_PCQ_CONTAINER_NAME))
+            .thenReturn(rejectedPcqContainer);
+        when(rejectedPcqContainer.exists()).thenReturn(false);
+        when(blobServiceClient.createBlobContainer(TEST_REJECTED_PCQ_CONTAINER_NAME)).thenReturn(rejectedPcqContainer);
+        when(pcqContainer.getBlobClient(testFileName)).thenReturn(blobClient);
+        when(rejectedPcqContainer.getBlobClient(testFileName)).thenReturn(rejectedBlobClient);
+        when(blobClient.getBlobUrl()).thenReturn(TEST_PCQ_BLOB_PATH + "/" + testFileName);
+        when(rejectedBlobClient.beginCopy(TEST_PCQ_BLOB_PATH + "/" + testFileName, null))
+            .thenReturn(null);
+        doNothing().when(blobClient).delete();
+
+        testBlobStorageManager.moveFileToRejectedContainer(testFileName, pcqContainer);
+
+        verify(blobServiceClient, times(1)).getBlobContainerClient(TEST_REJECTED_PCQ_CONTAINER_NAME);
+        verify(rejectedPcqContainer, times(1)).exists();
+        verify(blobServiceClient, times(1)).createBlobContainer(TEST_REJECTED_PCQ_CONTAINER_NAME);
+        verify(pcqContainer, times(1)).getBlobClient(testFileName);
+        verify(rejectedPcqContainer, times(1)).getBlobClient(testFileName);
+        verify(blobClient, times(1)).getBlobUrl();
+        verify(rejectedBlobClient, times(1)).beginCopy(TEST_PCQ_BLOB_PATH + "/"
+                                                             + testFileName, null);
+        verify(blobClient, times(1)).delete();
+    }
+
+    @Test
+    public void testMoveFileToRejectedContainer2() {
+        String testFileName = "Test1213.zip";
+        when(blobServiceClient.getBlobContainerClient(TEST_REJECTED_PCQ_CONTAINER_NAME))
+            .thenReturn(rejectedPcqContainer);
+        when(rejectedPcqContainer.exists()).thenReturn(true);
+        when(pcqContainer.getBlobClient(testFileName)).thenReturn(blobClient);
+        when(rejectedPcqContainer.getBlobClient(testFileName)).thenReturn(rejectedBlobClient);
+        when(blobClient.getBlobUrl()).thenReturn(TEST_PCQ_BLOB_PATH + "/" + testFileName);
+        when(rejectedBlobClient.beginCopy(TEST_PCQ_BLOB_PATH + "/" + testFileName, null))
+            .thenReturn(null);
+        doNothing().when(blobClient).delete();
+
+        testBlobStorageManager.moveFileToRejectedContainer(testFileName, pcqContainer);
+
+        verify(blobServiceClient, times(2)).getBlobContainerClient(TEST_REJECTED_PCQ_CONTAINER_NAME);
+        verify(rejectedPcqContainer, times(1)).exists();
+        verify(pcqContainer, times(1)).getBlobClient(testFileName);
+        verify(rejectedPcqContainer, times(1)).getBlobClient(testFileName);
+        verify(blobClient, times(1)).getBlobUrl();
+        verify(rejectedBlobClient, times(1)).beginCopy(TEST_PCQ_BLOB_PATH + "/"
+                                                             + testFileName, null);
+        verify(blobClient, times(1)).delete();
+    }
+
+    @Test
+    public void testMoveFileToProcessedFolder() {
+        String testFileName = "Test121334.zip";
+        when(pcqContainer.getBlobClient(testFileName)).thenReturn(blobClient);
+        when(pcqContainer.getBlobClient(PROCESSED_FOLDER + "/" + testFileName)).thenReturn(processedBlobClient);
+        when(blobClient.getBlobUrl()).thenReturn(TEST_PCQ_BLOB_PATH + "/" + testFileName);
+        when(processedBlobClient.beginCopy(TEST_PCQ_BLOB_PATH + "/" + testFileName, null))
+            .thenReturn(null);
+        doNothing().when(blobClient).delete();
+
+        testBlobStorageManager.moveFileToProcessedFolder(testFileName, pcqContainer);
+
+        verify(pcqContainer, times(1)).getBlobClient(testFileName);
+        verify(pcqContainer, times(1)).getBlobClient(PROCESSED_FOLDER + "/" + testFileName);
+        verify(blobClient, times(1)).getBlobUrl();
+        verify(processedBlobClient, times(1)).beginCopy(TEST_PCQ_BLOB_PATH
+                                                              + "/" + testFileName, null);
+
+        verify(blobClient, times(1)).delete();
     }
 }

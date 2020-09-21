@@ -17,13 +17,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("PMD.TooManyMethods")
 public class ZipFileUtilsTest {
 
     private static final String BLOB_FILENAME_1 = "1579002492_31-08-2020-11-35-10.zip";
@@ -140,4 +143,76 @@ public class ZipFileUtilsTest {
             assertNotNull(zpe, "ZipProcessingException exception is thrown.");
         }
     }
+
+    @Test
+    @SuppressWarnings({"PMD.AvoidInstanceofChecksInCatchClause","PMD.DataflowAnomalyAnalysis"})
+    public void testDeleteFilesFromLocal() {
+        // Both files null
+        zipFileUtils.deleteFilesFromLocalStorage(null, null);
+
+        //Zip File delete returns false and Folder files array is null
+        when(mockedFile.delete()).thenReturn(false);
+        when(mockedFolder.listFiles()).thenReturn(null);
+        boolean testSuccess = false;
+        try {
+            zipFileUtils.deleteFilesFromLocalStorage(mockedFile, mockedFolder);
+        } catch (Exception e) {
+            assertTrue(e instanceof NullPointerException, "NullPointer Exception not thrown");
+            verify(mockedFile, times(1)).delete();
+            verify(mockedFolder, times(1)).listFiles();
+            testSuccess = true;
+        }
+        if (!testSuccess) {
+            fail("Should have thrown an exception");
+        }
+    }
+
+    @Test
+    public void testDeleteFilesFromLocalSuccess() {
+        //Zip File delete returns true and Folder file delete returns false.
+        File testMockedFile = mock(File.class);
+        File[] files = {testMockedFile};
+        when(mockedFile.delete()).thenReturn(true);
+        when(testMockedFile.delete()).thenReturn(false);
+        when(mockedFolder.listFiles()).thenReturn(files);
+        zipFileUtils.deleteFilesFromLocalStorage(mockedFile, mockedFolder);
+        verify(mockedFile, times(1)).delete();
+        verify(testMockedFile, times(1)).delete();
+        verify(mockedFolder, times(1)).listFiles();
+    }
+
+    @Test
+    public void testDeleteFilesFromLocalAllSuccess() {
+        //Zip File delete returns true and folder file delete returns true.
+        File testMockedFileSuccess = mock(File.class);
+        File[] successFiles = {testMockedFileSuccess};
+        when(mockedFile.delete()).thenReturn(true);
+        when(testMockedFileSuccess.delete()).thenReturn(true);
+        when(mockedFolder.listFiles()).thenReturn(successFiles);
+        zipFileUtils.deleteFilesFromLocalStorage(mockedFile, mockedFolder);
+        verify(mockedFile, times(1)).delete();
+        verify(testMockedFileSuccess, times(1)).delete();
+        verify(mockedFolder, times(1)).listFiles();
+    }
+
+    @Test
+    public void testMetaDataFileFail() {
+        File[] files = {mockedFile};
+        when(mockedFile.getName()).thenReturn("TestFile");
+
+        File metaDataFile = zipFileUtils.getMetaDataFile(files);
+        assertNull(metaDataFile, "File should have been null");
+        verify(mockedFile, times(1)).getName();
+    }
+
+    @Test
+    public void testMetaDataFileSuccess() {
+        File[] files = {mockedFile};
+        when(mockedFile.getName()).thenReturn("metadata.json");
+
+        File metaDataFile = zipFileUtils.getMetaDataFile(files);
+        assertNotNull(metaDataFile, "File should not have been null");
+        verify(mockedFile, times(1)).getName();
+    }
+
 }

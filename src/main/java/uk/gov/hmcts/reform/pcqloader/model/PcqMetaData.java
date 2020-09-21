@@ -31,6 +31,9 @@ public class PcqMetaData implements Serializable {
     @JsonProperty("zip_file_name")
     private String zipFileName;
 
+    @JsonProperty("originating_document_control_number")
+    private String originatingDcnNumber;
+
     @JsonProperty("scannable_items")
     private PcqScannableItems[] scannableItems;
 

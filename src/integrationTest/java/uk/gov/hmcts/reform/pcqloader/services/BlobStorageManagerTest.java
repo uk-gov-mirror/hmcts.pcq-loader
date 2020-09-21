@@ -24,10 +24,12 @@ import java.util.List;
 public class BlobStorageManagerTest {
 
     protected static final String CONTAINER_NAME = "pcq";
+    protected static final String CONTAINER_REJECTED_NAME = "pcq-rejected";
     private static final String BLOB_FILENAME_1 = "1579002492_31-08-2020-11-35-10.zip";
     private static final String BLOB_FILENAME_2 = "1579002493_31-08-2020-11-48-42.zip";
     private static final String BLOB_FILENAME_DOES_NOT_EXIST = "NOT_FOOUND.zip";
     private static final String BLOB_DOWNLOAD_FILE_PATH = "/var/tmp/pcq-loader/download/blobs";
+    private static final String PROCESSED_FOLDER = "processed";
 
     private static DockerComposeContainer dockerComposeContainer;
 
@@ -51,6 +53,8 @@ public class BlobStorageManagerTest {
         BlobStorageProperties blobStorageProperties = new BlobStorageProperties();
         blobStorageProperties.setBlobPcqContainer(CONTAINER_NAME);
         blobStorageProperties.setBlobStorageDownloadPath(BLOB_DOWNLOAD_FILE_PATH);
+        blobStorageProperties.setBlobPcqRejectedContainer(CONTAINER_REJECTED_NAME);
+        blobStorageProperties.setProcessedFolderName(PROCESSED_FOLDER);
 
         File blobFile1 = ResourceUtils.getFile("classpath:blobTestFiles/" + BLOB_FILENAME_1);
         File blobFile2 = ResourceUtils.getFile("classpath:blobTestFiles/" + BLOB_FILENAME_2);
@@ -113,5 +117,35 @@ public class BlobStorageManagerTest {
         } catch (BlobProcessingException bpe) {
             Assertions.assertNotNull(bpe, "Successfully generated exception for missing file.");
         }
+    }
+
+    @Test
+    public void testMoveFileToRejectedContainer() {
+        blobStorageManager.moveFileToRejectedContainer(BLOB_FILENAME_1, blobStorageManager.getPcqContainer());
+        File rejectedFile = blobStorageManager.downloadFileFromBlobStorage(
+            blobStorageManager.getRejectedPcqContainer(), BLOB_FILENAME_1);
+        Assertions.assertNotNull(rejectedFile, "Rejected file does not exist");
+        try {
+            blobStorageManager.downloadFileFromBlobStorage(
+                blobStorageManager.getPcqContainer(), BLOB_FILENAME_1);
+        } catch (BlobProcessingException bpe) {
+            Assertions.assertNotNull(bpe, "Successfully generated exception for missing file");
+        }
+    }
+
+    @Test
+    public void testMoveFileToProcessedFolder() {
+        blobStorageManager.moveFileToProcessedFolder(BLOB_FILENAME_1, blobStorageManager.getPcqContainer());
+        try {
+            blobStorageManager.downloadFileFromBlobStorage(
+                blobStorageManager.getPcqContainer(), BLOB_FILENAME_1);
+        } catch (BlobProcessingException bpe) {
+            Assertions.assertNotNull(bpe, "Successfully generated exception for missing file");
+        }
+
+        File processedFile = blobStorageManager.downloadFileFromBlobStorage(
+                blobStorageManager.getPcqContainer(), "processed" + File.separator + BLOB_FILENAME_1);
+        Assertions.assertNotNull(processedFile, "Processed file does not exist");
+
     }
 }

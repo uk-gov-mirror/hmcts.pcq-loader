@@ -45,7 +45,7 @@ public class PayloadMappingHelper {
         this.payloadValidationHelper = payloadValidationHelper;
     }
 
-    public PcqAnswerRequest mapPayLoadToPcqAnswers(String dcnNumber, String metaDataString) throws
+    public PcqAnswerRequest mapPayLoadToPcqAnswers(String metaDataString) throws
         NoSuchFieldException, IllegalAccessException {
 
         try {
@@ -63,7 +63,7 @@ public class PayloadMappingHelper {
                 PcqPayLoad pcqPayLoad = new ObjectMapper().readValue(ocrData, PcqPayLoad.class);
 
                 //Step 5. Perform the mapping and get the PcqAnswers object.
-                PcqAnswerRequest answerRequest = performMapping(pcqMetaData, pcqPayLoad, dcnNumber);
+                PcqAnswerRequest answerRequest = performMapping(pcqMetaData, pcqPayLoad);
                 log.info("Successfully completed mapping from payload to Answer Definition");
                 return answerRequest;
 
@@ -78,7 +78,7 @@ public class PayloadMappingHelper {
         return null;
     }
 
-    private PcqAnswerRequest performMapping(PcqMetaData metaData, PcqPayLoad payLoad, String dcnNumber)
+    private PcqAnswerRequest performMapping(PcqMetaData metaData, PcqPayLoad payLoad)
         throws IllegalAccessException, NoSuchFieldException {
         PcqAnswerRequest pcqAnswerRequest = new PcqAnswerRequest();
 
@@ -86,7 +86,7 @@ public class PayloadMappingHelper {
         pcqAnswerRequest.setActor("UNKNOWN");
         pcqAnswerRequest.setChannel(2);
         pcqAnswerRequest.setCompletedDate(PcqLoaderUtils.getCurrentCompletedDate());
-        pcqAnswerRequest.setDcnNumber(dcnNumber);
+        pcqAnswerRequest.setDcnNumber(metaData.getOriginatingDcnNumber());
         pcqAnswerRequest.setPartyId("PaperForm");
         pcqAnswerRequest.setServiceId(metaData.getJurisdiction());
         pcqAnswerRequest.setVersionNo(1);

@@ -41,6 +41,10 @@ public class BlobStorageManager {
         return getContainer(blobStorageProperties.getBlobPcqContainer());
     }
 
+    public BlobContainerClient getRejectedPcqContainer() {
+        return getContainer(blobStorageProperties.getBlobPcqRejectedContainer());
+    }
+
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     public List<String> collectBlobFileNamesFromContainer(BlobContainerClient blobContainerClient) {
         List<String> zipFilenames = new ArrayList<>();
@@ -100,5 +104,24 @@ public class BlobStorageManager {
 
     public void deleteContainer(String containerName) {
         blobServiceClient.deleteBlobContainer(containerName);
+    }
+
+    public void moveFileToRejectedContainer(String fileName, BlobContainerClient sourceContainer) {
+        BlobContainerClient rejectedContainer = createContainer(blobStorageProperties.getBlobPcqRejectedContainer());
+        BlobClient sourceClient = sourceContainer.getBlobClient(fileName);
+        BlobClient destinationClient = rejectedContainer.getBlobClient(fileName);
+
+        destinationClient.beginCopy(sourceClient.getBlobUrl(), null);
+        sourceClient.delete();
+        log.info("Moved file {} to the Rejected Container", fileName);
+    }
+
+    public void moveFileToProcessedFolder(String fileName, BlobContainerClient sourceContainer) {
+        BlobClient sourceClient = sourceContainer.getBlobClient(fileName);
+        BlobClient destinationClient = sourceContainer.getBlobClient(blobStorageProperties.getProcessedFolderName()
+                                                                           + File.separator + fileName);
+        destinationClient.beginCopy(sourceClient.getBlobUrl(), null);
+        sourceClient.delete();
+        log.info("Moved file {} to the Processed Folder", fileName);
     }
 }
