@@ -49,8 +49,7 @@ withPipeline(type, product, component) {
   nonServiceApp()
 
   env.TEST_URL = "http://pcq-loader-aat.service.core-compute-aat.internal"
-  //env.PCQ_BACKEND_URL = "http://pcq-backend-aat.service.core-compute-aat.internal"
-  env.PCQ_BACKEND_URL = "http://pcq-backend-pr-150.service.core-compute-preview.internal"
+  env.PCQ_BACKEND_URL = "http://pcq-backend-aat.service.core-compute-aat.internal"
   env.STORAGE_URL = "https://pcqsharedaat.blob.core.windows.net"
 
   after('test') {
@@ -91,8 +90,7 @@ withPipeline(type, product, component) {
 
     // To run functional tests
     env.S2S_NAME = 'pcq_loader'
-    //env.PCQ_BACKEND_URL = "http://pcq-backend-aat.service.core-compute-aat.internal"
-    env.PCQ_BACKEND_URL = "http://pcq-backend-pr-150.service.core-compute-preview.internal"
+    env.PCQ_BACKEND_URL = "http://pcq-backend-aat.service.core-compute-aat.internal"
 
     echo "Just waiting a while to ensure that the pod has run the job"
     sh "sleep 120s"
