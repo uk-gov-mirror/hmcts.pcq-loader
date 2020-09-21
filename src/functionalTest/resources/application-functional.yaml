@@ -42,6 +42,7 @@ storage:
   blob_pcq_container: ${STORAGE_BLOB_PCQ_CONTAINER:pcq-func-tests}
   blob_pcq_rejected-container: ${STORAGE_BLOB_PCQ_REJECTED-CONTAINER:pcq-func-test-rejected}
   blob_storage_download_path: ${STORAGE_DOWNLOAD_PATH:/var/tmp/pcq-loader/download/blobs}
+  processed_folder_name: processed
 
 feign:
   allow:
@@ -49,4 +50,7 @@ feign:
       - x-correlation-id
 
 coRelationId: PCQ Loader Service
-jwt_test_secret: ${JWT_SECRET:JwtSecretKey}
+apiExecutionThreadDelay: 15000
+security:
+  jwt:
+    secret: ${JWT_SECRET:JwtSecretKey}

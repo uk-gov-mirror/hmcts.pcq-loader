@@ -19,8 +19,10 @@ public class ZipFileUtilsTest {
     private static final String BLOB_FILENAME_1 = "1579002492_31-08-2020-11-35-10.zip";
     private static final String TEST_UNPACK_ZIP_FOLDER = "/var/tmp/pcq-loader/unpack-test/blobs";
     private static final File UNPACK_FOLDER_FILE = new File(TEST_UNPACK_ZIP_FOLDER);
+    private static final String BLOB_FILENAME_2 = "1579002494_31-08-2020-11-35-10.zip";
 
     private File blobFile1;
+    private File blobFile2;
 
     private ZipFileUtils zipFileUtils;
 
@@ -28,6 +30,7 @@ public class ZipFileUtilsTest {
     public void setUp() throws Exception {
         zipFileUtils = new ZipFileUtils();
         blobFile1 = ResourceUtils.getFile("classpath:blobTestFiles/" + BLOB_FILENAME_1);
+        blobFile2 = ResourceUtils.getFile("classpath:blobTestFiles/" + BLOB_FILENAME_2);
     }
 
     @AfterEach
@@ -54,6 +57,47 @@ public class ZipFileUtilsTest {
             }
         } else {
             Assertions.fail("Unable to reach unpack folder to unzip file.");
+        }
+    }
+
+    @Test
+    public void testDeleteFilesFromLocalStorage() throws IOException {
+        File fileToTest = new File(TEST_UNPACK_ZIP_FOLDER + File.separator + BLOB_FILENAME_2);
+        if (zipFileUtils.confirmFileCanBeCreated(fileToTest)) {
+            FileUtils.copyFile(blobFile2, fileToTest);
+            if (fileToTest.exists() && fileToTest.isFile()) {
+                File unzippedFileFolder = zipFileUtils.unzipBlobDownloadZipFile(fileToTest);
+                zipFileUtils.deleteFilesFromLocalStorage(fileToTest, unzippedFileFolder);
+                Assertions.assertFalse(fileToTest.exists(), "File not deleted");
+                Assertions.assertFalse(unzippedFileFolder.exists(), "Unzipped folder not deleted");
+            }
+        }
+    }
+
+    @Test
+    public void testGetMetaDataFile() throws IOException {
+        File fileToTest = new File(TEST_UNPACK_ZIP_FOLDER + File.separator + BLOB_FILENAME_2);
+        if (zipFileUtils.confirmFileCanBeCreated(fileToTest)) {
+            FileUtils.copyFile(blobFile2, fileToTest);
+            if (fileToTest.exists() && fileToTest.isFile()) {
+                File unzippedFileFolder = zipFileUtils.unzipBlobDownloadZipFile(fileToTest);
+                File metaDataFile = zipFileUtils.getMetaDataFile(unzippedFileFolder.listFiles());
+                Assertions.assertEquals("metadata.json", metaDataFile.getName(), "Incorrect file found");
+            }
+        }
+    }
+
+    @Test
+    public void testReadAllData() throws IOException {
+        File fileToTest = new File(TEST_UNPACK_ZIP_FOLDER + File.separator + BLOB_FILENAME_2);
+        if (zipFileUtils.confirmFileCanBeCreated(fileToTest)) {
+            FileUtils.copyFile(blobFile2, fileToTest);
+            if (fileToTest.exists() && fileToTest.isFile()) {
+                File unzippedFileFolder = zipFileUtils.unzipBlobDownloadZipFile(fileToTest);
+                File metaDataFile = zipFileUtils.getMetaDataFile(unzippedFileFolder.listFiles());
+                String metaData = zipFileUtils.readAllBytesFromFile(metaDataFile);
+                Assertions.assertNotNull(metaData, "Meta Data is Invalid");
+            }
         }
     }
 }

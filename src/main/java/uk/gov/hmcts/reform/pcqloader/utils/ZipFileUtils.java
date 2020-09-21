@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -19,6 +20,8 @@ import java.util.zip.ZipFile;
 public class ZipFileUtils {
 
     private static final String ZIP_FOLDER_POSTFIX = ".zip";
+
+    private static final String METADATA_FILE_NAME = "metadata.json";
 
     public Boolean confirmFileCanBeCreated(File blobFile) {
         File blobFolder = blobFile.getParentFile();
@@ -70,6 +73,43 @@ public class ZipFileUtils {
         } else {
             throw new ZipProcessingException("Unable to process blob zip file " + blobDownload.getName());
         }
+    }
+
+    @SuppressWarnings({"PMD.DataflowAnomalyAnalysis", "PMD.CollapsibleIfStatements"})
+    public void deleteFilesFromLocalStorage(File zipFile, File unzippedFiles) {
+
+        if (zipFile != null && !zipFile.delete()) {
+            log.warn("Zip file {} not removed from local storage.", zipFile.getName());
+        }
+
+        if (unzippedFiles != null) {
+            File[] files = unzippedFiles.listFiles();
+            for (File file : Objects.requireNonNull(files)) {
+                if (!file.delete()) {
+                    log.warn("File {} not removed from local storage.", file.getName());
+                }
+            }
+            if (!unzippedFiles.delete()) {
+                log.warn("File {} not removed from local storage.", unzippedFiles.getName());
+            }
+        }
+
+    }
+
+    @SuppressWarnings({"PMD.DataflowAnomalyAnalysis", "PMD.UseVarargs"})
+    public File getMetaDataFile(File[] unzippedFiles) {
+        File metaDataFile = null;
+        for (File file : unzippedFiles) {
+            if (METADATA_FILE_NAME.equals(file.getName())) {
+                metaDataFile = file;
+            }
+        }
+
+        return metaDataFile;
+    }
+
+    public String readAllBytesFromFile(File file) throws IOException {
+        return new String(Files.readAllBytes(file.toPath()));
     }
 
     private void initialiseDirectory(File directory) throws IOException {

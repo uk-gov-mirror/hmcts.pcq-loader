@@ -24,15 +24,17 @@ public class AssertionUtils {
     private static final String LANG_MAIN_VALIDATION_MSG = "Language_Main is not correct";
     private static final String SEXUALITY_VALIDATION_MSG = "Sexuality is not correct";
     private static final String GENDER_DIFFERENT_MSG = "Gender Different is not correct";
+    private static final String DCN_NUMBER_VALIDATION_MSG = "DCN Number is not correct.";
 
-    public void assertMultipleEthnicityMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData,
-                                                String dcnNumber) {
-        assertDefaultAndGeneratedFields(mappedAnswers, dcnNumber);
+    public void assertMultipleEthnicityMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData) {
+        assertDefaultAndGeneratedFields(mappedAnswers);
 
         //Check the information that matches the meta-data information.
         PcqScannableItems[] pcqScannedItems = pcqMetaData.getScannableItems();
         assertEquals(pcqScannedItems[0].getDocumentType(), mappedAnswers.getFormId(), FORM_ID_VALIDATION_MSG);
         assertEquals(pcqMetaData.getJurisdiction(), mappedAnswers.getServiceId(), SERVICE_ID_VALIDATION_MSG);
+        //Check the correct DCN Number is populated.
+        assertEquals(pcqMetaData.getOriginatingDcnNumber(), mappedAnswers.getDcnNumber(), DCN_NUMBER_VALIDATION_MSG);
 
         //Check the answers matches the payload supplied.
         PcqAnswers answers = mappedAnswers.getPcqAnswers();
@@ -47,13 +49,15 @@ public class AssertionUtils {
         assertEquals(1, answers.getGenderDifferent(), GENDER_DIFFERENT_MSG);
     }
 
-    public void assertSuccessMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData, String dcnNumber) {
-        assertDefaultAndGeneratedFields(mappedAnswers, dcnNumber);
+    public void assertSuccessMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData) {
+        assertDefaultAndGeneratedFields(mappedAnswers);
 
         //Check the information that matches the meta-data information.
         PcqScannableItems[] pcqScannedItems = pcqMetaData.getScannableItems();
         assertEquals(pcqScannedItems[0].getDocumentType(), mappedAnswers.getFormId(), FORM_ID_VALIDATION_MSG);
         assertEquals(pcqMetaData.getJurisdiction(), mappedAnswers.getServiceId(), SERVICE_ID_VALIDATION_MSG);
+        //Check the correct DCN Number is populated.
+        assertEquals(pcqMetaData.getOriginatingDcnNumber(), mappedAnswers.getDcnNumber(), DCN_NUMBER_VALIDATION_MSG);
 
         //Check the answers matches the payload supplied.
         PcqAnswers answers = mappedAnswers.getPcqAnswers();
@@ -68,13 +72,15 @@ public class AssertionUtils {
         assertEquals(1, answers.getGenderDifferent(), GENDER_DIFFERENT_MSG);
     }
 
-    public void assertInvalidOtherMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData, String dcnNumber) {
-        assertDefaultAndGeneratedFields(mappedAnswers, dcnNumber);
+    public void assertInvalidOtherMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData) {
+        assertDefaultAndGeneratedFields(mappedAnswers);
 
         //Check the information that matches the meta-data information.
         PcqScannableItems[] pcqScannedItems = pcqMetaData.getScannableItems();
         assertEquals(pcqScannedItems[0].getDocumentType(), mappedAnswers.getFormId(), FORM_ID_VALIDATION_MSG);
         assertEquals(pcqMetaData.getJurisdiction(), mappedAnswers.getServiceId(), SERVICE_ID_VALIDATION_MSG);
+        //Check the correct DCN Number is populated.
+        assertEquals(pcqMetaData.getOriginatingDcnNumber(), mappedAnswers.getDcnNumber(), DCN_NUMBER_VALIDATION_MSG);
 
         //Check the answers matches the payload supplied.
         PcqAnswers answers = mappedAnswers.getPcqAnswers();
@@ -89,14 +95,15 @@ public class AssertionUtils {
         assertEquals(-1, answers.getGenderDifferent(), GENDER_DIFFERENT_MSG);
     }
 
-    public void assertReligionInvalidMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData,
-                                              String dcnNumber) {
-        assertDefaultAndGeneratedFields(mappedAnswers, dcnNumber);
+    public void assertReligionInvalidMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData) {
+        assertDefaultAndGeneratedFields(mappedAnswers);
 
         //Check the information that matches the meta-data information.
         PcqScannableItems[] pcqScannedItems = pcqMetaData.getScannableItems();
         assertEquals(pcqScannedItems[0].getDocumentType(), mappedAnswers.getFormId(), FORM_ID_VALIDATION_MSG);
         assertEquals(pcqMetaData.getJurisdiction(), mappedAnswers.getServiceId(), SERVICE_ID_VALIDATION_MSG);
+        //Check the correct DCN Number is populated.
+        assertEquals(pcqMetaData.getOriginatingDcnNumber(), mappedAnswers.getDcnNumber(), DCN_NUMBER_VALIDATION_MSG);
 
         //Check the answers matches the payload supplied.
         PcqAnswers answers = mappedAnswers.getPcqAnswers();
@@ -112,14 +119,15 @@ public class AssertionUtils {
 
     }
 
-    public void assertDobInvalidMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData,
-                                         String dcnNumber) {
-        assertDefaultAndGeneratedFields(mappedAnswers, dcnNumber);
+    public void assertDobInvalidMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData) {
+        assertDefaultAndGeneratedFields(mappedAnswers);
 
         //Check the information that matches the meta-data information.
         PcqScannableItems[] pcqScannedItems = pcqMetaData.getScannableItems();
         assertEquals(pcqScannedItems[0].getDocumentType(), mappedAnswers.getFormId(), FORM_ID_VALIDATION_MSG);
         assertEquals(pcqMetaData.getJurisdiction(), mappedAnswers.getServiceId(), SERVICE_ID_VALIDATION_MSG);
+        //Check the correct DCN Number is populated.
+        assertEquals(pcqMetaData.getOriginatingDcnNumber(), mappedAnswers.getDcnNumber(), DCN_NUMBER_VALIDATION_MSG);
 
         //Check the answers matches the payload supplied.
         PcqAnswers answers = mappedAnswers.getPcqAnswers();
@@ -135,14 +143,15 @@ public class AssertionUtils {
 
     }
 
-    public void assertDisabilityNoneMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData,
-                                             String dcnNumber) {
-        assertDefaultAndGeneratedFields(mappedAnswers, dcnNumber);
+    public void assertDisabilityNoneMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData) {
+        assertDefaultAndGeneratedFields(mappedAnswers);
 
         //Check the information that matches the meta-data information.
         PcqScannableItems[] pcqScannedItems = pcqMetaData.getScannableItems();
         assertEquals(pcqScannedItems[0].getDocumentType(), mappedAnswers.getFormId(), FORM_ID_VALIDATION_MSG);
         assertEquals(pcqMetaData.getJurisdiction(), mappedAnswers.getServiceId(),  SERVICE_ID_VALIDATION_MSG);
+        //Check the correct DCN Number is populated.
+        assertEquals(pcqMetaData.getOriginatingDcnNumber(), mappedAnswers.getDcnNumber(), DCN_NUMBER_VALIDATION_MSG);
 
         //Check the answers matches the payload supplied.
         PcqAnswers answers = mappedAnswers.getPcqAnswers();
@@ -217,12 +226,9 @@ public class AssertionUtils {
         }
     }
 
-    public void assertDefaultAndGeneratedFields(PcqAnswerRequest mappedAnswers, String dcnNumber) {
+    public void assertDefaultAndGeneratedFields(PcqAnswerRequest mappedAnswers) {
         //Check the primary key generated field is not missing.
         assertNotNull(mappedAnswers.getPcqId(), "PCQ Id is Null");
-
-        //Check the correct DCN Number is populated.
-        assertEquals(dcnNumber, mappedAnswers.getDcnNumber(), "DCN Number is not correct.");
 
         //Check the default values are set correctly for paper channel
         assertNull(mappedAnswers.getCaseId(), "Case Id is not correct.");
