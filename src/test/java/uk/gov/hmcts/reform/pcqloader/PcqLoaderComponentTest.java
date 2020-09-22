@@ -311,6 +311,7 @@ public class PcqLoaderComponentTest {
                                                                           HTTP_CREATED, SUCCESS_MSG);
         when(pcqBackendService.submitAnswers(answerRequest)).thenReturn(successResponse);
         doNothing().when(blobStorageManager).moveFileToProcessedFolder(TEST_BLOB_FILENAME1, blobContainerClient);
+        doNothing().when(blobStorageManager).moveFileToRejectedContainer(TEST_BLOB_FILENAME2, blobContainerClient);
         doNothing().when(fileUtil).deleteFilesFromLocalStorage(zipDirectory, unzippedFile);
         doNothing().when(fileUtil).deleteFilesFromLocalStorage(testZipDirectory, testUnzippedFile);
 
@@ -335,6 +336,76 @@ public class PcqLoaderComponentTest {
         }
         verify(pcqBackendService, times(1)).submitAnswers(answerRequest);
         verify(blobStorageManager, times(1)).moveFileToProcessedFolder(TEST_BLOB_FILENAME1, blobContainerClient);
+        verify(blobStorageManager, times(1)).moveFileToRejectedContainer(TEST_BLOB_FILENAME2, blobContainerClient);
+        verify(fileUtil, times(1)).deleteFilesFromLocalStorage(zipDirectory, unzippedFile);
+        verify(fileUtil, times(1)).deleteFilesFromLocalStorage(testZipDirectory, testUnzippedFile);
+
+    }
+
+    @Test
+    public void testInvalidMetaDataFileName() {
+        List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
+        File metaDataFile = new File(PAYLOAD_TEST_FILE);
+        File invalidMetaDataFile = new File("metadataProbate.json");
+        File[] listedFiles = {metaDataFile};
+        File[] invalidListedFiles = {invalidMetaDataFile};
+        PcqAnswerRequest answerRequest = getAnswerRequest();
+        String jsonTestMetaData = "{}";
+        File testZipDirectory = mock(File.class);
+        File testUnzippedFile = mock(File.class);
+
+        when(blobStorageManager.getPcqContainer()).thenReturn(blobContainerClient);
+        when(blobContainerClient.exists()).thenReturn(true);
+        when(blobStorageManager.collectBlobFileNamesFromContainer(blobContainerClient)).thenReturn(blobFileNames);
+        when(blobStorageManager.downloadFileFromBlobStorage(blobContainerClient, TEST_BLOB_FILENAME1))
+            .thenReturn(zipDirectory);
+        when(blobStorageManager.downloadFileFromBlobStorage(blobContainerClient, TEST_BLOB_FILENAME2))
+            .thenReturn(testZipDirectory);
+        when(fileUtil.unzipBlobDownloadZipFile(zipDirectory)).thenReturn(unzippedFile);
+        when(fileUtil.unzipBlobDownloadZipFile(testZipDirectory)).thenReturn(testUnzippedFile);
+        when(unzippedFile.listFiles()).thenReturn(listedFiles);
+        when(testUnzippedFile.listFiles()).thenReturn(invalidListedFiles);
+        when(fileUtil.getMetaDataFile(listedFiles)).thenReturn(metaDataFile);
+        when(fileUtil.getMetaDataFile(invalidListedFiles)).thenReturn(null);
+
+        try {
+            when(fileUtil.readAllBytesFromFile(metaDataFile)).thenReturn(jsonTestMetaData);
+            when(payloadMappingHelper.mapPayLoadToPcqAnswers(jsonTestMetaData))
+                .thenReturn(answerRequest);
+        } catch (Exception e) {
+            fail(EXCEPTION_UNEXPECTED + e.getMessage());
+        }
+        ResponseEntity<Map<String, String>> successResponse = getResponse(answerRequest.getPcqId(),
+                                                                          HTTP_CREATED, SUCCESS_MSG);
+        when(pcqBackendService.submitAnswers(answerRequest)).thenReturn(successResponse);
+        doNothing().when(blobStorageManager).moveFileToProcessedFolder(TEST_BLOB_FILENAME1, blobContainerClient);
+        doNothing().when(blobStorageManager).moveFileToRejectedContainer(TEST_BLOB_FILENAME2, blobContainerClient);
+        doNothing().when(fileUtil).deleteFilesFromLocalStorage(zipDirectory, unzippedFile);
+        doNothing().when(fileUtil).deleteFilesFromLocalStorage(testZipDirectory, testUnzippedFile);
+
+        pcqLoaderComponent.execute();
+
+        verify(blobStorageManager, times(1)).getPcqContainer();
+        verify(blobContainerClient, times(1)).exists();
+        verify(blobStorageManager, times(1)).collectBlobFileNamesFromContainer(blobContainerClient);
+        verify(blobStorageManager, times(1)).downloadFileFromBlobStorage(blobContainerClient, TEST_BLOB_FILENAME1);
+        verify(blobStorageManager, times(1)).downloadFileFromBlobStorage(blobContainerClient, TEST_BLOB_FILENAME2);
+        verify(fileUtil, times(1)).unzipBlobDownloadZipFile(zipDirectory);
+        verify(fileUtil, times(1)).unzipBlobDownloadZipFile(testZipDirectory);
+        verify(unzippedFile, times(1)).listFiles();
+        verify(testUnzippedFile, times(1)).listFiles();
+        verify(fileUtil, times(1)).getMetaDataFile(listedFiles);
+        verify(fileUtil, times(1)).getMetaDataFile(invalidListedFiles);
+        try {
+            verify(fileUtil, times(1)).readAllBytesFromFile(metaDataFile);
+            verify(payloadMappingHelper, times(1)).mapPayLoadToPcqAnswers(
+                jsonTestMetaData);
+        } catch (Exception e) {
+            fail(EXCEPTION_UNEXPECTED + e.getMessage());
+        }
+        verify(pcqBackendService, times(1)).submitAnswers(answerRequest);
+        verify(blobStorageManager, times(1)).moveFileToProcessedFolder(TEST_BLOB_FILENAME1, blobContainerClient);
+        verify(blobStorageManager, times(1)).moveFileToRejectedContainer(TEST_BLOB_FILENAME2, blobContainerClient);
         verify(fileUtil, times(1)).deleteFilesFromLocalStorage(zipDirectory, unzippedFile);
         verify(fileUtil, times(1)).deleteFilesFromLocalStorage(testZipDirectory, testUnzippedFile);
 
