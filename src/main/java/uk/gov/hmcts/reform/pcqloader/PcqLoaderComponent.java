@@ -72,17 +72,23 @@ public class PcqLoaderComponent {
 
                 // Step 7. Read the file and generate the mapping to the PcqAnswers object.
                 File metaDataFile = fileUtil.getMetaDataFile(Objects.requireNonNull(unzippedFiles.listFiles()));
-                String jsonMetaData = jsonStringFromFile(Objects.requireNonNull(metaDataFile));
-                PcqAnswerRequest mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(
-                    jsonMetaData);
-
-                if (mappedAnswers == null) {
-                    log.error("Mapping failed, moving the zip file to Rejected container");
+                if (metaDataFile == null) {
+                    log.error("metadata.json file not found, moving the zip file to Rejected container");
                     blobStorageManager.moveFileToRejectedContainer(tmpZipFileName, blobContainerClient);
                 } else {
-                    //Step 8. Invoke the back-end API
-                    invokeSubmitAnswers(mappedAnswers, tmpZipFileName, blobContainerClient);
+                    String jsonMetaData = jsonStringFromFile(metaDataFile);
+                    PcqAnswerRequest mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(
+                        jsonMetaData);
+
+                    if (mappedAnswers == null) {
+                        log.error("Mapping failed, moving the zip file to Rejected container");
+                        blobStorageManager.moveFileToRejectedContainer(tmpZipFileName, blobContainerClient);
+                    } else {
+                        //Step 8. Invoke the back-end API
+                        invokeSubmitAnswers(mappedAnswers, tmpZipFileName, blobContainerClient);
+                    }
                 }
+
 
             } catch (Exception ioe) {
                 log.error("Error during processing " + ioe.getMessage(), ioe);
