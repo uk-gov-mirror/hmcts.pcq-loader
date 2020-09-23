@@ -101,6 +101,15 @@ public class BlobStorageManagerTest {
     }
 
     @Test
+    public void testCollectBlobFileNamesAfterMove() {
+        blobStorageManager.moveFileToProcessedFolder(BLOB_FILENAME_1, blobStorageManager.getPcqContainer());
+        List<String> response =
+            blobStorageManager.collectBlobFileNamesFromContainer(blobStorageManager.getPcqContainer());
+        Assertions.assertEquals(1, response.size(), "Correct number of blob names");
+        Assertions.assertTrue(response.contains(BLOB_FILENAME_2), "Correct filename 2");
+    }
+
+    @Test
     public void testDownloadFileFromBlobStorage() {
         File fileResponse =
             blobStorageManager.downloadFileFromBlobStorage(blobStorageManager.getPcqContainer(), BLOB_FILENAME_1);
