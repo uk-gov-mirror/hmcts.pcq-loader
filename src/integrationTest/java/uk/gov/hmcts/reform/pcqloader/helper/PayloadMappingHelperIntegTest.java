@@ -316,8 +316,8 @@ public class PayloadMappingHelperIntegTest {
         assertEquals(1, answers.getDobProvided(), "Dob_Provided is not correct.");
         assertEquals(5, answers.getEthnicity(), "Ethnicity is not correct.");
         assertNull(answers.getEthnicityOther(), "Ethnicity_Other is not correct.");
-        assertEquals(0, answers.getDisabilityConditions(), "Disability_Conditions is not correct.");
-        assertEquals(3, answers.getDisabilityImpact(), "Disability_Impact is not correct.");
+        assertEquals(1, answers.getDisabilityConditions(), "Disability_Conditions is not correct.");
+        assertEquals(2, answers.getDisabilityImpact(), "Disability_Impact is not correct.");
         assertEquals(1, answers.getDisabilityVision(), "Disability_Vision is not correct.");
         assertEquals(0, answers.getDisabilityHearing(), "Disability_Hearing is not correct.");
         assertEquals(1, answers.getDisabilityMobility(), "Disability_Mobility is not correct.");

@@ -7,7 +7,10 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.reform.pcqloader.model.PcqAnswers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class PayloadValidationHelperTest {
@@ -23,7 +26,7 @@ public class PayloadValidationHelperTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -133,6 +136,38 @@ public class PayloadValidationHelperTest {
         checkAndAssertEthnicity(14, 16, answers);
         // Test the Other scenario
         checkAndAssertEthnicity(18,18, answers);
+
+    }
+
+    @Test
+    public void testDobProvided() {
+        PcqAnswers answers = new PcqAnswers();
+        answers.setDob("2001-01-01");
+
+        //Scenario 1- Dob provided is null and Dob is not null.
+        boolean testResult = payloadValidationHelper.isDobProvided(answers);
+        assertTrue(testResult, "Not expected to return false");
+        assertNotNull(answers.getDob(), "Dob is null");
+
+        //Scenario 2 - Dob provided is 0 and Dob is not null.
+        PcqAnswers testAnswers = new PcqAnswers();
+        testAnswers.setDobProvided(0);
+        testAnswers.setDob("2002-01-01");
+
+        testResult = payloadValidationHelper.isDobProvided(testAnswers);
+        assertFalse(testResult, "Not expected to return true");
+        assertNull(testAnswers.getDob(), "Dob is not null");
+        assertEquals(0, testAnswers.getDobProvided(), "Dob Provided is not correct");
+
+        //Scenario 3 - Dob Provided is 1 and Dob is not null
+        PcqAnswers test2Answers = new PcqAnswers();
+        test2Answers.setDobProvided(1);
+        test2Answers.setDob("2002-01-01");
+
+        testResult = payloadValidationHelper.isDobProvided(test2Answers);
+        assertTrue(testResult, "Not expected to return false");
+        assertNotNull(test2Answers.getDob(), "Dob is  null");
+        assertEquals(1, test2Answers.getDobProvided(), "Dob Provided is not correct");
 
     }
 
