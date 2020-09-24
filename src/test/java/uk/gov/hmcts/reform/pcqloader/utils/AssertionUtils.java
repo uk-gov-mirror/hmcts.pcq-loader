@@ -172,8 +172,8 @@ public class AssertionUtils {
         assertEquals(2, answers.getEnglishLanguageLevel(), "English Language Level is not correct");
         assertNull(answers.getReligionOther(), "Other Religion is not correct");
         assertNull(answers.getEthnicityOther(), "Ethnicity Other should have been null");
-        assertEquals(0, answers.getDisabilityConditions(), "Disability Conditions is not correct");
-        assertEquals(3, answers.getDisabilityImpact(), "Disability impact is not correct");
+        assertEquals(1, answers.getDisabilityConditions(), "Disability Conditions is not correct");
+        assertEquals(2, answers.getDisabilityImpact(), "Disability impact is not correct");
         assertEquals(2, answers.getPregnancy(), "Pregnancy is not correct");
         assertNull(answers.getSexualityOther(), "Sexuality Other is not correct");
         assertEquals(1, answers.getSex(), "Sex is not correct");

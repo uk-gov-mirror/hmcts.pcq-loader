@@ -63,6 +63,7 @@ public class BlobStorageManagerTest {
     private static final String TEST_PCQ_FILE_PATH = "/var/tmp/pcq-blobs";
     private static final String TEST_REJECTED_PCQ_CONTAINER_NAME = "PCQ_REJECTED";
     private static final String PROCESSED_FOLDER = "processed";
+    private static final String ROOT_FOLDER = "";
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -132,11 +133,11 @@ public class BlobStorageManagerTest {
 
     @Test
     public void testCollectBlobFileNamesSuccess() {
-        BlobItem blobItem1 = new BlobItem().setName(TEST_BLOB_FILENAME1);
-        BlobItem blobItem2 = new BlobItem().setName(TEST_BLOB_FILENAME2);
+        BlobItem blobItem1 = new BlobItem().setName(TEST_BLOB_FILENAME1).setDeleted(false).setIsPrefix(null);
+        BlobItem blobItem2 = new BlobItem().setName(TEST_BLOB_FILENAME2).setDeleted(false).setIsPrefix(null);
         List<BlobItem> blobs = Arrays.asList(blobItem1, blobItem2);
 
-        when(pcqContainer.listBlobs()).thenReturn(pageIterableBlobs);
+        when(pcqContainer.listBlobsByHierarchy(ROOT_FOLDER)).thenReturn(pageIterableBlobs);
         when(pageIterableBlobs.iterator()).thenReturn(blobs.iterator());
 
         testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
@@ -152,7 +153,7 @@ public class BlobStorageManagerTest {
     public void testCollectBlobFileNamesEmptyListSuccess() {
         List<BlobItem> blobs = new ArrayList<>();
 
-        when(pcqContainer.listBlobs()).thenReturn(pageIterableBlobs);
+        when(pcqContainer.listBlobsByHierarchy(ROOT_FOLDER)).thenReturn(pageIterableBlobs);
         when(pageIterableBlobs.iterator()).thenReturn(blobs.iterator());
 
         testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
@@ -164,10 +165,10 @@ public class BlobStorageManagerTest {
 
     @Test
     public void testCollectBlobFileNamesMissingName() {
-        BlobItem blobItem1 = new BlobItem();
+        BlobItem blobItem1 = new BlobItem().setDeleted(false).setIsPrefix(null);
         var blobs = Arrays.asList(blobItem1);
 
-        when(pcqContainer.listBlobs()).thenReturn(pageIterableBlobs);
+        when(pcqContainer.listBlobsByHierarchy(ROOT_FOLDER)).thenReturn(pageIterableBlobs);
         when(pageIterableBlobs.iterator()).thenReturn(blobs.iterator());
 
         testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);

@@ -21,6 +21,8 @@ import java.util.List;
 @Service
 public class BlobStorageManager {
 
+    private static final String BLOB_CONTAINER_FOLDER = "";
+
     private final BlobServiceClient blobServiceClient;
 
     private final BlobStorageProperties blobStorageProperties;
@@ -48,12 +50,14 @@ public class BlobStorageManager {
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     public List<String> collectBlobFileNamesFromContainer(BlobContainerClient blobContainerClient) {
         List<String> zipFilenames = new ArrayList<>();
-        for (BlobItem blob : blobContainerClient.listBlobs()) {
-            String fileName = FilenameUtils.getName(blob.getName());
-            if (Strings.isNullOrEmpty(fileName)) {
-                log.error("Unable to retrieve blob filename from container: {}", blob.getName());
-            } else {
-                zipFilenames.add(fileName);
+        for (BlobItem blob : blobContainerClient.listBlobsByHierarchy(BLOB_CONTAINER_FOLDER)) {
+            if (!blob.isDeleted() && null == blob.isPrefix()) {
+                String fileName = FilenameUtils.getName(blob.getName());
+                if (Strings.isNullOrEmpty(fileName)) {
+                    log.error("Unable to retrieve blob filename from container: {}", blob.getName());
+                } else {
+                    zipFilenames.add(fileName);
+                }
             }
         }
 

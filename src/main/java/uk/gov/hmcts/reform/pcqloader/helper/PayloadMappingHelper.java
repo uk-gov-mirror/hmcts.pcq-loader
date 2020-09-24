@@ -103,7 +103,9 @@ public class PayloadMappingHelper {
         mapOtherFields(payloadContents, answers);
 
         //Dob check and mapping
-        mapDateOfBirth(payloadContents, answers);
+        if (payloadValidationHelper.isDobProvided(answers)) {
+            mapDateOfBirth(payloadContents, answers);
+        }
 
         //Validate and check disability_none.
         payloadValidationHelper.validateDisabilityNone(answers);
