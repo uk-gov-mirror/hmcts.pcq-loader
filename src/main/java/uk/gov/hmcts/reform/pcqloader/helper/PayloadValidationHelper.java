@@ -114,4 +114,13 @@ public class PayloadValidationHelper {
         }
     }
 
+    public boolean isDobProvided(PcqAnswers answers) {
+        if (answers.getDobProvided() != null && answers.getDobProvided() == 0) {
+            answers.setDob(null);
+            return false;
+        }
+
+        return true;
+    }
+
 }
