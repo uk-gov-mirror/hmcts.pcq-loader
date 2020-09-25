@@ -9,6 +9,7 @@ import java.util.List;
 
 @Component
 @Slf4j
+@SuppressWarnings("PMD.GodClass")
 public class PayloadValidationHelper {
 
     private final String[] submitAnswerOtherFields = {"languageOther", "genderOther", "sexualityOther",
@@ -44,6 +45,16 @@ public class PayloadValidationHelper {
             setDisabilityValuesToNull(answers);
             answers.setDisabilityNone(null);
             log.info("Setting disability values to null because disability impact value is not 1 or 2");
+        }
+    }
+
+    public void validateLanguageLevel(PcqAnswers answers) {
+        //If user has selected the main language as English/Welsh or Prefer Not to Say then
+        //set the language level to null.
+        if (answers.getEnglishLanguageLevel() != null && answers.getLanguageMain() != null
+            && (answers.getLanguageMain() == 1 || answers.getLanguageMain() == 0)) {
+            answers.setEnglishLanguageLevel(null);
+            log.info("Setting english language level to null because main language value is not 2");
         }
     }
 

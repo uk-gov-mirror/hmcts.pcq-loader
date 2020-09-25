@@ -119,6 +119,9 @@ public class PayloadMappingHelper {
         //Validate and correct other fields.
         payloadValidationHelper.validateAndCorrectOtherFields(answers);
 
+        //Validate and correct english language level.
+        payloadValidationHelper.validateLanguageLevel(answers);
+
         pcqAnswerRequest.setPcqAnswers(answers);
 
         return pcqAnswerRequest;
