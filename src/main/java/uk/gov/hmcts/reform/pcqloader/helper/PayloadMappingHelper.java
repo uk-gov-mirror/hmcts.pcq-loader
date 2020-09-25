@@ -107,6 +107,12 @@ public class PayloadMappingHelper {
             mapDateOfBirth(payloadContents, answers);
         }
 
+        //Validate and check disability_conditions
+        payloadValidationHelper.validateDisabilityConditions(answers);
+
+        //validate and check disability_impact
+        payloadValidationHelper.validateDisabilityImpact(answers);
+
         //Validate and check disability_none.
         payloadValidationHelper.validateDisabilityNone(answers);
 

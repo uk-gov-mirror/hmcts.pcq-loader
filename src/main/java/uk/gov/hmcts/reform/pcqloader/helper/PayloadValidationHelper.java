@@ -19,18 +19,31 @@ public class PayloadValidationHelper {
     public void validateDisabilityNone(PcqAnswers answers) {
         // If the disability_none has value of "1" then all other disabilities should be set to null.
         if (answers.getDisabilityNone() != null && answers.getDisabilityNone() > 0) {
-            answers.setDisabilityVision(null);
-            answers.setDisabilityHearing(null);
-            answers.setDisabilityMobility(null);
-            answers.setDisabilityDexterity(null);
-            answers.setDisabilityLearning(null);
-            answers.setDisabilityMemory(null);
-            answers.setDisabilityMentalHealth(null);
-            answers.setDisabilityStamina(null);
-            answers.setDisabilitySocial(null);
-            answers.setDisabilityOther(null);
-            answers.setDisabilityConditionOther(null);
+            setDisabilityValuesToNull(answers);
             log.info("Setting disability values to null because disability None value is 1");
+        }
+    }
+
+    public void validateDisabilityConditions(PcqAnswers answers) {
+        //If the disability conditions has value of "2" or "0" (No or prefer not to say) then
+        //Disability impact should be set to null along with the disabilities.
+        if (answers.getDisabilityConditions() != null && (answers.getDisabilityConditions() == 2
+            || answers.getDisabilityConditions() == 0)) {
+            answers.setDisabilityImpact(null);
+            answers.setDisabilityNone(null);
+            setDisabilityValuesToNull(answers);
+            log.info("Setting disability values to null because disability Condition value is not 1");
+        }
+    }
+
+    public void validateDisabilityImpact(PcqAnswers answers) {
+        //If the disability impact has value of "3" or "0" (No or prefer not to say) then
+        //Disabilities should be set to null.
+        if (answers.getDisabilityImpact() != null && (answers.getDisabilityImpact() == 3
+            || answers.getDisabilityImpact() == 0)) {
+            setDisabilityValuesToNull(answers);
+            answers.setDisabilityNone(null);
+            log.info("Setting disability values to null because disability impact value is not 1 or 2");
         }
     }
 
@@ -121,6 +134,20 @@ public class PayloadValidationHelper {
         }
 
         return true;
+    }
+
+    private void setDisabilityValuesToNull(PcqAnswers pcqAnswers) {
+        pcqAnswers.setDisabilityVision(null);
+        pcqAnswers.setDisabilityHearing(null);
+        pcqAnswers.setDisabilityMobility(null);
+        pcqAnswers.setDisabilityDexterity(null);
+        pcqAnswers.setDisabilityLearning(null);
+        pcqAnswers.setDisabilityMemory(null);
+        pcqAnswers.setDisabilityMentalHealth(null);
+        pcqAnswers.setDisabilityStamina(null);
+        pcqAnswers.setDisabilitySocial(null);
+        pcqAnswers.setDisabilityOther(null);
+        pcqAnswers.setDisabilityConditionOther(null);
     }
 
 }
