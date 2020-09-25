@@ -303,6 +303,100 @@ public class PayloadMappingHelperTest {
         assertUtils.assertDobInvalidMapping(mappedAnswers, metaData);
     }
 
+    @Test
+    public void mapPayLoadNoDisabilityCondition() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/noDisabilityMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.NO_DISABILITY_CONDITION_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+
+        assertUtils.assertNoDisabilityCondition(mappedAnswers, metaData, 2);
+    }
+
+    @Test
+    public void mapPayLoadNoPreferenceDisabilityCondition() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/notPreferDisabilityMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(
+            TestSupportUtils.NOT_PREFER_DISABILITY_CONDITION_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+
+        assertUtils.assertNoDisabilityCondition(mappedAnswers, metaData, 0);
+    }
+
+    @Test
+    public void mapPayLoadNoDisabilityImpact() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/noDisabilityImpactMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.NO_DISABILITY_IMPACT_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+
+        assertUtils.assertNoDisabilityImpact(mappedAnswers, metaData, 3);
+    }
+
+    @Test
+    public void mapPayLoadNotPreferDisabilityImpact() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/notPreferDisabilityImpactMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(
+            TestSupportUtils.NOT_PREFER_DISABILITY_IMPACT_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+
+        assertUtils.assertNoDisabilityImpact(mappedAnswers, metaData, 0);
+    }
+
 
     /**
      * Obtains a JSON String from a JSON file in the classpath (Resources directory).

@@ -156,7 +156,7 @@ public class AssertionUtils {
         //Check the answers matches the payload supplied.
         PcqAnswers answers = mappedAnswers.getPcqAnswers();
         assertCommonAnswers(answers);
-        assertDisabilitiesNoneFlag(answers);
+        assertDisabilitiesNoneFlag(answers, false);
         assertEquals(5, answers.getEthnicity(), ETHNICITY_VALIDATION_MSG);
         assertEquals(3, answers.getReligion(), RELIGION_VALIDATION_MSG);
         assertEquals(EXPECTED_DOB, answers.getDob(),  DOB_VALIDATION_MSG);
@@ -181,6 +181,74 @@ public class AssertionUtils {
         assertEquals(2, answers.getMarriage(), "Marriage is not correct");
     }
 
+    public void assertNoDisabilityCondition(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData,
+                                            int expectedResult) {
+        assertDefaultAndGeneratedFields(mappedAnswers);
+
+        //Check the information that matches the meta-data information.
+        PcqScannableItems[] pcqScannedItems = pcqMetaData.getScannableItems();
+        assertEquals(pcqScannedItems[0].getDocumentType(), mappedAnswers.getFormId(), FORM_ID_VALIDATION_MSG);
+        assertEquals(pcqMetaData.getJurisdiction(), mappedAnswers.getServiceId(),  SERVICE_ID_VALIDATION_MSG);
+        //Check the correct DCN Number is populated.
+        assertEquals(pcqMetaData.getOriginatingDcnNumber(), mappedAnswers.getDcnNumber(), DCN_NUMBER_VALIDATION_MSG);
+
+        //Check the answers matches the payload supplied.
+        PcqAnswers answers = mappedAnswers.getPcqAnswers();
+        assertNull(answers.getLanguageOther(), "Other Language is not correct");
+        assertEquals(2, answers.getEnglishLanguageLevel(), "English Language Level is not correct");
+        assertNull(answers.getReligionOther(), "Other Religion is not correct");
+        assertNull(answers.getEthnicityOther(), "Ethnicity Other should have been null");
+        assertEquals(expectedResult, answers.getDisabilityConditions(), "Disability Conditions is not correct");
+        assertNull(answers.getDisabilityImpact(), "Disability impact is not correct");
+        assertEquals(2, answers.getPregnancy(), "Pregnancy is not correct");
+        assertNull(answers.getSexualityOther(), "Sexuality Other is not correct");
+        assertEquals(1, answers.getSex(), "Sex is not correct");
+        assertNull(answers.getGenderOther(), "Other Gender is not correct");
+        assertEquals(2, answers.getMarriage(), "Marriage is not correct");
+        assertDisabilitiesNoneFlag(answers, true);
+        assertEquals(5, answers.getEthnicity(), ETHNICITY_VALIDATION_MSG);
+        assertEquals(3, answers.getReligion(), RELIGION_VALIDATION_MSG);
+        assertEquals(EXPECTED_DOB, answers.getDob(),  DOB_VALIDATION_MSG);
+        assertEquals(1, answers.getDobProvided(), DOB_PROVIDED_MSG);
+        assertEquals(1, answers.getLanguageMain(), LANG_MAIN_VALIDATION_MSG);
+        assertEquals(1, answers.getSexuality(), SEXUALITY_VALIDATION_MSG);
+        assertEquals(1, answers.getGenderDifferent(), GENDER_DIFFERENT_MSG);
+    }
+
+    public void assertNoDisabilityImpact(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData,
+                                            int expectedResult) {
+        assertDefaultAndGeneratedFields(mappedAnswers);
+
+        //Check the information that matches the meta-data information.
+        PcqScannableItems[] pcqScannedItems = pcqMetaData.getScannableItems();
+        assertEquals(pcqScannedItems[0].getDocumentType(), mappedAnswers.getFormId(), FORM_ID_VALIDATION_MSG);
+        assertEquals(pcqMetaData.getJurisdiction(), mappedAnswers.getServiceId(),  SERVICE_ID_VALIDATION_MSG);
+        //Check the correct DCN Number is populated.
+        assertEquals(pcqMetaData.getOriginatingDcnNumber(), mappedAnswers.getDcnNumber(), DCN_NUMBER_VALIDATION_MSG);
+
+        //Check the answers matches the payload supplied.
+        PcqAnswers answers = mappedAnswers.getPcqAnswers();
+        assertNull(answers.getLanguageOther(), "Other Language is not correct");
+        assertEquals(2, answers.getEnglishLanguageLevel(), "English Language Level is not correct");
+        assertNull(answers.getReligionOther(), "Other Religion is not correct");
+        assertNull(answers.getEthnicityOther(), "Ethnicity Other should have been null");
+        assertEquals(1, answers.getDisabilityConditions(), "Disability Conditions is not correct");
+        assertEquals(expectedResult, answers.getDisabilityImpact(), "Disability impact is not correct");
+        assertEquals(2, answers.getPregnancy(), "Pregnancy is not correct");
+        assertNull(answers.getSexualityOther(), "Sexuality Other is not correct");
+        assertEquals(1, answers.getSex(), "Sex is not correct");
+        assertNull(answers.getGenderOther(), "Other Gender is not correct");
+        assertEquals(2, answers.getMarriage(), "Marriage is not correct");
+        assertDisabilitiesNoneFlag(answers, true);
+        assertEquals(5, answers.getEthnicity(), ETHNICITY_VALIDATION_MSG);
+        assertEquals(3, answers.getReligion(), RELIGION_VALIDATION_MSG);
+        assertEquals(EXPECTED_DOB, answers.getDob(),  DOB_VALIDATION_MSG);
+        assertEquals(1, answers.getDobProvided(), DOB_PROVIDED_MSG);
+        assertEquals(1, answers.getLanguageMain(), LANG_MAIN_VALIDATION_MSG);
+        assertEquals(1, answers.getSexuality(), SEXUALITY_VALIDATION_MSG);
+        assertEquals(1, answers.getGenderDifferent(), GENDER_DIFFERENT_MSG);
+    }
+
     public void assertDisabilitiesSuccess(PcqAnswers answers) {
         assertEquals(1, answers.getDisabilityVision(), "Disability Vision is not correct");
         assertEquals(0, answers.getDisabilityHearing(), "Disability Hearing is not correct");
@@ -197,7 +265,7 @@ public class AssertionUtils {
         assertEquals(0, answers.getDisabilityNone(), "Disability None is not correct");
     }
 
-    public void assertDisabilitiesNoneFlag(PcqAnswers answers) {
+    public void assertDisabilitiesNoneFlag(PcqAnswers answers, boolean allNull) {
         assertNull(answers.getDisabilityVision(), "Disability Vision is not correct");
         assertNull(answers.getDisabilityHearing(), "Disability Hearing is not correct");
         assertNull(answers.getDisabilityMobility(), "Disability Mobility is not correct");
@@ -209,7 +277,11 @@ public class AssertionUtils {
         assertNull(answers.getDisabilitySocial(), "Disability Social is not correct");
         assertNull(answers.getDisabilityOther(), "Disability Other is not correct");
         assertNull(answers.getDisabilityConditionOther(), "Other Disability Details is not correct");
-        assertEquals(1, answers.getDisabilityNone(), "Disability None is not correct");
+        if (allNull) {
+            assertNull(answers.getDisabilityNone(), "Disability None is not correct");
+        } else {
+            assertEquals(1, answers.getDisabilityNone(), "Disability None is not correct");
+        }
     }
 
     public void assertPayLoads(PcqPayLoad expectedPayLoad, PcqPayLoad actualPayLoad) {
