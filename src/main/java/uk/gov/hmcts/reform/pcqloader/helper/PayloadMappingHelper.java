@@ -218,7 +218,6 @@ public class PayloadMappingHelper {
             answers.setDobProvided(1);
             answers.setDob(PcqLoaderUtils.generateCompleteDobString(dob));
         } else {
-            answers.setDobProvided(0);
             answers.setDob(null);
             log.error("Invalid Dob provided - " + dob + ", setting the Dob to Null");
         }

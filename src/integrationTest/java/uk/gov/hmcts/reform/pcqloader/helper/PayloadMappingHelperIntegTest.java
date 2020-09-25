@@ -282,7 +282,7 @@ public class PayloadMappingHelperIntegTest {
         assertNull(answers.getDisabilityConditions(), "Disability_Conditions is not correct.");
         assertNull(answers.getEthnicityOther(), "Ethnicity_Other is not correct.");
         assertNull(answers.getEthnicity(), "Ethnicity is not correct.");
-        assertEquals(0, answers.getDobProvided(), "Dob_Provided is not correct.");
+        assertNull(answers.getDobProvided(), "Dob_Provided is not correct.");
         assertNull(answers.getDob(), "Dob is not correct.");
         assertNull(answers.getReligionOther(), "Religion_Other is not correct.");
         assertNull(answers.getReligion(), "Religion is not correct.");
