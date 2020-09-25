@@ -101,7 +101,7 @@ public final class TestSupportUtils {
         + "      { \"metadata_field_name\": \"dob_day\", \"metadata_field_value\": \"\" },\n"
         + "      { \"metadata_field_name\": \"dob_month\", \"metadata_field_value\": \"AB\" },\n"
         + "      { \"metadata_field_name\": \"dob_year\", \"metadata_field_value\": \"00\" },\n"
-        + "      { \"metadata_field_name\": \"dob_provided\", \"metadata_field_value\": \"1\" },\n"
+        + "      { \"metadata_field_name\": \"dob_provided\", \"metadata_field_value\": \"\" },\n"
         + "      { \"metadata_field_name\": \"ethnicity\", \"metadata_field_value\": \"5\" },\n"
         + "      { \"metadata_field_name\": \"other_white_ethnicity_text\", \"metadata_field_value\": \"\" },\n"
         + "      { \"metadata_field_name\": \"other_mixed_ethnicity_text\", \"metadata_field_value\": \"\" },\n"

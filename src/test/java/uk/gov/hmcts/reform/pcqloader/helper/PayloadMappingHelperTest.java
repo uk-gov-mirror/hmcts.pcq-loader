@@ -279,7 +279,7 @@ public class PayloadMappingHelperTest {
         }
 
 
-        assertUtils.assertDobInvalidMapping(mappedAnswers, metaData);
+        assertUtils.assertDobNotProvidedMapping(mappedAnswers, metaData);
     }
 
     @Test
@@ -302,7 +302,7 @@ public class PayloadMappingHelperTest {
         }
 
 
-        assertUtils.assertDobInvalidMapping(mappedAnswers, metaData);
+        assertUtils.assertDobNotProvidedMapping(mappedAnswers, metaData);
     }
 
     @Test
