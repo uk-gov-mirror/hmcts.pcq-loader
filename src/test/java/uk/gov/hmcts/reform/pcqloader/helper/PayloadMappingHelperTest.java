@@ -18,13 +18,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SuppressWarnings({"PMD.TooManyMethods", "PMD.DataflowAnomalyAnalysis"})
 public class PayloadMappingHelperTest {
 
     private static final String FAIL_ASSERT_MSG = "Method call failed.";
+    private static final String ENGLISH_LANGUAGE_LEVEL_MSG = "English Language Level is not correct";
 
     @Spy
     @SuppressWarnings("PMD.UnusedPrivateField")
@@ -277,7 +279,7 @@ public class PayloadMappingHelperTest {
         }
 
 
-        assertUtils.assertDobInvalidMapping(mappedAnswers, metaData);
+        assertUtils.assertDobNotProvidedMapping(mappedAnswers, metaData);
     }
 
     @Test
@@ -300,7 +302,192 @@ public class PayloadMappingHelperTest {
         }
 
 
-        assertUtils.assertDobInvalidMapping(mappedAnswers, metaData);
+        assertUtils.assertDobNotProvidedMapping(mappedAnswers, metaData);
+    }
+
+    @Test
+    public void mapPayLoadNoDisabilityCondition() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/noDisabilityMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.NO_DISABILITY_CONDITION_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+
+        assertUtils.assertNoDisabilityCondition(mappedAnswers, metaData, 2);
+    }
+
+    @Test
+    public void mapPayLoadNoPreferenceDisabilityCondition() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/notPreferDisabilityMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(
+            TestSupportUtils.NOT_PREFER_DISABILITY_CONDITION_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+
+        assertUtils.assertNoDisabilityCondition(mappedAnswers, metaData, 0);
+    }
+
+    @Test
+    public void mapPayLoadNoDisabilityImpact() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/noDisabilityImpactMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.NO_DISABILITY_IMPACT_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+
+        assertUtils.assertNoDisabilityImpact(mappedAnswers, metaData, 3);
+    }
+
+    @Test
+    public void mapPayLoadNotPreferDisabilityImpact() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/notPreferDisabilityImpactMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(
+            TestSupportUtils.NOT_PREFER_DISABILITY_IMPACT_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+
+        assertUtils.assertNoDisabilityImpact(mappedAnswers, metaData, 0);
+    }
+
+    @Test
+    public void mapPayLoadLanguageLevelEmpty() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/emptyLanguageMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.EMPTY_LANGUAGE_LEVEL);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+
+        assertUtils.assertSuccessMapping(mappedAnswers, metaData);
+    }
+
+    @Test
+    public void mapPayLoadMainLanguageEmpty() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/emptyMainLanguageMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.EMPTY_MAIN_LANGUAGE);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+        assertEquals(1, mappedAnswers.getPcqAnswers().getEnglishLanguageLevel(), ENGLISH_LANGUAGE_LEVEL_MSG);
+        assertUtils.assertLanguageMapping(mappedAnswers, metaData, null);
+    }
+
+    @Test
+    public void mapPayLoadMainLanguageNotPreferred() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/notPreferMainLanguageMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.MAIN_LANG_NOT_PREFERRED);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+        assertNull(mappedAnswers.getPcqAnswers().getEnglishLanguageLevel(), ENGLISH_LANGUAGE_LEVEL_MSG);
+        assertUtils.assertLanguageMapping(mappedAnswers, metaData, 0);
+    }
+
+    @Test
+    public void mapPayLoadMainLanguageOther() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/otherMainLanguageMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.OTHER_MAIN_LANGUAGE);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+        assertUtils.assertOtherLanguageMapping(mappedAnswers, metaData);
     }
 
 
