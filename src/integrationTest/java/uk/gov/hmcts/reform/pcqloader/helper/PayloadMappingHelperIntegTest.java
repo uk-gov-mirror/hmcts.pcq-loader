@@ -309,7 +309,7 @@ public class PayloadMappingHelperIntegTest {
         PcqAnswers answers = mappedAnswers.getPcqAnswers();
         assertEquals(1, answers.getLanguageMain(), "Language_Main is not correct.");
         assertNull(answers.getLanguageOther(), "Language_Other is not correct.");
-        assertEquals(2, answers.getEnglishLanguageLevel(), "English_Language_level is not correct.");
+        assertNull(answers.getEnglishLanguageLevel(), "English_Language_level is not correct.");
         assertEquals(3, answers.getReligion(), "Religion is not correct.");
         assertNull(answers.getReligionOther(), "Religion_Other is not correct.");
         assertEquals(EXPECTED_DOB, answers.getDob(),  DOB_VALIDATION_MSG);
