@@ -159,6 +159,30 @@ public class AssertionUtils {
         //Check the answers matches the payload supplied.
         PcqAnswers answers = mappedAnswers.getPcqAnswers();
         assertCommonAnswers(answers);
+        assertNull(answers.getEnglishLanguageLevel(), ENGLISH_LANGUAGE_LEVEL_MSG);
+        assertDisabilitiesSuccess(answers);
+        assertEquals(3, answers.getReligion(), RELIGION_VALIDATION_MSG);
+        assertEquals(3, answers.getEthnicity(), ETHNICITY_VALIDATION_MSG);
+        assertEquals(EXPECTED_DOB, answers.getDob(),  DOB_VALIDATION_MSG);
+        assertEquals(1, answers.getDobProvided(), DOB_PROVIDED_MSG);
+        assertEquals(1, answers.getLanguageMain(), LANG_MAIN_VALIDATION_MSG);
+        assertEquals(1, answers.getSexuality(), SEXUALITY_VALIDATION_MSG);
+        assertEquals(1, answers.getGenderDifferent(), GENDER_DIFFERENT_MSG);
+    }
+
+    public void assertMultipleInvalidOtherMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData) {
+        assertDefaultAndGeneratedFields(mappedAnswers);
+
+        //Check the information that matches the meta-data information.
+        PcqScannableItems[] pcqScannedItems = pcqMetaData.getScannableItems();
+        assertEquals(pcqScannedItems[0].getDocumentType(), mappedAnswers.getFormId(), FORM_ID_VALIDATION_MSG);
+        assertEquals(pcqMetaData.getJurisdiction(), mappedAnswers.getServiceId(), SERVICE_ID_VALIDATION_MSG);
+        //Check the correct DCN Number is populated.
+        assertEquals(pcqMetaData.getOriginatingDcnNumber(), mappedAnswers.getDcnNumber(), DCN_NUMBER_VALIDATION_MSG);
+
+        //Check the answers matches the payload supplied.
+        PcqAnswers answers = mappedAnswers.getPcqAnswers();
+        assertCommonAnswers(answers);
         assertEquals(2, answers.getEnglishLanguageLevel(), ENGLISH_LANGUAGE_LEVEL_MSG);
         assertDisabilitiesSuccess(answers);
         assertEquals(-1, answers.getReligion(), RELIGION_VALIDATION_MSG);

@@ -228,6 +228,28 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
+    public void mapInvalidOtherValuesMultiple() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/multipleInvalidOtherValuesMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.MULTIPLE_INVALID_OTHER_PAYLOAD);
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+            metaData.getScannableItems()[0].getOcrData())));
+        // Assert the expected and actual payloads are correct before invoking the mapping.
+        assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
+
+        PcqAnswerRequest mappedAnswers = null;
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+        assertUtils.assertMultipleInvalidOtherMapping(mappedAnswers, metaData);
+    }
+
+    @Test
     public void payloadScannableItemMissing() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/noScannableItemsMetaFile.json");
