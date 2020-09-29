@@ -87,9 +87,9 @@ public class PayloadValidationHelper {
             && answers.getLanguageMain() != null && !submitAnswerOtherIntFieldValues[index]
             .contains(String.valueOf(answers.getLanguageMain()))) {
             answers.setLanguageOther(null);
-            answers.setLanguageMain(-1);
-            log.error("Invalid other language provided, user has supplied duplicate values. "
-                          + "Setting language_main to -1");
+            if (answers.getLanguageMain() != -1) {
+                answers.setEnglishLanguageLevel(null);
+            }
         }
     }
 
@@ -98,9 +98,6 @@ public class PayloadValidationHelper {
             && answers.getGenderDifferent() != null && !submitAnswerOtherIntFieldValues[index]
             .contains(String.valueOf(answers.getGenderDifferent()))) {
             answers.setGenderOther(null);
-            answers.setGenderDifferent(-1);
-            log.error("Invalid other gender provided, user has supplied duplicate values. "
-                          + "Setting gender_different to -1");
         }
     }
 
@@ -109,9 +106,6 @@ public class PayloadValidationHelper {
             && answers.getSexuality() != null && !submitAnswerOtherIntFieldValues[index]
             .contains(String.valueOf(answers.getSexuality()))) {
             answers.setSexualityOther(null);
-            answers.setSexuality(-1);
-            log.error("Invalid other sexuality provided, user has supplied duplicate values. "
-                          + "Setting sexuality to -1");
         }
     }
 
@@ -120,9 +114,6 @@ public class PayloadValidationHelper {
             List<String> splitList = Arrays.asList(submitAnswerOtherIntFieldValues[index].split(","));
             if (! splitList.contains(String.valueOf(answers.getEthnicity()))) {
                 answers.setEthnicityOther(null);
-                answers.setEthnicity(-1);
-                log.error("Invalid ethnicity provided, user has supplied duplicate values. "
-                              + "Setting ethnicity to -1");
             }
         }
     }
@@ -132,9 +123,6 @@ public class PayloadValidationHelper {
             && answers.getReligion() != null && !submitAnswerOtherIntFieldValues[index]
             .contains(String.valueOf(answers.getReligion()))) {
             answers.setReligionOther(null);
-            answers.setReligion(-1);
-            log.error("Invalid other religion provided, user has supplied duplicate values. "
-                          + "Setting religion to -1");
         }
     }
 
