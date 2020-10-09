@@ -103,13 +103,24 @@ public class PayloadMappingHelper {
         mapOtherFields(payloadContents, answers);
 
         //Dob check and mapping
-        mapDateOfBirth(payloadContents, answers);
+        if (payloadValidationHelper.isDobProvided(answers)) {
+            mapDateOfBirth(payloadContents, answers);
+        }
+
+        //Validate and check disability_conditions
+        payloadValidationHelper.validateDisabilityConditions(answers);
+
+        //validate and check disability_impact
+        payloadValidationHelper.validateDisabilityImpact(answers);
 
         //Validate and check disability_none.
         payloadValidationHelper.validateDisabilityNone(answers);
 
         //Validate and correct other fields.
         payloadValidationHelper.validateAndCorrectOtherFields(answers);
+
+        //Validate and correct english language level.
+        payloadValidationHelper.validateLanguageLevel(answers);
 
         pcqAnswerRequest.setPcqAnswers(answers);
 
@@ -207,7 +218,6 @@ public class PayloadMappingHelper {
             answers.setDobProvided(1);
             answers.setDob(PcqLoaderUtils.generateCompleteDobString(dob));
         } else {
-            answers.setDobProvided(0);
             answers.setDob(null);
             log.error("Invalid Dob provided - " + dob + ", setting the Dob to Null");
         }

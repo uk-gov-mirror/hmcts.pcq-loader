@@ -9,6 +9,7 @@ import java.util.List;
 
 @Component
 @Slf4j
+@SuppressWarnings("PMD.GodClass")
 public class PayloadValidationHelper {
 
     private final String[] submitAnswerOtherFields = {"languageOther", "genderOther", "sexualityOther",
@@ -19,18 +20,41 @@ public class PayloadValidationHelper {
     public void validateDisabilityNone(PcqAnswers answers) {
         // If the disability_none has value of "1" then all other disabilities should be set to null.
         if (answers.getDisabilityNone() != null && answers.getDisabilityNone() > 0) {
-            answers.setDisabilityVision(null);
-            answers.setDisabilityHearing(null);
-            answers.setDisabilityMobility(null);
-            answers.setDisabilityDexterity(null);
-            answers.setDisabilityLearning(null);
-            answers.setDisabilityMemory(null);
-            answers.setDisabilityMentalHealth(null);
-            answers.setDisabilityStamina(null);
-            answers.setDisabilitySocial(null);
-            answers.setDisabilityOther(null);
-            answers.setDisabilityConditionOther(null);
+            setDisabilityValuesToNull(answers);
             log.info("Setting disability values to null because disability None value is 1");
+        }
+    }
+
+    public void validateDisabilityConditions(PcqAnswers answers) {
+        //If the disability conditions has value of "2" or "0" (No or prefer not to say) then
+        //Disability impact should be set to null along with the disabilities.
+        if (answers.getDisabilityConditions() != null && (answers.getDisabilityConditions() == 2
+            || answers.getDisabilityConditions() == 0)) {
+            answers.setDisabilityImpact(null);
+            answers.setDisabilityNone(null);
+            setDisabilityValuesToNull(answers);
+            log.info("Setting disability values to null because disability Condition value is not 1");
+        }
+    }
+
+    public void validateDisabilityImpact(PcqAnswers answers) {
+        //If the disability impact has value of "3" or "0" (No or prefer not to say) then
+        //Disabilities should be set to null.
+        if (answers.getDisabilityImpact() != null && (answers.getDisabilityImpact() == 3
+            || answers.getDisabilityImpact() == 0)) {
+            setDisabilityValuesToNull(answers);
+            answers.setDisabilityNone(null);
+            log.info("Setting disability values to null because disability impact value is not 1 or 2");
+        }
+    }
+
+    public void validateLanguageLevel(PcqAnswers answers) {
+        //If user has selected the main language as English/Welsh or Prefer Not to Say then
+        //set the language level to null.
+        if (answers.getEnglishLanguageLevel() != null && answers.getLanguageMain() != null
+            && (answers.getLanguageMain() == 1 || answers.getLanguageMain() == 0)) {
+            answers.setEnglishLanguageLevel(null);
+            log.info("Setting english language level to null because main language value is not 2");
         }
     }
 
@@ -63,9 +87,9 @@ public class PayloadValidationHelper {
             && answers.getLanguageMain() != null && !submitAnswerOtherIntFieldValues[index]
             .contains(String.valueOf(answers.getLanguageMain()))) {
             answers.setLanguageOther(null);
-            answers.setLanguageMain(-1);
-            log.error("Invalid other language provided, user has supplied duplicate values. "
-                          + "Setting language_main to -1");
+            if (answers.getLanguageMain() != -1) {
+                answers.setEnglishLanguageLevel(null);
+            }
         }
     }
 
@@ -74,9 +98,6 @@ public class PayloadValidationHelper {
             && answers.getGenderDifferent() != null && !submitAnswerOtherIntFieldValues[index]
             .contains(String.valueOf(answers.getGenderDifferent()))) {
             answers.setGenderOther(null);
-            answers.setGenderDifferent(-1);
-            log.error("Invalid other gender provided, user has supplied duplicate values. "
-                          + "Setting gender_different to -1");
         }
     }
 
@@ -85,9 +106,6 @@ public class PayloadValidationHelper {
             && answers.getSexuality() != null && !submitAnswerOtherIntFieldValues[index]
             .contains(String.valueOf(answers.getSexuality()))) {
             answers.setSexualityOther(null);
-            answers.setSexuality(-1);
-            log.error("Invalid other sexuality provided, user has supplied duplicate values. "
-                          + "Setting sexuality to -1");
         }
     }
 
@@ -96,9 +114,6 @@ public class PayloadValidationHelper {
             List<String> splitList = Arrays.asList(submitAnswerOtherIntFieldValues[index].split(","));
             if (! splitList.contains(String.valueOf(answers.getEthnicity()))) {
                 answers.setEthnicityOther(null);
-                answers.setEthnicity(-1);
-                log.error("Invalid ethnicity provided, user has supplied duplicate values. "
-                              + "Setting ethnicity to -1");
             }
         }
     }
@@ -108,10 +123,30 @@ public class PayloadValidationHelper {
             && answers.getReligion() != null && !submitAnswerOtherIntFieldValues[index]
             .contains(String.valueOf(answers.getReligion()))) {
             answers.setReligionOther(null);
-            answers.setReligion(-1);
-            log.error("Invalid other religion provided, user has supplied duplicate values. "
-                          + "Setting religion to -1");
         }
+    }
+
+    public boolean isDobProvided(PcqAnswers answers) {
+        if (answers.getDobProvided() != null && answers.getDobProvided() == 0) {
+            answers.setDob(null);
+            return false;
+        }
+
+        return true;
+    }
+
+    private void setDisabilityValuesToNull(PcqAnswers pcqAnswers) {
+        pcqAnswers.setDisabilityVision(null);
+        pcqAnswers.setDisabilityHearing(null);
+        pcqAnswers.setDisabilityMobility(null);
+        pcqAnswers.setDisabilityDexterity(null);
+        pcqAnswers.setDisabilityLearning(null);
+        pcqAnswers.setDisabilityMemory(null);
+        pcqAnswers.setDisabilityMentalHealth(null);
+        pcqAnswers.setDisabilityStamina(null);
+        pcqAnswers.setDisabilitySocial(null);
+        pcqAnswers.setDisabilityOther(null);
+        pcqAnswers.setDisabilityConditionOther(null);
     }
 
 }
