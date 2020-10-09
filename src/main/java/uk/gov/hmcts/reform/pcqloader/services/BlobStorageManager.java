@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.pcqloader.exceptions.BlobProcessingException;
 import uk.gov.hmcts.reform.pcqloader.utils.ZipFileUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -80,6 +81,8 @@ public class BlobStorageManager {
                     log.info("Succeessfully downloaded blob file to path: {}", localFile.getPath());
                     return localFile;
                 }
+            } else {
+                throw new IOException("Unable to write blob file to filesystem");
             }
         } catch (Exception exp) {
             log.error("Error downloading {} from Blob Storage", blobName);

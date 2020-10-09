@@ -59,6 +59,7 @@ class BlobStorageManagerTest {
     private static final String TEST_CUSTOM_CONTAINER_NAME = "PCQ_2";
     private static final String TEST_BLOB_FILENAME1 = "1579002492_31-08-2020-11-35-10.zip";
     private static final String TEST_BLOB_FILENAME2 = "1579002493_31-08-2020-11-48-42.zip";
+    private static final String TEST_BLOB_BAD_FILENAME1 = "157900#-%%&{-11-48-42.zip";
     private static final String TEST_PCQ_BLOB_PATH = "http://0.0.0.0:10000/" + TEST_PCQ_CONTAINER_NAME;
     private static final String TEST_PCQ_FILE_PATH = "/var/tmp/pcq-blobs";
     private static final String TEST_REJECTED_PCQ_CONTAINER_NAME = "PCQ_REJECTED";
@@ -211,6 +212,19 @@ class BlobStorageManagerTest {
         } catch (BlobProcessingException bpe) {
             verify(blobClient, times(1)).downloadToFile(
                 TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_FILENAME1, true);
+        }
+    }
+
+    @Test
+    void testDownloadFileFromBlobStorageWriteFileError() throws IOException {
+        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
+
+        try {
+            testBlobStorageManager.downloadFileFromBlobStorage(pcqContainer, TEST_BLOB_BAD_FILENAME1);
+            Assertions.fail("BlobProcessingException should be thrown");
+        } catch (BlobProcessingException bpe) {
+            verify(blobClient, times(0)).downloadToFile(
+                TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_BAD_FILENAME1, true);
         }
     }
 
