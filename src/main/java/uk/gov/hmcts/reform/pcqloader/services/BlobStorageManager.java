@@ -65,7 +65,7 @@ public class BlobStorageManager {
         return zipFilenames;
     }
 
-    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
+    @SuppressWarnings({"PMD.DataflowAnomalyAnalysis","PMD.LawOfDemeter"})
     public File downloadFileFromBlobStorage(BlobContainerClient blobContainerClient, String blobName) {
         ZipFileUtils zipFileUtils = new ZipFileUtils();
         log.debug("Downloading blob name {} to {} path",
@@ -74,7 +74,7 @@ public class BlobStorageManager {
         File localFile = new File(filePath);
 
         try {
-            if (zipFileUtils.confirmFileCanBeCreated(localFile)) {
+            if (Boolean.TRUE.equals(zipFileUtils.confirmFileCanBeCreated(localFile))) {
                 blobContainerClient.getBlobClient(blobName).downloadToFile(filePath, true);
                 if (localFile.exists()) {
                     log.info("Succeessfully downloaded blob file to path: {}", localFile.getPath());

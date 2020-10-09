@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 @SuppressWarnings("PMD.TooManyMethods")
 @ExtendWith(MockitoExtension.class)
-public class BlobStorageManagerTest {
+class BlobStorageManagerTest {
 
     @Mock
     private BlobServiceClient blobServiceClient;
@@ -66,7 +66,7 @@ public class BlobStorageManagerTest {
     private static final String ROOT_FOLDER = "";
 
     @BeforeEach
-    public void setUp() throws IOException {
+    void setUp() throws IOException {
         blobStorageProperties = new BlobStorageProperties();
         blobStorageProperties.setBlobPcqContainer(TEST_PCQ_CONTAINER_NAME);
         blobStorageProperties.setBlobStorageDownloadPath(TEST_PCQ_FILE_PATH);
@@ -77,13 +77,13 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void initialisationSuccess() {
+    void initialisationSuccess() {
         blobServiceClient.getBlobContainerClient(TEST_PCQ_CONTAINER_NAME);
         verify(blobServiceClient, times(1)).getBlobContainerClient(TEST_PCQ_CONTAINER_NAME);
     }
 
     @Test
-    public void testGetPcqContainer() {
+    void testGetPcqContainer() {
         when(blobServiceClient.getBlobContainerClient(TEST_PCQ_CONTAINER_NAME)).thenReturn(pcqContainer);
         BlobContainerClient blobContainerClient = testBlobStorageManager.getPcqContainer();
         Assertions.assertNotNull(blobContainerClient, "Container collected successfully");
@@ -91,7 +91,7 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void testGetContainerWithContainerName() {
+    void testGetContainerWithContainerName() {
         when(blobServiceClient.getBlobContainerClient(TEST_CUSTOM_CONTAINER_NAME)).thenReturn(pcqContainer);
         BlobContainerClient blobContainerClient = testBlobStorageManager.getContainer(TEST_CUSTOM_CONTAINER_NAME);
         Assertions.assertNotNull(blobContainerClient, "Named container collected successfully");
@@ -99,7 +99,7 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void testCreateNewContainerSuccess() {
+    void testCreateNewContainerSuccess() {
         when(blobServiceClient.createBlobContainer(TEST_PCQ_CONTAINER_NAME)).thenReturn(pcqContainer);
         when(blobServiceClient.getBlobContainerClient(TEST_PCQ_CONTAINER_NAME)).thenReturn(pcqContainer);
         when(pcqContainer.exists()).thenReturn(false);
@@ -109,7 +109,7 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void testCreateNewContainerWhenExistingSuccess() {
+    void testCreateNewContainerWhenExistingSuccess() {
         when(blobServiceClient.getBlobContainerClient(TEST_PCQ_CONTAINER_NAME)).thenReturn(pcqContainer);
         when(pcqContainer.exists()).thenReturn(true);
         BlobContainerClient newContainer = testBlobStorageManager.createContainer(TEST_PCQ_CONTAINER_NAME);
@@ -118,7 +118,7 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void testUploadFilesToBlobStorageSuccess() {
+    void testUploadFilesToBlobStorageSuccess() {
         when(pcqContainer.getBlobClient(TEST_BLOB_FILENAME1)).thenReturn(blobClient);
         when(blobClient.getBlobUrl()).thenReturn(TEST_PCQ_BLOB_PATH + "/" + TEST_BLOB_FILENAME1);
         testBlobStorageManager.uploadFileToBlobStorage(pcqContainer, TEST_BLOB_FILENAME1);
@@ -126,13 +126,13 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void testDeleteContainersSuccess() {
+    void testDeleteContainersSuccess() {
         testBlobStorageManager.deleteContainer(TEST_PCQ_CONTAINER_NAME);
         verify(blobServiceClient, times(1)).deleteBlobContainer(TEST_PCQ_CONTAINER_NAME);
     }
 
     @Test
-    public void testCollectBlobFileNamesSuccess() {
+    void testCollectBlobFileNamesSuccess() {
         BlobItem blobItem1 = new BlobItem().setName(TEST_BLOB_FILENAME1).setDeleted(false).setIsPrefix(null);
         BlobItem blobItem2 = new BlobItem().setName(TEST_BLOB_FILENAME2).setDeleted(false).setIsPrefix(null);
         List<BlobItem> blobs = Arrays.asList(blobItem1, blobItem2);
@@ -150,7 +150,7 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void testCollectBlobFileNamesEmptyListSuccess() {
+    void testCollectBlobFileNamesEmptyListSuccess() {
         List<BlobItem> blobs = new ArrayList<>();
 
         when(pcqContainer.listBlobsByHierarchy(ROOT_FOLDER)).thenReturn(pageIterableBlobs);
@@ -164,7 +164,7 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void testCollectBlobFileNamesMissingName() {
+    void testCollectBlobFileNamesMissingName() {
         BlobItem blobItem1 = new BlobItem().setDeleted(false).setIsPrefix(null);
         var blobs = Arrays.asList(blobItem1);
 
@@ -179,7 +179,7 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void testDownloadFileFromBlobStorageSuccess() throws IOException {
+    void testDownloadFileFromBlobStorageSuccess() throws IOException {
 
         when(pcqContainer.getBlobClient(TEST_BLOB_FILENAME1)).thenReturn(blobClient);
         when(blobClient.downloadToFile(TEST_PCQ_FILE_PATH + File.separator + TEST_BLOB_FILENAME1,
@@ -196,7 +196,7 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void testDownloadFileFromBlobStorageError() throws IOException {
+    void testDownloadFileFromBlobStorageError() throws IOException {
         when(pcqContainer.getBlobClient(TEST_BLOB_FILENAME1)).thenReturn(blobClient);
         when(blobClient.downloadToFile(TEST_PCQ_FILE_PATH + File.separator + TEST_BLOB_FILENAME1,
                                        true)).thenReturn(null);
@@ -215,7 +215,7 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void testMoveFileToRejectedContainer1() {
+    void testMoveFileToRejectedContainer1() {
         String testFileName = "Test1212.zip";
         when(blobServiceClient.getBlobContainerClient(TEST_REJECTED_PCQ_CONTAINER_NAME))
             .thenReturn(rejectedPcqContainer);
@@ -242,7 +242,7 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void testMoveFileToRejectedContainer2() {
+    void testMoveFileToRejectedContainer2() {
         String testFileName = "Test1213.zip";
         when(blobServiceClient.getBlobContainerClient(TEST_REJECTED_PCQ_CONTAINER_NAME))
             .thenReturn(rejectedPcqContainer);
@@ -267,7 +267,7 @@ public class BlobStorageManagerTest {
     }
 
     @Test
-    public void testMoveFileToProcessedFolder() {
+    void testMoveFileToProcessedFolder() {
         String testFileName = "Test121334.zip";
         when(pcqContainer.getBlobClient(testFileName)).thenReturn(blobClient);
         when(pcqContainer.getBlobClient(PROCESSED_FOLDER + "/" + testFileName)).thenReturn(processedBlobClient);
