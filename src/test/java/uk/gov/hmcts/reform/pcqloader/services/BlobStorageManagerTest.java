@@ -9,11 +9,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.pcqloader.config.BlobStorageProperties;
 import uk.gov.hmcts.reform.pcqloader.exceptions.BlobProcessingException;
+import uk.gov.hmcts.reform.pcqloader.utils.ZipFileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,15 +52,19 @@ class BlobStorageManagerTest {
     @Mock
     private BlobClient processedBlobClient;
 
+    @Mock
+    private ZipFileUtils zipFileUtilsMock;
+
     private BlobStorageProperties blobStorageProperties;
 
     private BlobStorageManager testBlobStorageManager;
+
+    private ZipFileUtils zipFileUtils;
 
     private static final String TEST_PCQ_CONTAINER_NAME = "PCQ_1";
     private static final String TEST_CUSTOM_CONTAINER_NAME = "PCQ_2";
     private static final String TEST_BLOB_FILENAME1 = "1579002492_31-08-2020-11-35-10.zip";
     private static final String TEST_BLOB_FILENAME2 = "1579002493_31-08-2020-11-48-42.zip";
-    private static final String TEST_BLOB_BAD_FILENAME1 = "157900#-%%&{-11-48-42.zip";
     private static final String TEST_PCQ_BLOB_PATH = "http://0.0.0.0:10000/" + TEST_PCQ_CONTAINER_NAME;
     private static final String TEST_PCQ_FILE_PATH = "/var/tmp/pcq-blobs";
     private static final String TEST_REJECTED_PCQ_CONTAINER_NAME = "PCQ_REJECTED";
@@ -68,13 +73,13 @@ class BlobStorageManagerTest {
 
     @BeforeEach
     void setUp() throws IOException {
+        zipFileUtils = new ZipFileUtils();
         blobStorageProperties = new BlobStorageProperties();
         blobStorageProperties.setBlobPcqContainer(TEST_PCQ_CONTAINER_NAME);
         blobStorageProperties.setBlobStorageDownloadPath(TEST_PCQ_FILE_PATH);
         blobStorageProperties.setBlobPcqRejectedContainer(TEST_REJECTED_PCQ_CONTAINER_NAME);
         blobStorageProperties.setProcessedFolderName(PROCESSED_FOLDER);
-        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
-        MockitoAnnotations.openMocks(testBlobStorageManager);
+        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient, zipFileUtils);
     }
 
     @Test
@@ -141,7 +146,7 @@ class BlobStorageManagerTest {
         when(pcqContainer.listBlobsByHierarchy(ROOT_FOLDER)).thenReturn(pageIterableBlobs);
         when(pageIterableBlobs.iterator()).thenReturn(blobs.iterator());
 
-        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
+        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient, zipFileUtils);
         List<String> response = testBlobStorageManager.collectBlobFileNamesFromContainer(pcqContainer);
 
         verify(pageIterableBlobs, times(1)).iterator();
@@ -157,7 +162,7 @@ class BlobStorageManagerTest {
         when(pcqContainer.listBlobsByHierarchy(ROOT_FOLDER)).thenReturn(pageIterableBlobs);
         when(pageIterableBlobs.iterator()).thenReturn(blobs.iterator());
 
-        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
+        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient, zipFileUtils);
         List<String> response = testBlobStorageManager.collectBlobFileNamesFromContainer(pcqContainer);
 
         verify(pageIterableBlobs, times(1)).iterator();
@@ -172,7 +177,7 @@ class BlobStorageManagerTest {
         when(pcqContainer.listBlobsByHierarchy(ROOT_FOLDER)).thenReturn(pageIterableBlobs);
         when(pageIterableBlobs.iterator()).thenReturn(blobs.iterator());
 
-        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
+        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient, zipFileUtils);
         List<String> response = testBlobStorageManager.collectBlobFileNamesFromContainer(pcqContainer);
 
         verify(pageIterableBlobs, times(1)).iterator();
@@ -188,7 +193,7 @@ class BlobStorageManagerTest {
         File downloadFile = new File(TEST_PCQ_FILE_PATH + File.separator + TEST_BLOB_FILENAME1);
         downloadFile.createNewFile();
 
-        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
+        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient, zipFileUtils);
         File fileResponse = testBlobStorageManager.downloadFileFromBlobStorage(pcqContainer, TEST_BLOB_FILENAME1);
 
         verify(blobClient, times(1)).downloadToFile(
@@ -204,7 +209,7 @@ class BlobStorageManagerTest {
         File downloadFile = new File(TEST_PCQ_FILE_PATH + File.separator + TEST_BLOB_FILENAME1);
         downloadFile.delete();
 
-        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
+        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient, zipFileUtils);
 
         try {
             testBlobStorageManager.downloadFileFromBlobStorage(pcqContainer, TEST_BLOB_FILENAME1);
@@ -217,14 +222,16 @@ class BlobStorageManagerTest {
 
     @Test
     void testDownloadFileFromBlobStorageWriteFileError() throws IOException {
-        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
+        when(zipFileUtilsMock.confirmFileCanBeCreated(ArgumentMatchers.any())).thenReturn(Boolean.FALSE);
+
+        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient, zipFileUtilsMock);
 
         try {
-            testBlobStorageManager.downloadFileFromBlobStorage(pcqContainer, TEST_BLOB_BAD_FILENAME1);
+            testBlobStorageManager.downloadFileFromBlobStorage(pcqContainer, TEST_BLOB_FILENAME1);
             Assertions.fail("BlobProcessingException should be thrown");
         } catch (BlobProcessingException bpe) {
             verify(blobClient, times(0)).downloadToFile(
-                TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_BAD_FILENAME1, true);
+                TEST_PCQ_FILE_PATH + "/" + TEST_BLOB_FILENAME1, true);
         }
     }
 
