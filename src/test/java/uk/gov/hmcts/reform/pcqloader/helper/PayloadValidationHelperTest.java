@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class PayloadValidationHelperTest {
+class PayloadValidationHelperTest {
 
     private static final String OTHER_LANGUAGE = "Other Language";
     private static final String OTHER_GENDER = "Other Gender";
@@ -25,12 +25,12 @@ public class PayloadValidationHelperTest {
     private PayloadValidationHelper payloadValidationHelper;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testLanguageMainOtherFields() {
+    void testLanguageMainOtherFields() {
         PcqAnswers answers = new PcqAnswers();
         answers.setLanguageOther(OTHER_LANGUAGE);
 
@@ -60,7 +60,7 @@ public class PayloadValidationHelperTest {
     }
 
     @Test
-    public void testGenderOtherFields() {
+    void testGenderOtherFields() {
         PcqAnswers answers = new PcqAnswers();
         answers.setGenderOther(OTHER_GENDER);
 
@@ -90,7 +90,7 @@ public class PayloadValidationHelperTest {
     }
 
     @Test
-    public void testSexualityOtherFields() {
+    void testSexualityOtherFields() {
         PcqAnswers answers = new PcqAnswers();
         answers.setSexualityOther(OTHER_SEXUALITY);
 
@@ -120,7 +120,7 @@ public class PayloadValidationHelperTest {
     }
 
     @Test
-    public void testReligionOtherFields() {
+    void testReligionOtherFields() {
         PcqAnswers answers = new PcqAnswers();
         answers.setReligionOther(OTHER_RELIGION);
 
@@ -153,7 +153,7 @@ public class PayloadValidationHelperTest {
     }
 
     @Test
-    public void tesEthnicityOtherFields() {
+    void tesEthnicityOtherFields() {
         PcqAnswers answers = new PcqAnswers();
         answers.setEthnicityOther(OTHER_ETHNICITY);
 
@@ -171,7 +171,7 @@ public class PayloadValidationHelperTest {
     }
 
     @Test
-    public void testDobProvided() {
+    void testDobProvided() {
         PcqAnswers answers = new PcqAnswers();
         answers.setDob("2001-01-01");
 

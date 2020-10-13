@@ -8,7 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class BlobStorageConfigurationTest {
+class BlobStorageConfigurationTest {
 
     @InjectMocks
     private BlobStorageConfiguration blobStorageConfiguration;
@@ -18,7 +18,7 @@ public class BlobStorageConfigurationTest {
     private static final String ACCOUNT_URL = "http://pcqshared.file.core.windows.net";
 
     @Test
-    public void blobStorageConfigurationGetStorageClientTest() {
+    void blobStorageConfigurationGetStorageClientTest() {
         BlobServiceClient blobServiceClient = blobStorageConfiguration.getStorageClient(
             ACCOUNT_NAME, ACCOUNT_KEY, ACCOUNT_URL);
         Assertions.assertEquals(ACCOUNT_NAME, blobServiceClient.getAccountName());

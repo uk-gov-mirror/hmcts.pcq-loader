@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("PMD.TooManyMethods")
-public class ZipFileUtilsTest {
+class ZipFileUtilsTest {
 
     private static final String BLOB_FILENAME_1 = "1579002492_31-08-2020-11-35-10.zip";
     private static final String BAD_ZIP = "1579002493_31-08-2020-11-35-ERROR.zip";
@@ -44,14 +44,14 @@ public class ZipFileUtilsTest {
     private ZipFileUtils zipFileUtils;
 
     @BeforeEach
-    public void setUp() throws FileNotFoundException {
+    void setUp() throws FileNotFoundException {
         zipFileUtils = new ZipFileUtils();
         actualZip = ResourceUtils.getFile("classpath:testZipFiles/" + BLOB_FILENAME_1);
         badZip = ResourceUtils.getFile("classpath:testZipFiles/" + BAD_ZIP);
     }
 
     @Test
-    public void testConfirmFileCanBeCreated() throws IOException {
+    void testConfirmFileCanBeCreated() throws IOException {
         when(mockedFile.getParentFile()).thenReturn(mockedFolder);
         when(mockedFolder.exists()).thenReturn(false);
         when(mockedFolder.mkdirs()).thenReturn(true);
@@ -66,7 +66,7 @@ public class ZipFileUtilsTest {
     }
 
     @Test
-    public void testConfirmFolderPathCanNotBeCreated() throws IOException {
+    void testConfirmFolderPathCanNotBeCreated() throws IOException {
         when(mockedFile.getParentFile()).thenReturn(mockedFolder);
         when(mockedFolder.exists()).thenReturn(false);
         when(mockedFolder.mkdirs()).thenReturn(false);
@@ -79,7 +79,7 @@ public class ZipFileUtilsTest {
     }
 
     @Test
-    public void testConfirmFileCanNotBeCreated() throws IOException {
+    void testConfirmFileCanNotBeCreated() throws IOException {
         when(mockedFile.getParentFile()).thenReturn(mockedFolder);
         when(mockedFolder.exists()).thenReturn(false);
         when(mockedFolder.mkdirs()).thenReturn(true);
@@ -95,7 +95,7 @@ public class ZipFileUtilsTest {
     }
 
     @Test
-    public void testConfirmFileCanNotBeDeleted() throws IOException {
+    void testConfirmFileCanNotBeDeleted() throws IOException {
         when(mockedFile.getParentFile()).thenReturn(mockedFolder);
         when(mockedFolder.exists()).thenReturn(false);
         when(mockedFolder.mkdirs()).thenReturn(true);
@@ -113,7 +113,7 @@ public class ZipFileUtilsTest {
 
     @Test
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
-    public void testUnzipBlobDownloadZipFileSuccess() {
+    void testUnzipBlobDownloadZipFileSuccess() {
         File result = zipFileUtils.unzipBlobDownloadZipFile(actualZip);
         List<String> knownFiles = Arrays.asList("metadata.json", "1111001.pdf");
         assertNotNull(result, "Valid folder of unpacked zip returned.");
@@ -124,7 +124,7 @@ public class ZipFileUtilsTest {
     }
 
     @Test
-    public void testUnzipBlobDownloadZipFileError() {
+    void testUnzipBlobDownloadZipFileError() {
         try {
             zipFileUtils.unzipBlobDownloadZipFile(badZip);
             fail("ZipProcessingException exception should be thrown.");
@@ -134,7 +134,7 @@ public class ZipFileUtilsTest {
     }
 
     @Test
-    public void testUnzipBlobDownloadFileMissingError() {
+    void testUnzipBlobDownloadFileMissingError() {
         when(mockedFile.exists()).thenReturn(false);
         try {
             zipFileUtils.unzipBlobDownloadZipFile(mockedFile);
@@ -146,7 +146,7 @@ public class ZipFileUtilsTest {
 
     @Test
     @SuppressWarnings({"PMD.AvoidInstanceofChecksInCatchClause","PMD.DataflowAnomalyAnalysis"})
-    public void testDeleteFilesFromLocal() {
+    void testDeleteFilesFromLocal() {
         // Both files null
         zipFileUtils.deleteFilesFromLocalStorage(null, null);
 
@@ -168,7 +168,7 @@ public class ZipFileUtilsTest {
     }
 
     @Test
-    public void testDeleteFilesFromLocalSuccess() {
+    void testDeleteFilesFromLocalSuccess() {
         //Zip File delete returns true and Folder file delete returns false.
         File testMockedFile = mock(File.class);
         File[] files = {testMockedFile};
@@ -182,7 +182,7 @@ public class ZipFileUtilsTest {
     }
 
     @Test
-    public void testDeleteFilesFromLocalAllSuccess() {
+    void testDeleteFilesFromLocalAllSuccess() {
         //Zip File delete returns true and folder file delete returns true.
         File testMockedFileSuccess = mock(File.class);
         File[] successFiles = {testMockedFileSuccess};
@@ -196,7 +196,7 @@ public class ZipFileUtilsTest {
     }
 
     @Test
-    public void testMetaDataFileFail() {
+    void testMetaDataFileFail() {
         File[] files = {mockedFile};
         when(mockedFile.getName()).thenReturn("TestFile");
 
@@ -206,7 +206,7 @@ public class ZipFileUtilsTest {
     }
 
     @Test
-    public void testMetaDataFileSuccess() {
+    void testMetaDataFileSuccess() {
         File[] files = {mockedFile};
         when(mockedFile.getName()).thenReturn("metadata.json");
 

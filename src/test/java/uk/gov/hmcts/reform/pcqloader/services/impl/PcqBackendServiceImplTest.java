@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
-public class PcqBackendServiceImplTest {
+class PcqBackendServiceImplTest {
 
     private static final String HEADER_VALUE = "Test_Loader";
     private static final String RESPONSE_INCORRECT = "Not the correct response";
@@ -51,14 +51,14 @@ public class PcqBackendServiceImplTest {
 
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(pcqBackendService, "jwtSecretKey", "TestKey");
         ReflectionTestUtils.setField(pcqBackendService, "coRelationHeader", HEADER_VALUE);
     }
 
     @Test
-    public void test201SuccessResponse() {
+    void test201SuccessResponse() {
         PcqAnswerRequest testRequest = generateTestRequest();
         String responseBody = getResponseBody("201", "Successfully created");
 
@@ -81,7 +81,7 @@ public class PcqBackendServiceImplTest {
     }
 
     @Test
-    public void testInvalidRequestResponse400() {
+    void testInvalidRequestResponse400() {
         PcqAnswerRequest testRequest = generateTestRequest();
         String responseBody = getResponseBody("400", INVALID_REQUEST);
 
@@ -104,7 +104,7 @@ public class PcqBackendServiceImplTest {
     }
 
     @Test
-    public void testInvalidRequestResponse403() {
+    void testInvalidRequestResponse403() {
         PcqAnswerRequest testRequest = generateTestRequest();
         String responseBody = getResponseBody("403", INVALID_REQUEST);
 
@@ -127,7 +127,7 @@ public class PcqBackendServiceImplTest {
     }
 
     @Test
-    public void testUnknownError() {
+    void testUnknownError() {
         PcqAnswerRequest testRequest = generateTestRequest();
         String responseBody = getResponseBody("500", "Unknown error occurred");
 
@@ -150,7 +150,7 @@ public class PcqBackendServiceImplTest {
     }
 
     @Test
-    public void executeFeignApiError() {
+    void executeFeignApiError() {
         PcqAnswerRequest testRequest = generateTestRequest();
         FeignException feignException = new FeignException.BadGateway("Bade Gateway Error", mock(Request.class),
                                                                       "Test".getBytes());

@@ -15,6 +15,7 @@ import org.springframework.util.ResourceUtils;
 import org.testcontainers.containers.DockerComposeContainer;
 import uk.gov.hmcts.reform.pcqloader.config.BlobStorageProperties;
 import uk.gov.hmcts.reform.pcqloader.exceptions.BlobProcessingException;
+import uk.gov.hmcts.reform.pcqloader.utils.ZipFileUtils;
 
 import java.io.File;
 import java.util.List;
@@ -43,8 +44,11 @@ public class BlobStorageManagerTest {
 
     protected File blobFile2;
 
+    protected ZipFileUtils zipFileUtils;
+
     @BeforeEach
     public void setUp() throws Exception {
+        zipFileUtils = new ZipFileUtils();
         blobServiceClient = new BlobServiceClientBuilder()
                 .connectionString("UseDevelopmentStorage=true")
                 .buildClient();
@@ -59,7 +63,7 @@ public class BlobStorageManagerTest {
         File blobFile1 = ResourceUtils.getFile("classpath:blobTestFiles/" + BLOB_FILENAME_1);
         File blobFile2 = ResourceUtils.getFile("classpath:blobTestFiles/" + BLOB_FILENAME_2);
 
-        blobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient);
+        blobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient, zipFileUtils);
         blobStorageManager.uploadFileToBlobStorage(testContainer, blobFile1.getPath());
         blobStorageManager.uploadFileToBlobStorage(testContainer, blobFile2.getPath());
     }
