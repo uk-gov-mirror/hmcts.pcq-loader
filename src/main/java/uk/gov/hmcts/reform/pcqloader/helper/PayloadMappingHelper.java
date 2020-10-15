@@ -10,12 +10,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
-import uk.gov.hmcts.reform.pcqloader.model.PcqAnswers;
-import uk.gov.hmcts.reform.pcqloader.model.PcqAnswerRequest;
-import uk.gov.hmcts.reform.pcqloader.model.PcqMetaData;
-import uk.gov.hmcts.reform.pcqloader.model.PcqPayLoad;
-import uk.gov.hmcts.reform.pcqloader.model.PcqPayloadContents;
-import uk.gov.hmcts.reform.pcqloader.model.PcqScannableItems;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqAnswers;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqAnswerRequest;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqMetaData;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqPayLoad;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqPayloadContents;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqScannableItems;
 import uk.gov.hmcts.reform.pcqloader.utils.PcqLoaderUtils;
 
 import java.lang.reflect.Field;
