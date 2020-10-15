@@ -52,11 +52,20 @@ public class PcqBackendServiceImpl implements PcqBackendService {
                                                                      jwtToken, answerRequest)) {
             responseEntity = JsonFeignResponseUtil.toResponseEntity(response, HashMap.class);
         } catch (FeignException ex) {
-            throw new ExternalApiException(HttpStatus.valueOf(ex.status()), ex.getMessage());
+            HttpStatus httpStatus = checkAndReturnHttpStatus(ex.status());
+            throw new ExternalApiException(httpStatus, ex.getMessage());
         } catch (IOException | IllegalArgumentException ioe) {
             throw new ExternalApiException(HttpStatus.SERVICE_UNAVAILABLE, ioe.getMessage());
         }
 
         return responseEntity;
+    }
+
+    private HttpStatus checkAndReturnHttpStatus(int status) {
+        if (status == -1) {
+            return HttpStatus.SERVICE_UNAVAILABLE;
+        } else {
+            return HttpStatus.valueOf(status);
+        }
     }
 }

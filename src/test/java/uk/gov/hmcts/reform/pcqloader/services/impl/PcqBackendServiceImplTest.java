@@ -165,6 +165,21 @@ class PcqBackendServiceImplTest {
     }
 
     @Test
+    void executeFeignApiUnknownError() {
+        PcqAnswerRequest testRequest = generateTestRequest();
+        FeignException feignException = new FeignException.FeignServerException(-1, "Bad error", mock(Request.class),
+                                                                                "TestError".getBytes());
+
+        when(mockPcqBackendFeignClient.submitAnswers(anyString(), anyString(), any(PcqAnswerRequest.class)))
+            .thenThrow(feignException);
+
+        assertThrows(ExternalApiException.class, () -> pcqBackendService.submitAnswers(testRequest));
+
+        verify(mockPcqBackendFeignClient, times(1)).submitAnswers(anyString(), anyString(),
+                                                                  any(PcqAnswerRequest.class));
+    }
+
+    @Test
     void executeIllegalArgumentExceptionError() {
         PcqAnswerRequest testRequest = generateTestRequest();
         IllegalArgumentException illegalArgumentException = new IllegalArgumentException("test");
