@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SuppressWarnings({"PMD.TooManyMethods", "PMD.DataflowAnomalyAnalysis"})
-public class PayloadMappingHelperTest {
+class PayloadMappingHelperTest {
 
     private static final String FAIL_ASSERT_MSG = "Method call failed.";
     private static final String ENGLISH_LANGUAGE_LEVEL_MSG = "English Language Level is not correct";
@@ -38,12 +38,12 @@ public class PayloadMappingHelperTest {
     private final AssertionUtils assertUtils = new AssertionUtils();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void mapPayLoadSuccess() throws IOException {
+    void mapPayLoadSuccess() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/successMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -66,7 +66,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadSuccessEmptyDobProvided() throws IOException {
+    void mapPayLoadSuccessEmptyDobProvided() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/successEmptyDobProvidedMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -90,7 +90,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadMultipleIntElements() throws IOException {
+    void mapPayLoadMultipleIntElements() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/multipleReligionMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -113,7 +113,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadInvalidDob() throws IOException {
+    void mapPayLoadInvalidDob() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidDobMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -136,7 +136,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadInvalidDobAndDobProvidedEmpty() throws IOException {
+    void mapPayLoadInvalidDobAndDobProvidedEmpty() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidDobEmptyProvidedMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -160,7 +160,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadDisabilityNone() throws IOException {
+    void mapPayLoadDisabilityNone() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/disabilityNoneMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -183,7 +183,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapMultipleEthnicity() throws IOException {
+    void mapMultipleEthnicity() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/multipleEthnicityMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -206,7 +206,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapInvalidOtherValues() throws IOException {
+    void mapInvalidOtherValues() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidOtherValuesMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -228,7 +228,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapInvalidOtherValuesMultiple() throws IOException {
+    void mapInvalidOtherValuesMultiple() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/multipleInvalidOtherValuesMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -250,7 +250,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void payloadScannableItemMissing() throws IOException {
+    void payloadScannableItemMissing() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/noScannableItemsMetaFile.json");
 
@@ -266,7 +266,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void jsonProcessingError()  {
+    void jsonProcessingError()  {
 
         String metaDataPayLoad = "{Test:asdsad}";
 
@@ -282,7 +282,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadDobNotProvided() throws IOException {
+    void mapPayLoadDobNotProvided() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/dobNotProvidedMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -305,7 +305,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadDobEmptyNotProvided() throws IOException {
+    void mapPayLoadDobEmptyNotProvided() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/dobEmptyNotProvidedMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -328,7 +328,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadNoDisabilityCondition() throws IOException {
+    void mapPayLoadNoDisabilityCondition() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/noDisabilityMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -351,7 +351,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadNoPreferenceDisabilityCondition() throws IOException {
+    void mapPayLoadNoPreferenceDisabilityCondition() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/notPreferDisabilityMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -375,7 +375,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadNoDisabilityImpact() throws IOException {
+    void mapPayLoadNoDisabilityImpact() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/noDisabilityImpactMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -398,7 +398,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadNotPreferDisabilityImpact() throws IOException {
+    void mapPayLoadNotPreferDisabilityImpact() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/notPreferDisabilityImpactMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -422,7 +422,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadLanguageLevelEmpty() throws IOException {
+    void mapPayLoadLanguageLevelEmpty() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/emptyLanguageMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -445,7 +445,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadMainLanguageEmpty() throws IOException {
+    void mapPayLoadMainLanguageEmpty() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/emptyMainLanguageMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -468,7 +468,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadMainLanguageNotPreferred() throws IOException {
+    void mapPayLoadMainLanguageNotPreferred() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/notPreferMainLanguageMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -491,7 +491,7 @@ public class PayloadMappingHelperTest {
     }
 
     @Test
-    public void mapPayLoadMainLanguageOther() throws IOException {
+    void mapPayLoadMainLanguageOther() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/otherMainLanguageMetaFile.json");
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
@@ -520,16 +520,16 @@ public class PayloadMappingHelperTest {
      * @return - JSON String from the file.
      * @throws IOException - If there is any issue when reading from the file.
      */
-    public static String jsonStringFromFile(String fileName) throws IOException {
+    private static String jsonStringFromFile(String fileName) throws IOException {
         File resource = new ClassPathResource(fileName).getFile();
         return new String(Files.readAllBytes(resource.toPath()));
     }
 
-    public static PcqPayLoad jsonPayloadObjectFromString(String jsonString) throws IOException {
+    private static PcqPayLoad jsonPayloadObjectFromString(String jsonString) throws IOException {
         return new ObjectMapper().readValue(jsonString, PcqPayLoad.class);
     }
 
-    public static PcqMetaData jsonMetaDataObjectFromString(String jsonString) throws IOException {
+    private static PcqMetaData jsonMetaDataObjectFromString(String jsonString) throws IOException {
         return new ObjectMapper().readValue(jsonString, PcqMetaData.class);
     }
 

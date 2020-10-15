@@ -14,7 +14,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class PcqLoaderApplicationTest {
+class PcqLoaderApplicationTest {
 
     @InjectMocks
     private PcqLoaderApplication testPcqLoaderApplication;
@@ -26,14 +26,14 @@ public class PcqLoaderApplicationTest {
     private PcqLoaderComponent pcqLoaderComponent;
 
     @Test
-    public void testApplicationExecuted() throws Exception {
+    void testApplicationExecuted() throws Exception {
         testPcqLoaderApplication.run(null);
         verify(pcqLoaderComponent, times(1)).execute();
         verify(client, times(1)).flush();
     }
 
     @Test
-    public void testApplicationError() throws Exception {
+    void testApplicationError() throws Exception {
         Assertions.assertThrows(Exception.class, () -> {
             doThrow(new Exception()).when(pcqLoaderComponent).execute();
             testPcqLoaderApplication.run(null);

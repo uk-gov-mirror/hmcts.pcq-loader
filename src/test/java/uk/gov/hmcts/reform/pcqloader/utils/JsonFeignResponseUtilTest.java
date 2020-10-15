@@ -71,7 +71,7 @@ public class JsonFeignResponseUtilTest {
 
         try {
             when(bodyMock.asInputStream()).thenThrow(new IOException());
-            when(bodyMock.asReader()).thenThrow(new IOException());
+            when(bodyMock.asReader(UTF_8)).thenThrow(new IOException());
             bodyMock.close();
         } catch (IOException e) {
             log.error("Error during execution {}", e.getMessage());

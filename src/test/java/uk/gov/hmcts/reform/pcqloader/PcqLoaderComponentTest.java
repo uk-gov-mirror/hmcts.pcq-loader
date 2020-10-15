@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("PMD.TooManyMethods")
-public class PcqLoaderComponentTest {
+class PcqLoaderComponentTest {
 
     private static final String TEST_BLOB_FILENAME1 = "1579002492_31-08-2020-11-35-10.zip";
     private static final String TEST_BLOB_FILENAME2 = "1579002493_31-08-2020-11-48-42.zip";
@@ -71,7 +71,7 @@ public class PcqLoaderComponentTest {
 
 
     @Test
-    public void executeSuccess() {
+    void executeSuccess() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -129,7 +129,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void testContainerNotAvailable() {
+    void testContainerNotAvailable() {
 
         when(blobStorageManager.getPcqContainer()).thenReturn(blobContainerClient);
         when(blobContainerClient.exists()).thenReturn(false);
@@ -144,7 +144,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void testNoZipFilesAvailable() {
+    void testNoZipFilesAvailable() {
         List<String> blobFileNames = new ArrayList<>();
 
         when(blobStorageManager.getPcqContainer()).thenReturn(blobContainerClient);
@@ -160,7 +160,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void testBlobDownloadErrorForOneFile() {
+    void testBlobDownloadErrorForOneFile() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         BlobProcessingException blobProcessingException = new BlobProcessingException("Test Message");
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
@@ -217,7 +217,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void testZipProcessingExceptionForOneFile() {
+    void testZipProcessingExceptionForOneFile() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         ZipProcessingException zipProcessingException = new ZipProcessingException("Test Message");
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
@@ -277,7 +277,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void testEmptyZipFile() {
+    void testEmptyZipFile() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -343,7 +343,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void testInvalidMetaDataFileName() {
+    void testInvalidMetaDataFileName() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File invalidMetaDataFile = new File("metadataProbate.json");
@@ -412,7 +412,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void testNullListFile() {
+    void testNullListFile() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
 
         when(blobStorageManager.getPcqContainer()).thenReturn(blobContainerClient);
@@ -442,7 +442,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void executeSuccessAndMappingError() {
+    void executeSuccessAndMappingError() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -500,7 +500,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void executeMappingErrorNoSuchField() {
+    void executeMappingErrorNoSuchField() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -548,7 +548,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void executeMappingErrorIllegalAccessException() {
+    void executeMappingErrorIllegalAccessException() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -596,7 +596,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void executeSuccessDuplicateDcn() {
+    void executeSuccessDuplicateDcn() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -655,7 +655,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void executeInvalidRequest() {
+    void executeInvalidRequest() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -714,7 +714,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void executeInvalidApiException() {
+    void executeInvalidApiException() {
 
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
@@ -764,7 +764,7 @@ public class PcqLoaderComponentTest {
     }
 
     @Test
-    public void executeInvalidApiExceptionSuccessfulThirdAttempt() {
+    void executeInvalidApiExceptionSuccessfulThirdAttempt() {
 
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);

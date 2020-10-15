@@ -8,11 +8,11 @@ buildscript {
 
 plugins {
     id 'application'
-    id 'uk.gov.hmcts.java' version '0.9.0'
+    id 'uk.gov.hmcts.java' version '0.12.0'
     id 'pmd'
     id 'jacoco'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'org.springframework.boot' version '2.3.0.RELEASE'
+    id 'org.springframework.boot' version '2.3.4.RELEASE'
     id 'org.owasp.dependencycheck' version '6.0.1'
     id 'com.github.ben-manes.versions' version '0.28.0'
     id "info.solidsoft.pitest" version '1.4.7'
@@ -93,6 +93,10 @@ task unit(type: Test, description: 'Runs the unit tests.', group: 'Verification'
     useJUnitPlatform()
 }
 
+task functional() {
+  // This task is required for a Jenkins hook (fullFunctionalTest)
+}
+
 task functionalPostDeploy(type: Test) {
     group = 'Functional Tests'
     description = 'Verifies that files from functionPreDeploy step were processed following job creation in AKS'
@@ -108,7 +112,7 @@ task integration(type: Test, description: 'Runs the integration tests.', group: 
 }
 
 pmd {
-    toolVersion = "6.18.0"
+    toolVersion = "6.28.0"
     sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest, sourceSets.integrationTest, sourceSets.smokeTest]
     reportsDir = file("$project.buildDir/reports/pmd")
     // https://github.com/pmd/pmd/issues/876

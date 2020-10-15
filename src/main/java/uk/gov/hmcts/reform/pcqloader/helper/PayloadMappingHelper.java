@@ -26,6 +26,8 @@ import static uk.gov.hmcts.reform.pcqloader.utils.PcqLoaderUtils.nullIfEmpty;
 @Slf4j
 public class PayloadMappingHelper {
 
+    private static final String EMPTY_STRING = "";
+
     private final String[] submitAnswerIntElements = {"dob_provided", "language_main", "english_language_level", "sex",
         "gender_different", "sexuality", "marriage", "ethnicity", "religion", "disability_condition",
         "disability_impact", "disability_vision", "disability_hearing", "disability_mobility", "disability_dexterity",
@@ -97,7 +99,9 @@ public class PayloadMappingHelper {
         PcqPayloadContents[] payloadContents = payLoad.getMetaDataContents();
 
         //For all the integer schema elements, set the values in the schema object first.
-        mapIntegerElements(payloadContents, answers);
+        for (String schemaElement : submitAnswerIntElements) {
+            mapIntegerElements(payloadContents, answers, schemaElement);
+        }
 
         //<element>_other field check
         mapOtherFields(payloadContents, answers);
@@ -128,28 +132,24 @@ public class PayloadMappingHelper {
     }
 
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
-    private void mapIntegerElements(PcqPayloadContents[] payloadContents, PcqAnswers answers)
+    private void mapIntegerElements(PcqPayloadContents[] payloadContents, PcqAnswers answers, String schemaElement)
         throws IllegalAccessException, NoSuchFieldException {
-        for (String schemaElement : submitAnswerIntElements) {
-
-            for (PcqPayloadContents payloadContent : payloadContents) {
-                if (payloadContent.getFieldName().equals(schemaElement)) {
-                    // Find the field name of the element in the SubmitAnswers object.
-                    int index = ArrayUtils.indexOf(submitAnswerIntElements, schemaElement);
-                    Field schemaField = PcqAnswers.class.getDeclaredField(submitAnswerIntFields[index]);
-                    // Make the field accessible
-                    PcqLoaderUtils.makeFieldAccessible(schemaField);
-                    // If the element value has been already set in answers object i.e. more than one check-box
-                    // has been ticked by the user, then set the answer to "-1".
-                    if (schemaField.get(answers) == null) {
-                        if (!StringUtils.isEmpty(payloadContent.getFieldValue())) {
-                            schemaField.set(answers, Integer.valueOf(payloadContent.getFieldValue()));
-                        }
-                    } else {
-                        log.error("Invalid answer for " + schemaElement + ", found more than one value in payload.");
-                        schemaField.set(answers, -1);
+        for (PcqPayloadContents payloadContent : payloadContents) {
+            if (payloadContent.getFieldName().equals(schemaElement)) {
+                // Find the field name of the element in the SubmitAnswers object.
+                int index = ArrayUtils.indexOf(submitAnswerIntElements, schemaElement);
+                Field schemaField = PcqAnswers.class.getDeclaredField(submitAnswerIntFields[index]);
+                // Make the field accessible
+                PcqLoaderUtils.makeFieldAccessible(schemaField);
+                // If the element value has been already set in answers object i.e. more than one check-box
+                // has been ticked by the user, then set the answer to "-1".
+                if (schemaField.get(answers) == null) {
+                    if (!StringUtils.isEmpty(payloadContent.getFieldValue())) {
+                        schemaField.set(answers, Integer.valueOf(payloadContent.getFieldValue()));
                     }
-
+                } else {
+                    log.error("Invalid answer for " + schemaElement + ", found more than one value in payload.");
+                    schemaField.set(answers, -1);
                 }
             }
         }
@@ -230,7 +230,7 @@ public class PayloadMappingHelper {
             // Only set the value if ethnicity is not already set.
             answers.setEthnicityOther(nullIfEmpty(payloadContent.getFieldValue()));
         } else {
-            if (!payloadContent.getFieldValue().equals("")) {
+            if (!EMPTY_STRING.equals(payloadContent.getFieldValue())) {
                 // Invalid answer supplied as ethnicity is already set in the payload.
                 log.error("Invalid answer for " + payloadContent.getFieldName() + ", found more than one "
                               + "other value in payload.");

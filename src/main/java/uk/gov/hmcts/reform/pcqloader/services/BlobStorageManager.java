@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.pcqloader.exceptions.BlobProcessingException;
 import uk.gov.hmcts.reform.pcqloader.utils.ZipFileUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,12 +28,16 @@ public class BlobStorageManager {
 
     private final BlobStorageProperties blobStorageProperties;
 
+    private final ZipFileUtils zipFileUtils;
+
     public BlobStorageManager(
         BlobStorageProperties blobStorageProperties,
-        BlobServiceClient blobServiceClient
+        BlobServiceClient blobServiceClient,
+        ZipFileUtils zipFileUtils
     ) {
         this.blobStorageProperties = blobStorageProperties;
         this.blobServiceClient = blobServiceClient;
+        this.zipFileUtils = zipFileUtils;
     }
 
     public BlobContainerClient getContainer(String containerName) {
@@ -65,21 +70,22 @@ public class BlobStorageManager {
         return zipFilenames;
     }
 
-    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
+    @SuppressWarnings({"PMD.DataflowAnomalyAnalysis","PMD.LawOfDemeter"})
     public File downloadFileFromBlobStorage(BlobContainerClient blobContainerClient, String blobName) {
-        ZipFileUtils zipFileUtils = new ZipFileUtils();
         log.debug("Downloading blob name {} to {} path",
                   blobName, blobStorageProperties.getBlobStorageDownloadPath());
         String filePath = blobStorageProperties.getBlobStorageDownloadPath() + File.separator + blobName;
         File localFile = new File(filePath);
 
         try {
-            if (zipFileUtils.confirmFileCanBeCreated(localFile)) {
+            if (Boolean.TRUE.equals(zipFileUtils.confirmFileCanBeCreated(localFile))) {
                 blobContainerClient.getBlobClient(blobName).downloadToFile(filePath, true);
                 if (localFile.exists()) {
                     log.info("Succeessfully downloaded blob file to path: {}", localFile.getPath());
                     return localFile;
                 }
+            } else {
+                throw new IOException("Unable to write blob file to filesystem");
             }
         } catch (Exception exp) {
             log.error("Error downloading {} from Blob Storage", blobName);

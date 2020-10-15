@@ -13,12 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("PMD.TooManyMethods")
-public class PcqLoaderUtilsTest {
+class PcqLoaderUtilsTest {
 
     private static final String DOB_VALIDATION_MSG = "Dob validation should not return true";
 
     @Test
-    public void testExtractDcnNumberSuccess() {
+    void testExtractDcnNumberSuccess() {
         String testFileName = "1789034567_01-01-1900-12-00-00.zip";
 
         String extractedDcnNumber = PcqLoaderUtils.extractDcnNumberFromFile(testFileName);
@@ -27,7 +27,7 @@ public class PcqLoaderUtilsTest {
     }
 
     @Test
-    public void testExtractDcnNumberEmpty() {
+    void testExtractDcnNumberEmpty() {
         String testFileName = "";
 
         String extractedDcnNumber = PcqLoaderUtils.extractDcnNumberFromFile(testFileName);
@@ -36,14 +36,14 @@ public class PcqLoaderUtilsTest {
     }
 
     @Test
-    public void testExtractDcnNumberNull() {
+    void testExtractDcnNumberNull() {
         String extractedDcnNumber = PcqLoaderUtils.extractDcnNumberFromFile(null);
 
         assertNull(extractedDcnNumber, "DCN Number Different.");
     }
 
     @Test
-    public void testGetCurrentCompletedDate() {
+    void testGetCurrentCompletedDate() {
         Pattern pattern = Pattern.compile("\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d(?:\\.\\d+)?Z?");
         Matcher matcher = pattern.matcher(PcqLoaderUtils.getCurrentCompletedDate());
 
@@ -51,12 +51,12 @@ public class PcqLoaderUtilsTest {
     }
 
     @Test
-    public void testGenerateUuidNotNull() {
+    void testGenerateUuidNotNull() {
         assertNotNull(PcqLoaderUtils.generateUuid(), "Uuid is null");
     }
 
     @Test
-    public void testGenerateUuidRandom() {
+    void testGenerateUuidRandom() {
         String pcqIdOne = PcqLoaderUtils.generateUuid();
         String pcqIdSecond = PcqLoaderUtils.generateUuid();
 
@@ -64,7 +64,7 @@ public class PcqLoaderUtilsTest {
     }
 
     @Test
-    public void invalidDobCharacters() {
+    void invalidDobCharacters() {
         // User has not supplied any dob data. So the day, month and year will be empty strings.
         String invalidDob = "--";
         boolean isDobValid = PcqLoaderUtils.isDobValid(invalidDob);
@@ -92,7 +92,7 @@ public class PcqLoaderUtilsTest {
     }
 
     @Test
-    public void invalidDobDay() {
+    void invalidDobDay() {
         //User has supplied an numeric but invalid day field
         String invalidDobDay = "1900-01-00";
         boolean isDobValid = PcqLoaderUtils.isDobValid(invalidDobDay);
@@ -108,7 +108,7 @@ public class PcqLoaderUtilsTest {
     }
 
     @Test
-    public void invalidDobMonth() {
+    void invalidDobMonth() {
         //User has supplied an numeric but invalid month field
         String invalidDobMonth = "1900-00-01";
         boolean isDobValid = PcqLoaderUtils.isDobValid(invalidDobMonth);
@@ -120,7 +120,7 @@ public class PcqLoaderUtilsTest {
     }
 
     @Test
-    public void invalidDobYear() {
+    void invalidDobYear() {
         //User has supplied an numeric but invalid year field
         String invalidDobYear = "01-01-01";
         boolean isDobValid = PcqLoaderUtils.isDobValid(invalidDobYear);
@@ -132,7 +132,7 @@ public class PcqLoaderUtilsTest {
     }
 
     @Test
-    public void dobValidation() {
+    void dobValidation() {
         //User has supplied an numeric and valid dob data
         String validDob = "2001-01-31";
         boolean isDobValid = PcqLoaderUtils.isDobValid(validDob);
@@ -148,7 +148,7 @@ public class PcqLoaderUtilsTest {
     }
 
     @Test
-    public void testCompleteDobString() {
+    void testCompleteDobString() {
         Pattern pattern = Pattern.compile("\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d(?:\\.\\d+)?Z?");
         String dobPartial = "1900-01-01";
         String completeDob = PcqLoaderUtils.generateCompleteDobString(dobPartial);
@@ -157,7 +157,7 @@ public class PcqLoaderUtilsTest {
     }
 
     @Test
-    public void testAuthorisationToken() {
+    void testAuthorisationToken() {
         String token = PcqLoaderUtils.generateAuthorizationToken("Test", "TestSubject");
         assertNotNull(token, "Authorisation token is null");
     }
