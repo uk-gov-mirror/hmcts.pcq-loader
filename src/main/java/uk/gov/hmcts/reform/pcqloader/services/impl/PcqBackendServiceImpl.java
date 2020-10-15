@@ -53,7 +53,7 @@ public class PcqBackendServiceImpl implements PcqBackendService {
             responseEntity = JsonFeignResponseUtil.toResponseEntity(response, HashMap.class);
         } catch (FeignException ex) {
             throw new ExternalApiException(HttpStatus.valueOf(ex.status()), ex.getMessage());
-        } catch (IOException ioe) {
+        } catch (IOException | IllegalArgumentException ioe) {
             throw new ExternalApiException(HttpStatus.SERVICE_UNAVAILABLE, ioe.getMessage());
         }
 

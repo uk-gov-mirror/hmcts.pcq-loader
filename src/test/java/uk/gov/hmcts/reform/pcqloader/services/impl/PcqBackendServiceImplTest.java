@@ -164,6 +164,20 @@ class PcqBackendServiceImplTest {
                                                                   any(PcqAnswerRequest.class));
     }
 
+    @Test
+    void executeIllegalArgumentExceptionError() {
+        PcqAnswerRequest testRequest = generateTestRequest();
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("test");
+
+        when(mockPcqBackendFeignClient.submitAnswers(anyString(), anyString(), any(PcqAnswerRequest.class)))
+            .thenThrow(illegalArgumentException);
+
+        assertThrows(ExternalApiException.class, () -> pcqBackendService.submitAnswers(testRequest));
+
+        verify(mockPcqBackendFeignClient, times(1)).submitAnswers(anyString(), anyString(),
+                                                                  any(PcqAnswerRequest.class));
+    }
+
 
     private PcqAnswerRequest generateTestRequest() {
         PcqAnswerRequest pcqAnswerRequest = new PcqAnswerRequest();
