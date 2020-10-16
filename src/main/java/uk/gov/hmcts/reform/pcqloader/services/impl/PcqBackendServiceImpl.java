@@ -8,12 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.pcqloader.controller.feign.PcqBackendFeignClient;
-import uk.gov.hmcts.reform.pcqloader.exceptions.ExternalApiException;
-import uk.gov.hmcts.reform.pcqloader.model.PcqAnswerRequest;
+import uk.gov.hmcts.reform.pcq.commons.controller.feign.PcqBackendFeignClient;
+import uk.gov.hmcts.reform.pcq.commons.exception.ExternalApiException;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqAnswerRequest;
+import uk.gov.hmcts.reform.pcq.commons.utils.PcqUtils;
+import uk.gov.hmcts.reform.pcq.commons.utils.JsonFeignResponseUtil;
 import uk.gov.hmcts.reform.pcqloader.services.PcqBackendService;
-import uk.gov.hmcts.reform.pcqloader.utils.JsonFeignResponseUtil;
-import uk.gov.hmcts.reform.pcqloader.utils.PcqLoaderUtils;
+
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -44,8 +45,8 @@ public class PcqBackendServiceImpl implements PcqBackendService {
         ResponseEntity<Map<String, String>> responseEntity;
 
         //Generate the Bearer JWT token.
-        String jwtToken = "Bearer " + PcqLoaderUtils.generateAuthorizationToken(jwtSecretKey,
-                                                                                answerRequest.getPartyId());
+        String jwtToken = "Bearer " + PcqUtils.generateAuthorizationToken(jwtSecretKey,
+                                                                          answerRequest.getPartyId(), "Pcq Loader");
 
         //Invoke the API
         try (Response response = pcqBackendFeignClient.submitAnswers(coRelationHeader + answerRequest.getDcnNumber(),

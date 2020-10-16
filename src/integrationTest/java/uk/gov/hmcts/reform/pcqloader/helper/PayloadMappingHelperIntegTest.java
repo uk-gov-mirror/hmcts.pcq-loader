@@ -5,21 +5,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.gov.hmcts.reform.pcqloader.model.PcqAnswerRequest;
-import uk.gov.hmcts.reform.pcqloader.model.PcqAnswers;
-import uk.gov.hmcts.reform.pcqloader.model.PcqMetaData;
-import uk.gov.hmcts.reform.pcqloader.model.PcqScannableItems;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqAnswers;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqAnswerRequest;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqMetaData;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqScannableItems;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
+import static uk.gov.hmcts.reform.pcq.commons.tests.utils.TestUtils.jsonStringFromFile;
 
 @ExtendWith(SpringExtension.class)
 @SuppressWarnings("PMD.TooManyMethods")
@@ -358,18 +356,6 @@ public class PayloadMappingHelperIntegTest {
         assertNull(mappedAnswers.getOptOut(), "Opt Out is not correct.");
     }
 
-
-    /**
-     * Obtains a JSON String from a JSON file in the classpath (Resources directory).
-     *
-     * @param fileName - The name of the Json file from classpath.
-     * @return - JSON String from the file.
-     * @throws IOException - If there is any issue when reading from the file.
-     */
-    public static String jsonStringFromFile(String fileName) throws IOException {
-        File resource = new ClassPathResource(fileName).getFile();
-        return new String(Files.readAllBytes(resource.toPath()));
-    }
 
     public static PcqMetaData jsonMetaDataObjectFromString(String jsonString) throws IOException {
         return new ObjectMapper().readValue(jsonString, PcqMetaData.class);
