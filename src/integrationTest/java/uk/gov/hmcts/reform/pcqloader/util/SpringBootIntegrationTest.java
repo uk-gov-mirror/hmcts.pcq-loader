@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+import uk.gov.hmcts.reform.pcq.commons.controller.feign.PcqBackendFeignClient;
 import uk.gov.hmcts.reform.pcqloader.PcqLoaderComponent;
 import uk.gov.hmcts.reform.pcqloader.config.BlobStorageConfiguration;
 import uk.gov.hmcts.reform.pcqloader.config.TestApplicationConfiguration;
-import uk.gov.hmcts.reform.pcqloader.controller.feign.PcqBackendFeignClient;
 import uk.gov.hmcts.reform.pcqloader.services.BlobStorageManager;
 import uk.gov.hmcts.reform.pcqloader.services.impl.PcqBackendServiceImpl;
 

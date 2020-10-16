@@ -8,13 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-import uk.gov.hmcts.reform.pcqloader.exceptions.ExternalApiException;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqAnswerRequest;
+import uk.gov.hmcts.reform.pcq.commons.exception.ExternalApiException;
+import uk.gov.hmcts.reform.pcq.commons.utils.PcqUtils;
 import uk.gov.hmcts.reform.pcqloader.helper.PayloadMappingHelper;
-import uk.gov.hmcts.reform.pcqloader.model.PcqAnswerRequest;
 import uk.gov.hmcts.reform.pcqloader.services.BlobStorageManager;
 import uk.gov.hmcts.reform.pcqloader.services.PcqBackendService;
 import uk.gov.hmcts.reform.pcqloader.utils.ZipFileUtils;
-import uk.gov.hmcts.reform.pcqloader.utils.PcqLoaderUtils;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -64,7 +65,7 @@ public class PcqLoaderComponent {
 
                 // Step 5. Retrieve the DCN Number from the Zip File Name. Pass the actual zip file name in the
                 // method call below
-                final String fileDcnNumber = PcqLoaderUtils.extractDcnNumberFromFile(tmpZipFileName);
+                final String fileDcnNumber = PcqUtils.extractDcnNumberFromFile(tmpZipFileName);
                 log.info("Starting to process file {}", fileDcnNumber);
 
                 // Step 6. Unzip the zip file
