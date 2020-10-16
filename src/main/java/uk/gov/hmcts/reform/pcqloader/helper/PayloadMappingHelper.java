@@ -16,11 +16,11 @@ import uk.gov.hmcts.reform.pcq.commons.model.PcqMetaData;
 import uk.gov.hmcts.reform.pcq.commons.model.PcqPayLoad;
 import uk.gov.hmcts.reform.pcq.commons.model.PcqPayloadContents;
 import uk.gov.hmcts.reform.pcq.commons.model.PcqScannableItems;
-import uk.gov.hmcts.reform.pcqloader.utils.PcqLoaderUtils;
+import uk.gov.hmcts.reform.pcq.commons.utils.PcqUtils;
 
 import java.lang.reflect.Field;
 
-import static uk.gov.hmcts.reform.pcqloader.utils.PcqLoaderUtils.nullIfEmpty;
+import static uk.gov.hmcts.reform.pcq.commons.utils.PcqUtils.nullIfEmpty;
 
 @Component
 @Slf4j
@@ -87,12 +87,12 @@ public class PayloadMappingHelper {
         //Set the default values
         pcqAnswerRequest.setActor("UNKNOWN");
         pcqAnswerRequest.setChannel(2);
-        pcqAnswerRequest.setCompletedDate(PcqLoaderUtils.getCurrentCompletedDate());
+        pcqAnswerRequest.setCompletedDate(PcqUtils.getCurrentCompletedDate());
         pcqAnswerRequest.setDcnNumber(metaData.getOriginatingDcnNumber());
         pcqAnswerRequest.setPartyId("PaperForm");
         pcqAnswerRequest.setServiceId(metaData.getJurisdiction());
         pcqAnswerRequest.setVersionNo(1);
-        pcqAnswerRequest.setPcqId(PcqLoaderUtils.generateUuid());
+        pcqAnswerRequest.setPcqId(PcqUtils.generateUuid());
         pcqAnswerRequest.setFormId(metaData.getScannableItems()[0].getDocumentType());
 
         PcqAnswers answers = new PcqAnswers();
@@ -140,7 +140,7 @@ public class PayloadMappingHelper {
                 int index = ArrayUtils.indexOf(submitAnswerIntElements, schemaElement);
                 Field schemaField = PcqAnswers.class.getDeclaredField(submitAnswerIntFields[index]);
                 // Make the field accessible
-                PcqLoaderUtils.makeFieldAccessible(schemaField);
+                PcqUtils.makeFieldAccessible(schemaField);
                 // If the element value has been already set in answers object i.e. more than one check-box
                 // has been ticked by the user, then set the answer to "-1".
                 if (schemaField.get(answers) == null) {
@@ -209,14 +209,14 @@ public class PayloadMappingHelper {
         }
 
         //Prefix the month and day with 0 if the length is 1 and numeric.
-        dobMonth = PcqLoaderUtils.formatDobField(dobMonth);
-        dobDay = PcqLoaderUtils.formatDobField(dobDay);
+        dobMonth = PcqUtils.formatDobField(dobMonth);
+        dobDay = PcqUtils.formatDobField(dobDay);
 
         String dob = dobYear + "-" + dobMonth + "-" + dobDay;
 
-        if (PcqLoaderUtils.isDobValid(dob)) {
+        if (PcqUtils.isDobValid(dob)) {
             answers.setDobProvided(1);
-            answers.setDob(PcqLoaderUtils.generateCompleteDobString(dob));
+            answers.setDob(PcqUtils.generateCompleteDobString(dob));
         } else {
             answers.setDob(null);
             log.error("Invalid Dob provided - " + dob + ", setting the Dob to Null");

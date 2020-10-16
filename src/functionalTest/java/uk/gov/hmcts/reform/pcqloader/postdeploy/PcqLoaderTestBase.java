@@ -1,18 +1,15 @@
 package uk.gov.hmcts.reform.pcqloader.postdeploy;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
-import uk.gov.hmcts.reform.pcqloader.model.PcqAnswerRequest;
-import uk.gov.hmcts.reform.pcqloader.model.PcqAnswers;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqAnswers;
+import uk.gov.hmcts.reform.pcq.commons.model.PcqAnswerRequest;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.Files;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
@@ -22,17 +19,6 @@ import static org.junit.Assert.assertNull;
 @Slf4j
 public class PcqLoaderTestBase {
 
-
-    /**
-     * Obtains a JSON String from a JSON file in the classpath (Resources directory).
-     * @param fileName - The name of the Json file from classpath.
-     * @return - JSON String from the file.
-     * @throws IOException - If there is any issue when reading from the file.
-     */
-    protected String jsonStringFromFile(String fileName) throws IOException {
-        File resource = new ClassPathResource(fileName).getFile();
-        return new String(Files.readAllBytes(resource.toPath()));
-    }
 
     protected PcqAnswerRequest getTestAnswerRecord(String pcqId, String apiUrl) throws IOException {
         return getResponseFromBackend(apiUrl, pcqId);
