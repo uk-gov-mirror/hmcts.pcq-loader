@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.pcqloader.helper;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -245,6 +246,17 @@ public class PayloadMappingHelperIntegTest {
         assertSuccessMapping(mappedAnswers, metaData);
     }
 
+    @Test
+    @DisplayName("A valid scenario test where valid form is supplied but with unKnown fields.")
+    public void testValidFormWithUnknownFields() throws IOException {
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/unknownFieldsPayloadMetaFile.json");
+        PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
+
+        PcqAnswerRequest mappedAnswers = invokeMappingHelper(metaDataPayLoad);
+
+        assertUnknownFieldMapping(mappedAnswers, metaData);
+    }
+
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private PcqAnswerRequest invokeMappingHelper(String metaDataPayLoad) {
         PcqAnswerRequest mappedAnswers = null;
@@ -338,6 +350,50 @@ public class PayloadMappingHelperIntegTest {
         assertEquals(2, answers.getMarriage(), "Marriage is not correct.");
     }
 
+    public void assertUnknownFieldMapping(PcqAnswerRequest mappedAnswers, PcqMetaData pcqMetaData) {
+        assertDefaultAndGeneratedFields(mappedAnswers);
+
+        //Check the information that matches the meta-data information.
+        PcqScannableItems[] pcqScannedItems = pcqMetaData.getScannableItems();
+        assertEquals(pcqScannedItems[0].getDocumentType(), mappedAnswers.getFormId(), FORM_ID_VALIDATION_MSG);
+        assertEquals(pcqMetaData.getJurisdiction(), mappedAnswers.getServiceId(), SERVICE_ID_VALIDATION_MSG);
+        //Check the correct DCN Number is populated.
+        assertEquals(pcqMetaData.getOriginatingDcnNumber(), mappedAnswers.getDcnNumber(), DCN_VALIDATION_MSG);
+
+        //Check the answers matches the payload supplied.
+        PcqAnswers answers = mappedAnswers.getPcqAnswers();
+        assertEquals(1, answers.getLanguageMain(), "Language_Main is not correct.");
+        assertNull(answers.getLanguageOther(), "Language_Other is not correct.");
+        assertNull(answers.getEnglishLanguageLevel(), "English_Language_level is not correct.");
+        assertEquals(1, answers.getReligion(), "Religion is not correct.");
+        assertNull(answers.getReligionOther(), "Religion_Other is not correct.");
+        assertEquals("1987-01-05T00:00:00.000Z", answers.getDob(),  DOB_VALIDATION_MSG);
+        assertEquals(1, answers.getDobProvided(), "Dob_Provided is not correct.");
+        assertEquals(1, answers.getEthnicity(), "Ethnicity is not correct.");
+        assertNull(answers.getEthnicityOther(), "Ethnicity_Other is not correct.");
+        assertEquals(1, answers.getDisabilityConditions(), "Disability_Conditions is not correct.");
+        assertEquals(1, answers.getDisabilityImpact(), "Disability_Impact is not correct.");
+        assertEquals(1, answers.getDisabilityVision(), "Disability_Vision is not correct.");
+        assertEquals(1, answers.getDisabilityHearing(), "Disability_Hearing is not correct.");
+        assertEquals(1, answers.getDisabilityMobility(), "Disability_Mobility is not correct.");
+        assertEquals(1, answers.getDisabilityDexterity(), "Disability_Dexterity is not correct.");
+        assertNull(answers.getDisabilityLearning(), "Disability_Learning is not correct.");
+        assertNull(answers.getDisabilityMemory(), "Disability_Memory is not correct.");
+        assertEquals(1, answers.getDisabilityMentalHealth(), "Disability_Mental is not correct.");
+        assertEquals(1, answers.getDisabilityStamina(), "Disability_Stamina is not correct.");
+        assertNull(answers.getDisabilitySocial(), "Disability_Social is not correct.");
+        assertNull(answers.getDisabilityOther(), "Disability_Other is not correct.");
+        assertNull(answers.getDisabilityConditionOther(), "Disability_Condition_Other is not correct.");
+        assertNull(answers.getDisabilityNone(), "Disability_None is not correct.");
+        assertEquals(1, answers.getPregnancy(), "Pregnancy is not correct.");
+        assertEquals(1, answers.getSexuality(), "Sexuality is not correct.");
+        assertNull(answers.getSexualityOther(), "Sexuality_Other is not correct.");
+        assertEquals(1, answers.getSex(), "Sex is not correct.");
+        assertEquals(1, answers.getGenderDifferent(), "Gender_Different is not correct.");
+        assertNull(answers.getGenderOther(), "Gender_other is not correct.");
+        assertEquals(1, answers.getMarriage(), "Marriage is not correct.");
+    }
+
     public void assertDefaultAndGeneratedFields(PcqAnswerRequest mappedAnswers) {
         //Check the primary key generated field is not missing.
         assertNotNull(mappedAnswers.getPcqId(), "PCQ Id is Null");
@@ -358,7 +414,9 @@ public class PayloadMappingHelperIntegTest {
 
 
     public static PcqMetaData jsonMetaDataObjectFromString(String jsonString) throws IOException {
-        return new ObjectMapper().readValue(jsonString, PcqMetaData.class);
+        return new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .readValue(jsonString, PcqMetaData.class);
     }
 
 }
