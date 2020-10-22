@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.pcqloader.helper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +53,9 @@ public class PayloadMappingHelper {
 
         try {
             // Step 1. Convert the JSon String into an Java Object
-            PcqMetaData pcqMetaData = new ObjectMapper().readValue(metaDataString, PcqMetaData.class);
+            PcqMetaData pcqMetaData = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .readValue(metaDataString, PcqMetaData.class);
 
             // Step 2. Retrieve the Scannable items
             PcqScannableItems[] scannedItems = pcqMetaData.getScannableItems();
