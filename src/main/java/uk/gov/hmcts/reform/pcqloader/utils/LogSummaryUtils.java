@@ -44,7 +44,7 @@ public final class LogSummaryUtils {
 
     private static String getSummaryString() {
         StringBuilder stringBuilder = new StringBuilder(SUMMARY_HEADING_STRING);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMMM yyyy", Locale.UK);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMMM yyyy HH mm", Locale.UK);
         stringBuilder.append(dateFormat.format(new Date()))
             .append(CR_STRING)
             .append(SERVICE_SUMMARY_STRING)
