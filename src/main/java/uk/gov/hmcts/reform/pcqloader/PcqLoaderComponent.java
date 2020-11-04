@@ -54,6 +54,7 @@ public class PcqLoaderComponent {
 
     @SuppressWarnings({"PMD.DataflowAnomalyAnalysis"})
     public void execute() {
+
         log.info("PcqLoaderComponent started.");
 
         // Step 1. Connect and Authenticate with the PCQ Azure Blob Storage Account.
