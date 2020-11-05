@@ -828,6 +828,7 @@ class PcqLoaderComponentTest {
         pcqAnswerRequest.setDcnNumber("testDcn");
         pcqAnswerRequest.setChannel(2);
         pcqAnswerRequest.setPcqId("Test_Pcq_Id");
+        pcqAnswerRequest.setServiceId("Probate");
         PcqAnswers answers = new PcqAnswers();
         answers.setDobProvided(0);
         pcqAnswerRequest.setPcqAnswers(answers);
