@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.pcq.commons.utils.PcqUtils;
 import uk.gov.hmcts.reform.pcqloader.helper.PayloadMappingHelper;
 import uk.gov.hmcts.reform.pcqloader.services.BlobStorageManager;
 import uk.gov.hmcts.reform.pcqloader.services.PcqBackendService;
+import uk.gov.hmcts.reform.pcqloader.utils.LogSummaryUtils;
 import uk.gov.hmcts.reform.pcqloader.utils.ZipFileUtils;
 
 
@@ -22,12 +23,18 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Slf4j
 public class PcqLoaderComponent {
 
     private static final int MAX_RETRIES = 3;
+    private static final String ERROR_SUFFIX = "_Erred";
+    private static final String CRATED_SUFFIX = "_Created";
+
+
+    private final Map<String, Integer> serviceSummaryMap = new ConcurrentHashMap<>();
 
     @Value("${apiExecutionThreadDelay:1000}")
     private int threadDelay;
@@ -47,6 +54,7 @@ public class PcqLoaderComponent {
 
     @SuppressWarnings({"PMD.DataflowAnomalyAnalysis"})
     public void execute() {
+
         log.info("PcqLoaderComponent started.");
 
         // Step 1. Connect and Authenticate with the PCQ Azure Blob Storage Account.
@@ -59,6 +67,7 @@ public class PcqLoaderComponent {
 
             File blobZipDirectory = null;
             File unzippedFiles = null;
+            String jurisdiction = "";
             try {
                 // Step 4. Download the zip file to local storage.
                 blobZipDirectory = blobStorageManager.downloadFileFromBlobStorage(blobContainerClient, tmpZipFileName);
@@ -76,6 +85,7 @@ public class PcqLoaderComponent {
                 if (metaDataFile == null) {
                     log.error("metadata.json file not found, moving the zip file to Rejected container");
                     blobStorageManager.moveFileToRejectedContainer(tmpZipFileName, blobContainerClient);
+                    incrementServiceCount(jurisdiction + ERROR_SUFFIX);
                 } else {
                     String jsonMetaData = jsonStringFromFile(metaDataFile);
                     PcqAnswerRequest mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(
@@ -84,8 +94,10 @@ public class PcqLoaderComponent {
                     if (mappedAnswers == null) {
                         log.error("Mapping failed, moving the zip file to Rejected container");
                         blobStorageManager.moveFileToRejectedContainer(tmpZipFileName, blobContainerClient);
+                        incrementServiceCount(jurisdiction + ERROR_SUFFIX);
                     } else {
                         //Step 8. Invoke the back-end API
+                        jurisdiction = mappedAnswers.getServiceId();
                         invokeSubmitAnswers(mappedAnswers, tmpZipFileName, blobContainerClient);
                     }
                 }
@@ -93,11 +105,13 @@ public class PcqLoaderComponent {
 
             } catch (Exception ioe) {
                 log.error("Error during processing " + ioe.getMessage(), ioe);
+                incrementServiceCount(jurisdiction + ERROR_SUFFIX);
             } finally {
                 log.info("File processing completed. Deleting file from local storage");
                 fileUtil.deleteFilesFromLocalStorage(blobZipDirectory, unzippedFiles);
             }
         }
+        LogSummaryUtils.logSummary(serviceSummaryMap);
 
         log.info("PcqLoaderComponent finished.");
     }
@@ -119,11 +133,13 @@ public class PcqLoaderComponent {
                         tmpZipFileName
                     );
                     blobStorageManager.moveFileToProcessedFolder(tmpZipFileName, sourceContainer);
+                    incrementServiceCount(mappedAnswers.getServiceId() + CRATED_SUFFIX);
                 } else {
                     log.error("Back-end API call returned invalid response, moving file to rejected "
                                   + "container - Error code {} for DCN {}",
                               responseEntity.getStatusCode(), mappedAnswers.getDcnNumber());
                     blobStorageManager.moveFileToRejectedContainer(tmpZipFileName, sourceContainer);
+                    incrementServiceCount(mappedAnswers.getServiceId() + ERROR_SUFFIX);
                 }
                 retryCount = MAX_RETRIES;
 
@@ -135,6 +151,8 @@ public class PcqLoaderComponent {
                 if (retryCount < MAX_RETRIES - 1) {
                     Thread.sleep(threadDelay);
                     log.info("Re-trying to process file {}", tmpZipFileName);
+                } else {
+                    incrementServiceCount(mappedAnswers.getServiceId() + ERROR_SUFFIX);
                 }
                 retryCount++;
             }
@@ -143,5 +161,15 @@ public class PcqLoaderComponent {
 
     private String jsonStringFromFile(File file) throws IOException {
         return fileUtil.readAllBytesFromFile(file);
+    }
+
+    private void incrementServiceCount(String service) {
+
+        if (serviceSummaryMap.get(service) == null) {
+            serviceSummaryMap.put(service, 1);
+        } else {
+            int count = serviceSummaryMap.get(service) + 1;
+            serviceSummaryMap.put(service, count);
+        }
     }
 }
