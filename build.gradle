@@ -280,7 +280,6 @@ dependencies {
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: versions.junit
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
-    testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: versions.junit
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
 
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
