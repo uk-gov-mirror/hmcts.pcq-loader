@@ -254,7 +254,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
 
     implementation group: 'com.microsoft.azure', name: 'azure-storage', version: '8.6.5'
-    implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.8.0'
+    implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.10.0'
 
     implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: '11.0'
 
@@ -300,7 +300,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
     testImplementation group: "com.gilecode.yagson", name:"j9-reflection-utils", version:"1.0"
     testImplementation group: "io.jsonwebtoken", name: "jjwt", version: "0.9.1"
-    testImplementation group: "org.testcontainers", name: "junit-jupiter", version:"1.14.3"
+    testImplementation group: "org.testcontainers", name: "junit-jupiter", version:"1.15.1"
 
     integrationTestCompile sourceSets.main.runtimeClasspath
     integrationTestCompile sourceSets.test.runtimeClasspath
