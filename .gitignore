@@ -5,7 +5,6 @@
 *.class
 .DS_Store
 bin/main/application.yaml
-functional-output/
 
 git.properties
 
