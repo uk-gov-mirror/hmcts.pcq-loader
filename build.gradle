@@ -188,6 +188,23 @@ dependencyCheck {
 
 dependencyManagement {
     dependencies {
+        // CVE-2021-21290
+        dependency group: 'com.azure', name: 'azure-core-http-netty', version: '1.8.0'
+        dependencySet(group: 'io.netty', version: '4.1.59.Final') {
+          entry 'netty-buffer'
+          entry 'netty-codec'
+          entry 'netty-codec-http'
+          entry 'netty-codec-http2'
+          entry 'netty-codec-socks'
+          entry 'netty-common'
+          entry 'netty-handler'
+          entry 'netty-handler-proxy'
+          entry 'netty-resolver'
+          entry 'netty-transport'
+          entry 'netty-transport-native-epoll'
+          entry 'netty-transport-native-kqueue'
+          entry 'netty-transport-native-unix-common'
+        }
         dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.64'
         // CVE-2018-10237 - Unbounded memory allocation
         // CVE-2020-8908 - Temp directory creation vulnerability
