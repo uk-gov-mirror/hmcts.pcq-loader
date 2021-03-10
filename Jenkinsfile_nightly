@@ -51,7 +51,7 @@ withNightlyPipeline(type, product, component) {
   disableLegacyDeployment()
   nonServiceApp()
 
-  //enableSecurityScan()
+  enableSecurityScan()
 
   enableMutationTest()
   after('mutationTest') {
