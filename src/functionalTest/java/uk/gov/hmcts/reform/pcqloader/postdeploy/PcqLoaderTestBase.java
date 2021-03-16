@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.pcqloader.postdeploy;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import uk.gov.hmcts.reform.pcq.commons.model.PcqAnswers;
