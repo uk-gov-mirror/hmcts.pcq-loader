@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.pcqloader.postdeploy;
 
+import com.azure.core.http.rest.PagedIterable;
+import com.azure.storage.blob.models.BlobItem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -40,6 +42,16 @@ public class PcqLoaderTestBase {
             .defaultHeader("X-Correlation-Id", "Pcq Loader Functional Test")
             .defaultUriVariables(Collections.singletonMap("url", apiUrl))
             .build();
+    }
+
+    protected int countBlobs(PagedIterable<BlobItem> blobs) {
+        int blobCount = 0;
+        for (BlobItem blobItem : blobs) {
+            if (null != blobItem) {
+                blobCount++;
+            }
+        }
+        return blobCount;
     }
 
     @SuppressWarnings({"PMD.ConfusingTernary"})
