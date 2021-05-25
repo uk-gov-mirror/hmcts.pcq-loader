@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 @Slf4j
 public class PcqLoaderFunctionalTest extends PcqLoaderTestBase {
 
+    private static final String CLASSPATH_BLOBTESTFILES_PATH = "classpath:BlobTestFiles/";
     private static final String FUNC_TEST_PCQ_CONTAINER_NAME = "pcq-func-tests";
     private static final String BLOB_FILENAME_1 = "1579002492_31-08-2020-11-35-10.zip";
     private static final String BLOB_FILENAME_2 = "1579002493_31-08-2020-11-48-42.zip";
@@ -54,10 +55,10 @@ public class PcqLoaderFunctionalTest extends PcqLoaderTestBase {
         log.info("Created test container: {}", blobContainerClient.getBlobContainerUrl());
 
         // Upload sample documents
-        File blobFile1 = ResourceUtils.getFile("classpath:BlobTestFiles/" + BLOB_FILENAME_1);
-        File blobFile2 = ResourceUtils.getFile("classpath:BlobTestFiles/" + BLOB_FILENAME_2);
-        File blobFile3 = ResourceUtils.getFile("classpath:BlobTestFiles/" + BLOB_FILENAME_3_LARGE_FILE);
-        File blobFile4 = ResourceUtils.getFile("classpath:BlobTestFiles/" + BLOB_FILENAME_3_INVALID_DATA);
+        File blobFile1 = ResourceUtils.getFile(CLASSPATH_BLOBTESTFILES_PATH + BLOB_FILENAME_1);
+        File blobFile2 = ResourceUtils.getFile(CLASSPATH_BLOBTESTFILES_PATH + BLOB_FILENAME_2);
+        File blobFile3 = ResourceUtils.getFile(CLASSPATH_BLOBTESTFILES_PATH + BLOB_FILENAME_3_LARGE_FILE);
+        File blobFile4 = ResourceUtils.getFile(CLASSPATH_BLOBTESTFILES_PATH + BLOB_FILENAME_3_INVALID_DATA);
 
         blobStorageManager.uploadFileToBlobStorage(blobContainerClient, blobFile1.getPath());
         blobStorageManager.uploadFileToBlobStorage(blobContainerClient, blobFile2.getPath());
