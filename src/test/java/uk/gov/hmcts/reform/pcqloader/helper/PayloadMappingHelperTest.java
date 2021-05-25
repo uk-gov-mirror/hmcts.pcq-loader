@@ -282,6 +282,22 @@ class PayloadMappingHelperTest {
     }
 
     @Test
+    void mapPayLoadNumericalDataError() throws IOException {
+
+        String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/invalidNumericValuesMetaFile.json");
+        PcqAnswerRequest mappedAnswers = null;
+
+        try {
+            mappedAnswers = payloadMappingHelper.mapPayLoadToPcqAnswers(metaDataPayLoad);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(FAIL_ASSERT_MSG, e);
+        }
+
+        assertNull(mappedAnswers, "Mapped Answers should be null");
+
+    }
+
+    @Test
     void mapPayLoadDobNotProvided() throws IOException {
 
         String metaDataPayLoad = jsonStringFromFile("testPayloadFiles/dobNotProvidedMetaFile.json");
