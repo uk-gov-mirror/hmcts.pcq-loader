@@ -55,6 +55,18 @@ public class PayloadMappingHelperIntegTest {
     }
 
     @Test
+    @DisplayName("Payload data had invalid numerical values.")
+    public void testInvalidNumericData() throws IOException {
+
+        String metaDataPayLoad =
+            jsonStringFromFile("testPayloadFiles/invalidNumericValuesPayloadMetaFile.json");
+
+        PcqAnswerRequest mappedAnswers = invokeMappingHelper(metaDataPayLoad);
+
+        assertNull(mappedAnswers, "Data values returned from form are not numeric.");
+    }
+
+    @Test
     @DisplayName("Multiple choices test.")
     public void testMultipleChoices() throws IOException {
 

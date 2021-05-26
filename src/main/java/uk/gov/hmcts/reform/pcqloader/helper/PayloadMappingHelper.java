@@ -74,8 +74,10 @@ public class PayloadMappingHelper {
                 log.error("No scanned items found in the meta-data file.");
             }
 
-        } catch (JsonProcessingException e) {
-            log.error("JsonProcessingException during payload parsing - " + e.getMessage());
+        } catch (JsonProcessingException jpe) {
+            log.error("JsonProcessingException during payload parsing - " + jpe.getMessage());
+        } catch (NumberFormatException nfe) {
+            log.error("NumberFormatException during payload parsing - " + nfe.getMessage());
         }
 
         return null;
