@@ -34,10 +34,11 @@ public class PcqLoaderFunctionalTest extends PcqLoaderTestBase {
     private static final String BLOB_FILENAME_2 = "1579002493_31-08-2020-11-48-42.zip";
     private static final String BLOB_FILENAME_3_LARGE_FILE = "1579002494_27-03-2021-12-30-00.zip";
     private static final String BLOB_FILENAME_3_INVALID_DATA = "1579002495_20-05-2021-16-40-00.zip";
+    private static final String BLOB_FILENAME_3_MISSING_OCR_DATA = "1579002496_01-07-2021-16-45-00.zip";
     private static final String BLOB_CONTAINER_DEFAULT_DIR = "/";
     private static final String BLOB_CONTAINER_PROCESSED_DIR = "processed/";
     private static final int EXPECT_SUCCESSFUL_TESTS = 3;
-    private static final int EXPECT_REJECTED_TESTS = 1;
+    private static final int EXPECT_REJECTED_TESTS = 2;
     private static final int EXPECT_UNPROCESSED_TESTS = 0;
 
     @Autowired
@@ -62,11 +63,13 @@ public class PcqLoaderFunctionalTest extends PcqLoaderTestBase {
         File blobFile2 = ResourceUtils.getFile(CLASSPATH_BLOBTESTFILES_PATH + BLOB_FILENAME_2);
         File blobFile3 = ResourceUtils.getFile(CLASSPATH_BLOBTESTFILES_PATH + BLOB_FILENAME_3_LARGE_FILE);
         File blobFile4 = ResourceUtils.getFile(CLASSPATH_BLOBTESTFILES_PATH + BLOB_FILENAME_3_INVALID_DATA);
+        File blobFile5 = ResourceUtils.getFile(CLASSPATH_BLOBTESTFILES_PATH + BLOB_FILENAME_3_MISSING_OCR_DATA);
 
         blobStorageManager.uploadFileToBlobStorage(blobContainerClient, blobFile1.getPath());
         blobStorageManager.uploadFileToBlobStorage(blobContainerClient, blobFile2.getPath());
         blobStorageManager.uploadFileToBlobStorage(blobContainerClient, blobFile3.getPath());
         blobStorageManager.uploadFileToBlobStorage(blobContainerClient, blobFile4.getPath());
+        blobStorageManager.uploadFileToBlobStorage(blobContainerClient, blobFile5.getPath());
     }
 
     @After
