@@ -78,6 +78,10 @@ public class PayloadMappingHelper {
             log.error("JsonProcessingException during payload parsing - " + jpe.getMessage());
         } catch (NumberFormatException nfe) {
             log.error("NumberFormatException during payload parsing - " + nfe.getMessage());
+        } catch (NullPointerException npe) {
+            log.error("NullPointerException during payload parsing - " + npe.getMessage());
+        } catch (Exception exp) {
+            log.error("An unknown error during payload parsing - " + exp.getMessage());
         }
 
         return null;
