@@ -57,7 +57,8 @@ public class PayloadMappingHelper {
 
             // Step 2. Retrieve the Scannable items
             PcqScannableItems[] scannedItems = pcqMetaData.getScannableItems();
-            if (scannedItems != null && scannedItems.length > 0) {
+            if (scannedItems != null && scannedItems.length == 1
+                && StringUtils.isNotEmpty(scannedItems[0].getOcrData())) {
 
                 // Step 3. Retrieve and decode the Ocr Data.
                 String ocrData = new String(Base64Utils.decodeFromString(scannedItems[0].getOcrData()));
@@ -71,17 +72,13 @@ public class PayloadMappingHelper {
                 return answerRequest;
 
             } else {
-                log.error("No scanned items found in the meta-data file.");
+                log.error("No scanned items with ocr_data found in the meta-data file.");
             }
 
         } catch (JsonProcessingException jpe) {
             log.error("JsonProcessingException during payload parsing - " + jpe.getMessage());
         } catch (NumberFormatException nfe) {
             log.error("NumberFormatException during payload parsing - " + nfe.getMessage());
-        } catch (NullPointerException npe) {
-            log.error("NullPointerException during payload parsing - " + npe.getMessage());
-        } catch (Exception exp) {
-            log.error("An unknown error during payload parsing - " + exp.getMessage());
         }
 
         return null;
