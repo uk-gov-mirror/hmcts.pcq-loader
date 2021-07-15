@@ -232,7 +232,7 @@ repositories {
     jcenter()
     mavenCentral()
     maven {
-        url "https://dl.bintray.com/hmcts/hmcts-maven"
+        url 'https://jitpack.io'
     }
 }
 
@@ -317,7 +317,7 @@ dependencies {
 
     implementation group: "io.jsonwebtoken", name: "jjwt", version: "0.9.1"
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
-    implementation group: 'uk.gov.hmcts.reform.pcq', name: 'pcq-commons', version: '1.1.2'
+    implementation group: 'com.github.hmcts', name: 'pcq-commons', version: '1.1.4'
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: versions.junit
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
