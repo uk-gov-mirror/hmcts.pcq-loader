@@ -260,7 +260,7 @@ configurations.all {
                 details.useVersion '2.12.10'
             }
             if (details.requested.group in ['org.apache.tomcat.embed']) {
-                details.useVersion '9.0.43'
+                details.useVersion '9.0.50'
             }
             if (details.requested.group in ['org.apache.httpcomponents.httpclient']) {
               details.useVersion '4.5.13'
