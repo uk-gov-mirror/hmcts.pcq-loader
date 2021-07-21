@@ -112,6 +112,12 @@ task integration(type: Test, description: 'Runs the integration tests.', group: 
     useJUnitPlatform()
 }
 
+task fortifyScan(type: JavaExec)  {
+    main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+    classpath += sourceSets.test.runtimeClasspath
+    jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
+}
+
 checkstyle {
   maxWarnings = 0
   toolVersion = '8.29'
@@ -337,6 +343,8 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-inline', version: '3.4.6'
 
     testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: '2.19.0'
+
+    testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
     testImplementation group: "com.gilecode.yagson", name:"j9-reflection-utils", version:"1.0"
