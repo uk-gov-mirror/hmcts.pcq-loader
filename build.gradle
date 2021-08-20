@@ -228,7 +228,7 @@ dependencyManagement {
         dependencySet(group: 'com.google.guava', version: '30.1-jre') {
           entry 'guava'
         }
-      
+
         // CVE-2021-29425
         dependency group: 'commons-io', name: 'commons-io', version: '2.8.0'
     }
@@ -304,14 +304,14 @@ dependencies {
     implementation group: 'org.springframework', name:'spring-webmvc', version: versions.springFramework
 
     implementation group: 'com.microsoft.azure', name: 'azure-storage', version: '8.6.5'
-    implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.10.0'
+    implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.13.0'
 
     implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: '11.0'
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.7.RELEASE'
-    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.7.RELEASE'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
 
     compile group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     compile group: "com.networknt", name: "json-schema-validator", version: "1.0.31"
