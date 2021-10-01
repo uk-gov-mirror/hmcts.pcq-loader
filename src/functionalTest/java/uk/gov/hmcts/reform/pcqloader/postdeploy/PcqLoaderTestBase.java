@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.pcq.commons.model.PcqAnswerRequest;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -52,6 +53,19 @@ public class PcqLoaderTestBase {
             }
         }
         return blobCount;
+    }
+
+    protected void deleteTestAnswerRecord(PcqAnswerRequest answerRequest, String apiUrl) throws IOException {
+        deleteTestRecordFromBackend(apiUrl, answerRequest);
+    }
+
+    protected void deleteTestRecordFromBackend(String apiUrl, PcqAnswerRequest answerRequest) {
+        String pcqId = answerRequest.getPcqId();
+        WebClient pcqWebClient = createPcqBackendWebClient(apiUrl);
+        WebClient.RequestHeadersSpec requestBodySpec = pcqWebClient.delete().uri(URI.create(
+            apiUrl + "/pcq/backend/deletePcqRecord/" + pcqId));
+        Map response3 = requestBodySpec.retrieve().bodyToMono(Map.class).block();
+        log.info("Returned response " + response3.toString());
     }
 
     @SuppressWarnings({"PMD.ConfusingTernary"})
