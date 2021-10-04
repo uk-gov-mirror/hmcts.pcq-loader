@@ -87,6 +87,7 @@ public class PcqLoaderMappingFunctionalTest extends PcqLoaderTestBase {
 
             PcqAnswerRequest answerRecord = getTestAnswerRecord(mappedAnswers.getPcqId(), pcqBackendUrl);
             Assertions.assertNotNull(answerRecord, "Answer Record is null");
+            log.info("PCQ Id {} " + answerRecord.getPcqId());
             checkAssertionsOnResponse(answerRecord, mappedAnswers);
             deleteTestAnswerRecord(answerRecord, pcqBackendUrl);
         }
