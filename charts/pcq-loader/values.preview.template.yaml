@@ -4,6 +4,7 @@ job:
   ingressHost: ${SERVICE_FQDN}
   environment:
     S2S_URL: "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
+    PCQ_BACKEND_URL: "http://pcq-backend-pr-383.service.core-compute-preview.internal"
   kind: CronJob
   schedule: "*/20 * * * *"
   startingDeadlineSeconds: 180
