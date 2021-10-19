@@ -56,10 +56,6 @@ public class PcqLoaderTestBase {
     }
 
     protected void deleteTestAnswerRecord(PcqAnswerRequest answerRequest, String apiUrl) throws IOException {
-        deleteTestRecordFromBackend(apiUrl, answerRequest);
-    }
-
-    protected void deleteTestRecordFromBackend(String apiUrl, PcqAnswerRequest answerRequest) {
         String pcqId = answerRequest.getPcqId();
         WebClient pcqWebClient = createPcqBackendWebClient(apiUrl);
         WebClient.RequestHeadersSpec requestBodySpec = pcqWebClient.delete().uri(URI.create(
