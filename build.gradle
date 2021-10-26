@@ -223,7 +223,7 @@ dependencyManagement {
           entry 'netty-resolver-dns'
           entry 'netty-resolver-dns-native-macos'
         }
-        dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.69'
+        dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.64'
         // CVE-2018-10237 - Unbounded memory allocation
         // CVE-2020-8908 - Temp directory creation vulnerability
         dependencySet(group: 'com.google.guava', version: '30.1-jre') {
@@ -231,7 +231,7 @@ dependencyManagement {
         }
 
         // CVE-2021-29425
-        dependency group: 'commons-io', name: 'commons-io', version: '2.8.0'
+        dependency group: 'commons-io', name: 'commons-io', version: '2.11.0'
     }
     imports {
       mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2020.0.3'
