@@ -128,8 +128,8 @@ public class PcqLoaderComponent {
                 if (responseEntity.getStatusCode() == HttpStatus.CREATED
                     || responseEntity.getStatusCode() == HttpStatus.CONFLICT) {
                     log.info(
-                        "File {} processed successfully, moving file to processed folder.",
-                        tmpZipFileName
+                        "File {} with DCN {} processed successfully, moving file to processed folder.",
+                        tmpZipFileName,mappedAnswers.getDcnNumber()
                     );
                     blobStorageManager.moveFileToProcessedFolder(tmpZipFileName, sourceContainer);
                     incrementServiceCount(mappedAnswers.getServiceId() + CRATED_SUFFIX);
