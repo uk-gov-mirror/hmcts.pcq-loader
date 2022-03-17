@@ -149,30 +149,20 @@ public class ZipFileUtils {
                         }
                     }
                 } catch (IOException e) {
-                    log.error("An error occured while unzipping file from blob storage",e);
+                    log.error("An error occurred while unzipping file from blob storage",e);
                     throw new ZipProcessingException("Unable to unpack zip file "
                                                          + ze.getName(), e);
                 } finally {
-                    if (out != null) {
-                        out.close();
-                    }
-                    if (in != null) {
-                        in.close();
-                    }
+                    out.close();
+                    in.close();
                 }
-                if (totalSizeArchive > thresholdSize) {
+                if (totalSizeArchive > thresholdSize || totalEntryArchive > thresholdEntries) {
                     // the uncompressed data size is too much for the application resource capacity
                     throw new ZipProcessingException(
-                        "Uncompressed data size is too much for the application resource capacity :"
-                            + totalSizeArchive + " : "
-                            + ze.getName());
-                }
-
-                if (totalEntryArchive > thresholdEntries) {
-                    // too much entries in this archive, can lead to inodes exhaustion of the system
-                    throw new ZipProcessingException(
-                        "Too much entries in this archive, can lead to inodes exhaustion of the system :"
-                            + totalEntryArchive + " : "
+                        "Either Uncompressed data size is too much for the application resource capacity or "
+                            + "Too much entries in this archive, can lead to inodes exhaustion of the system"
+                            + totalSizeArchive + " : Allowed (" + thresholdSize + ")"
+                            + totalEntryArchive + " : Allowed (" + thresholdEntries + ")"
                             + ze.getName());
                 }
                 Files.copy(zipFile.getInputStream(ze), fileToCreate, StandardCopyOption.REPLACE_EXISTING);
