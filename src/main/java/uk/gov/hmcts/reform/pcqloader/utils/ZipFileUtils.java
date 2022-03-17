@@ -152,13 +152,14 @@ public class ZipFileUtils {
         InputStream in = null;
         OutputStream out = null;
         byte[] buffer = new byte[1248];
-        try {
-            while (zipEntries.hasMoreElements()) {
-                ZipEntry ze = zipEntries.nextElement();
-                String simpleName = FilenameUtils.getName(ze.getName());
-                if (!ze.isDirectory() && simpleName.charAt(0) != '.') {
-                    log.info("Found zip content: " + ze.getName());
-                    var fileToCreate = outputDir.toPath().resolve(simpleName);
+
+        while (zipEntries.hasMoreElements()) {
+            ZipEntry ze = zipEntries.nextElement();
+            String simpleName = FilenameUtils.getName(ze.getName());
+            if (!ze.isDirectory() && simpleName.charAt(0) != '.') {
+                log.info("Found zip content: " + ze.getName());
+                var fileToCreate = outputDir.toPath().resolve(simpleName);
+                try {
                     in = zipFile.getInputStream(ze);
                     out = Files.newOutputStream(Paths.get(fileToCreate.toString()));
                     totalEntryArchive++;
@@ -180,32 +181,34 @@ public class ZipFileUtils {
                                     + ze.getName());
                         }
                     }
-                    if (totalSizeArchive > thresholdSize) {
-                        // the uncompressed data size is too much for the application resource capacity
-                        throw new ZipProcessingException(
-                            "Uncompressed data size is too much for the application resource capacity :"
-                                + totalSizeArchive + " : "
-                                + ze.getName());
+                } catch (IOException e) {
+                    log.error("An error occured while unzipping file from blob storage",e);
+                    throw new ZipProcessingException("Unable to unpack zip file "
+                                                         + ze.getName(), e);
+                } finally {
+                    if (out != null) {
+                        out.close();
                     }
-
-                    if (totalEntryArchive > thresholdEntries) {
-                        // too much entries in this archive, can lead to inodes exhaustion of the system
-                        throw new ZipProcessingException(
-                            "Too much entries in this archive, can lead to inodes exhaustion of the system :"
-                                + totalEntryArchive + " : "
-                                + ze.getName());
+                    if (in != null) {
+                        in.close();
                     }
-                    Files.copy(zipFile.getInputStream(ze), fileToCreate, StandardCopyOption.REPLACE_EXISTING);
                 }
-            }
-        } catch (IOException e) {
-            log.error("IOException has been thrown.", e.getMessage(),e);
-        } finally {
-            if (out != null) {
-                out.close();
-            }
-            if (in != null) {
-                in.close();
+                if (totalSizeArchive > thresholdSize) {
+                    // the uncompressed data size is too much for the application resource capacity
+                    throw new ZipProcessingException(
+                        "Uncompressed data size is too much for the application resource capacity :"
+                            + totalSizeArchive + " : "
+                            + ze.getName());
+                }
+
+                if (totalEntryArchive > thresholdEntries) {
+                    // too much entries in this archive, can lead to inodes exhaustion of the system
+                    throw new ZipProcessingException(
+                        "Too much entries in this archive, can lead to inodes exhaustion of the system :"
+                            + totalEntryArchive + " : "
+                            + ze.getName());
+                }
+                Files.copy(zipFile.getInputStream(ze), fileToCreate, StandardCopyOption.REPLACE_EXISTING);
             }
         }
         return outputDir;
