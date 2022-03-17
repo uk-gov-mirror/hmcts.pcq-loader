@@ -8,7 +8,11 @@ import uk.gov.hmcts.reform.pcqloader.exceptions.ZipProcessingException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Objects;
@@ -42,7 +46,7 @@ public class ZipFileUtils {
         return false;
     }
 
-    public File unzipBlobDownloadZipFile(File blobDownload) {
+    /*public File unzipBlobDownloadZipFile(File blobDownload) {
         if (blobDownload.exists()
             && blobDownload.isFile()
             && blobDownload.getPath().toLowerCase(Locale.ENGLISH).endsWith(ZIP_FOLDER_POSTFIX)) {
@@ -73,7 +77,27 @@ public class ZipFileUtils {
         } else {
             throw new ZipProcessingException("Unable to process blob zip file " + blobDownload.getName());
         }
+    }*/
+
+    public File unzipBlobDownloadZipFile(File blobDownload) {
+        if (blobDownload.exists()
+            && blobDownload.isFile()
+            && blobDownload.getPath().toLowerCase(Locale.ENGLISH).endsWith(ZIP_FOLDER_POSTFIX)) {
+            try (ZipFile zipFile = new ZipFile(blobDownload.getAbsoluteFile())) {
+                File outputDir = new File(FilenameUtils.removeExtension(blobDownload.getPath()));
+                initialiseDirectory(outputDir);
+                Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
+                return checkUnzipFileSize(zipEntries,outputDir,zipFile);
+
+            } catch (IOException ioe) {
+                throw new ZipProcessingException("Unable to read zip file " + blobDownload.getName(), ioe);
+            }
+
+        } else {
+            throw new ZipProcessingException("Unable to process blob zip file " + blobDownload.getName());
+        }
     }
+
 
     @SuppressWarnings({"PMD.DataflowAnomalyAnalysis", "PMD.CollapsibleIfStatements"})
     public void deleteFilesFromLocalStorage(File zipFile, File unzippedFiles) {
@@ -116,5 +140,74 @@ public class ZipFileUtils {
         if (directory.exists() || directory.mkdirs()) {
             FileUtils.cleanDirectory(directory);
         }
+    }
+
+    public File checkUnzipFileSize(Enumeration<? extends ZipEntry> zipEntries,
+                                   File outputDir,ZipFile zipFile) throws IOException {
+        int thresholdEntries = 10_000;
+        int thresholdSize = 1_000_000_000; // 1 GB
+        double thresholdRatio = 10;
+        int totalSizeArchive = 0;
+        int totalEntryArchive = 0;
+        InputStream in = null;
+        OutputStream out = null;
+        byte[] buffer = new byte[1248];
+        try {
+            while (zipEntries.hasMoreElements()) {
+                ZipEntry ze = zipEntries.nextElement();
+                String simpleName = FilenameUtils.getName(ze.getName());
+                if (!ze.isDirectory() && simpleName.charAt(0) != '.') {
+                    log.info("Found zip content: " + ze.getName());
+                    var fileToCreate = outputDir.toPath().resolve(simpleName);
+                    in = zipFile.getInputStream(ze);
+                    out = Files.newOutputStream(Paths.get(fileToCreate.toString()));
+                    totalEntryArchive++;
+
+                    int bytes;
+                    int totalSizeEntry = 0;
+                    bytes = in.read(buffer);
+                    while (bytes > 0) { // Compliant
+                        out.write(buffer, 0, bytes);
+                        totalSizeEntry += bytes;
+                        totalSizeArchive += bytes;
+                        bytes = in.read(buffer);
+                        double compressionRatio = totalSizeEntry / ze.getCompressedSize();
+                        if (compressionRatio > thresholdRatio) {
+                            // ratio between compressed and uncompressed data is highly suspicious,
+                            // looks like a Zip Bomb Attack
+                            throw new ZipProcessingException(
+                                "Ratio between compressed and uncompressed data is highly suspicious "
+                                    + ze.getName());
+                        }
+                    }
+                    if (totalSizeArchive > thresholdSize) {
+                        // the uncompressed data size is too much for the application resource capacity
+                        throw new ZipProcessingException(
+                            "Uncompressed data size is too much for the application resource capacity :"
+                                + totalSizeArchive + " : "
+                                + ze.getName());
+                    }
+
+                    if (totalEntryArchive > thresholdEntries) {
+                        // too much entries in this archive, can lead to inodes exhaustion of the system
+                        throw new ZipProcessingException(
+                            "Too much entries in this archive, can lead to inodes exhaustion of the system :"
+                                + totalEntryArchive + " : "
+                                + ze.getName());
+                    }
+                    Files.copy(zipFile.getInputStream(ze), fileToCreate, StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+        } catch (IOException e) {
+            log.error("IOException has been thrown.", e.getMessage(),e);
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+            if (in != null) {
+                in.close();
+            }
+        }
+        return outputDir;
     }
 }

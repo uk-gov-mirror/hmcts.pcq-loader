@@ -101,7 +101,10 @@ public class PcqLoaderComponent {
                     }
                 }
 
-
+            } catch (InterruptedException e) {
+                log.error("Interrupted " + e.getMessage(), e);
+                // Restore interrupted state...
+                Thread.currentThread().interrupt();
             } catch (Exception ioe) {
                 log.error("Error during processing " + ioe.getMessage(), ioe);
                 incrementServiceCount(jurisdiction + ERROR_SUFFIX);
