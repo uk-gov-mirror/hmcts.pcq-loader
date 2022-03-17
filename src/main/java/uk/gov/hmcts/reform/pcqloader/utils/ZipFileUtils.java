@@ -164,7 +164,7 @@ public class ZipFileUtils {
                     totalEntryArchive++;
 
                     int bytes;
-                    int totalSizeEntry = 0;
+                    double totalSizeEntry = 0;
                     bytes = in.read(buffer);
                     while (bytes > 0) { // Compliant
                         out.write(buffer, 0, bytes);
