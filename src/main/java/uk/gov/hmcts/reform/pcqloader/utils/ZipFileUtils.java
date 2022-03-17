@@ -54,8 +54,15 @@ public class ZipFileUtils {
                 File outputDir = new File(FilenameUtils.removeExtension(blobDownload.getPath()));
                 initialiseDirectory(outputDir);
                 Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
-                return checkUnzipFileSize(zipEntries,outputDir,zipFile);
-
+                while (zipEntries.hasMoreElements()) {
+                    ZipEntry ze = zipEntries.nextElement();
+                    String simpleName = FilenameUtils.getName(ze.getName());
+                    if (!ze.isDirectory() && simpleName.charAt(0) != '.') {
+                        log.info("Found zip content: " + ze.getName());
+                        checkUnzipFileSize(zipFile,ze,outputDir,simpleName);
+                    }
+                }
+                return outputDir;
             } catch (IOException ioe) {
                 throw new ZipProcessingException("Unable to read zip file " + blobDownload.getName(), ioe);
             }
@@ -109,65 +116,56 @@ public class ZipFileUtils {
         }
     }
 
-    public File checkUnzipFileSize(Enumeration<? extends ZipEntry> zipEntries,
-                                   File outputDir,ZipFile zipFile) throws IOException {
-        int thresholdEntries = 10_000;
-        int thresholdSize = 1_000_000_000; // 1 GB
+    public void checkUnzipFileSize(ZipFile zipFile, ZipEntry ze, File outputDir, String simpleName) throws IOException {
+        var fileToCreate = outputDir.toPath().resolve(simpleName);
         double thresholdRatio = 10;
         int totalSizeArchive = 0;
         int totalEntryArchive = 0;
         InputStream in = null;
         OutputStream out = null;
         byte[] buffer = new byte[1248];
+        try {
+            in = zipFile.getInputStream(ze);
+            out = Files.newOutputStream(Paths.get(fileToCreate.toString()));
+            totalEntryArchive++;
 
-        while (zipEntries.hasMoreElements()) {
-            ZipEntry ze = zipEntries.nextElement();
-            String simpleName = FilenameUtils.getName(ze.getName());
-            if (!ze.isDirectory() && simpleName.charAt(0) != '.') {
-                log.info("Found zip content: " + ze.getName());
-                var fileToCreate = outputDir.toPath().resolve(simpleName);
-                try {
-                    in = zipFile.getInputStream(ze);
-                    out = Files.newOutputStream(Paths.get(fileToCreate.toString()));
-                    totalEntryArchive++;
+            int bytes;
+            double totalSizeEntry = 0;
+            bytes = in.read(buffer);
 
-                    int bytes;
-                    double totalSizeEntry = 0;
-                    bytes = in.read(buffer);
-                    while (bytes > 0) { // Compliant
-                        out.write(buffer, 0, bytes);
-                        totalSizeEntry += bytes;
-                        totalSizeArchive += bytes;
-                        bytes = in.read(buffer);
-                        double compressionRatio = totalSizeEntry / ze.getCompressedSize();
-                        if (compressionRatio > thresholdRatio) {
-                            // ratio between compressed and uncompressed data is highly suspicious,
-                            // looks like a Zip Bomb Attack
-                            throw new ZipProcessingException(
-                                "Ratio between compressed and uncompressed data is highly suspicious "
-                                    + ze.getName());
-                        }
-                    }
-                } catch (IOException e) {
-                    log.error("An error occurred while unzipping file from blob storage",e);
-                    throw new ZipProcessingException("Unable to unpack zip file "
-                                                         + ze.getName(), e);
-                } finally {
-                    out.close();
-                    in.close();
-                }
-                if (totalSizeArchive > thresholdSize || totalEntryArchive > thresholdEntries) {
-                    // the uncompressed data size is too much for the application resource capacity
+            while (bytes > 0) { // Compliant
+                out.write(buffer, 0, bytes);
+                totalSizeEntry += bytes;
+                totalSizeArchive += bytes;
+                bytes = in.read(buffer);
+                double compressionRatio = totalSizeEntry / ze.getCompressedSize();
+                if (compressionRatio > thresholdRatio) {
+                    // ratio between compressed and uncompressed data is highly suspicious,
+                    // looks like a Zip Bomb Attack
                     throw new ZipProcessingException(
-                        "Either Uncompressed data size is too much for the application resource capacity or "
-                            + "Too much entries in this archive, can lead to inodes exhaustion of the system"
-                            + totalSizeArchive + " : Allowed (" + thresholdSize + ")"
-                            + totalEntryArchive + " : Allowed (" + thresholdEntries + ")"
+                        "Ratio between compressed and uncompressed data is highly suspicious "
                             + ze.getName());
                 }
-                Files.copy(zipFile.getInputStream(ze), fileToCreate, StandardCopyOption.REPLACE_EXISTING);
             }
+        } catch (IOException e) {
+            log.error("An error occurred while unzipping file from blob storage",e);
+            throw new ZipProcessingException("Unable to unpack zip file "
+                                                 + ze.getName(), e);
+        } finally {
+            out.close();
+            in.close();
         }
-        return outputDir;
+        int thresholdEntries = 10_000;
+        int thresholdSize = 1_000_000_000; // 1 GB
+        if (totalSizeArchive > thresholdSize || totalEntryArchive > thresholdEntries) {
+            // the uncompressed data size is too much for the application resource capacity
+            throw new ZipProcessingException(
+                "Either Uncompressed data size is too much for the application resource capacity or "
+                    + "Too much entries in this archive, can lead to inodes exhaustion of the system"
+                    + totalSizeArchive + " : Allowed (" + thresholdSize + ")"
+                    + totalEntryArchive + " : Allowed (" + thresholdEntries + ")"
+                    + ze.getName());
+        }
+        Files.copy(zipFile.getInputStream(ze), fileToCreate, StandardCopyOption.REPLACE_EXISTING);
     }
 }
