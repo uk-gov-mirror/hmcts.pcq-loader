@@ -159,17 +159,6 @@ public class ZipFileUtils {
                 in.close();
             }
         }
-        int thresholdEntries = 10_000;
-        int thresholdSize = 1_000_000_000; // 1 GB
-        if (totalSizeArchive > thresholdSize || totalEntryArchive > thresholdEntries) {
-            // the uncompressed data size is too much for the application resource capacity
-            throw new ZipProcessingException(
-                "Either Uncompressed data size is too much for the application resource capacity or "
-                    + "Too much entries in this archive, can lead to inodes exhaustion of the system"
-                    + totalSizeArchive + " : Allowed (" + thresholdSize + ")"
-                    + totalEntryArchive + " : Allowed (" + thresholdEntries + ")"
-                    + ze.getName());
-        }
         Files.copy(zipFile.getInputStream(ze), fileToCreate, StandardCopyOption.REPLACE_EXISTING);
     }
 }
