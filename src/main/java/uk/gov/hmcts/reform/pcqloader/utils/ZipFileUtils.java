@@ -120,19 +120,16 @@ public class ZipFileUtils {
         var fileToCreate = outputDir.toPath().resolve(simpleName);
         double thresholdRatio = 10;
         int totalSizeArchive = 0;
-        int totalEntryArchive = 0;
         InputStream in = null;
         OutputStream out = null;
         byte[] buffer = new byte[1248];
         try {
             in = zipFile.getInputStream(ze);
             out = Files.newOutputStream(Paths.get(fileToCreate.toString()));
-            totalEntryArchive++;
 
             int bytes;
             double totalSizeEntry = 0;
             bytes = in.read(buffer);
-
             while (bytes > 0) { // Compliant
                 out.write(buffer, 0, bytes);
                 totalSizeEntry += bytes;
