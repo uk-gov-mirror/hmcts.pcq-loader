@@ -152,8 +152,12 @@ public class ZipFileUtils {
             throw new ZipProcessingException("Unable to unpack zip file "
                                                  + ze.getName(), e);
         } finally {
-            out.close();
-            in.close();
+            if (out != null) {
+                out.close();
+            }
+            if (in != null) {
+                in.close();
+            }
         }
         int thresholdEntries = 10_000;
         int thresholdSize = 1_000_000_000; // 1 GB
