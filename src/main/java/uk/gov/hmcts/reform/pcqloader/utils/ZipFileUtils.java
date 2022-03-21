@@ -119,7 +119,6 @@ public class ZipFileUtils {
     public void checkUnzipFileSize(ZipFile zipFile, ZipEntry ze, File outputDir, String simpleName) throws IOException {
         var fileToCreate = outputDir.toPath().resolve(simpleName);
         double thresholdRatio = 10;
-        int totalSizeArchive = 0;
         InputStream in = null;
         OutputStream out = null;
         byte[] buffer = new byte[1248];
@@ -133,7 +132,6 @@ public class ZipFileUtils {
             while (bytes > 0) { // Compliant
                 out.write(buffer, 0, bytes);
                 totalSizeEntry += bytes;
-                totalSizeArchive += bytes;
                 bytes = in.read(buffer);
                 double compressionRatio = totalSizeEntry / ze.getCompressedSize();
                 if (compressionRatio > thresholdRatio) {
