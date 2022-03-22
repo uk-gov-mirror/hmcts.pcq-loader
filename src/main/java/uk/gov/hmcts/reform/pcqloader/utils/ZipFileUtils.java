@@ -74,7 +74,6 @@ public class ZipFileUtils {
         }
     }
 
-
     @SuppressWarnings({"PMD.DataflowAnomalyAnalysis", "PMD.CollapsibleIfStatements"})
     public void deleteFilesFromLocalStorage(File zipFile, File unzippedFiles) {
 
