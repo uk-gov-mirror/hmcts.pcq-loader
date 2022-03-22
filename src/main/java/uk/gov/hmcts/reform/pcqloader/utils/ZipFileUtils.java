@@ -27,6 +27,8 @@ public class ZipFileUtils {
 
     private static final String METADATA_FILE_NAME = "metadata.json";
 
+    public static final double THRESHOLD_RATIO = 10;
+
     public Boolean confirmFileCanBeCreated(File blobFile) {
         File blobFolder = blobFile.getParentFile();
         if ((blobFolder.exists() || blobFolder.mkdirs()) && blobFolder.isDirectory()) {
@@ -118,14 +120,12 @@ public class ZipFileUtils {
 
     public void checkUnzipFileSize(ZipFile zipFile, ZipEntry ze, File outputDir, String simpleName) throws IOException {
         var fileToCreate = outputDir.toPath().resolve(simpleName);
-        double thresholdRatio = 10;
         InputStream in = null;
         OutputStream out = null;
         byte[] buffer = new byte[1248];
         try {
             in = zipFile.getInputStream(ze);
             out = Files.newOutputStream(Paths.get(fileToCreate.toString()));
-
             int bytes;
             double totalSizeEntry = 0;
             bytes = in.read(buffer);
@@ -134,9 +134,7 @@ public class ZipFileUtils {
                 totalSizeEntry += bytes;
                 bytes = in.read(buffer);
                 double compressionRatio = totalSizeEntry / ze.getCompressedSize();
-                if (compressionRatio > thresholdRatio) {
-                    // ratio between compressed and uncompressed data is highly suspicious,
-                    // looks like a Zip Bomb Attack
+                if (compressionRatio > THRESHOLD_RATIO) {
                     throw new ZipProcessingException(
                         "Ratio between compressed and uncompressed data is highly suspicious "
                             + ze.getName());
