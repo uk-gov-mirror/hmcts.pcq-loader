@@ -97,7 +97,12 @@ public class PcqLoaderComponent {
                     } else {
                         //Step 8. Invoke the back-end API
                         jurisdiction = mappedAnswers.getServiceId();
-                        invokeSubmitAnswers(mappedAnswers, tmpZipFileName, blobContainerClient);
+                        try {
+                            invokeSubmitAnswers(mappedAnswers, tmpZipFileName, blobContainerClient);
+                        } catch (InterruptedException ie){
+                            log.info("Interrupted Exception is thrown : " , ie);
+                            Thread.currentThread().interrupt();
+                        }
                     }
                 }
 

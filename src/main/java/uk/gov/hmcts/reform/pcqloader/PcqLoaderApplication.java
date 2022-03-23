@@ -31,7 +31,7 @@ public class PcqLoaderApplication implements ApplicationRunner {
     private int waitPeriod;
 
     @Override
-    public void run(ApplicationArguments args) throws InterruptedException,Exception {
+    public void run(ApplicationArguments args) throws Exception {
 
         try {
             log.info("Starting the Pcq Loader job.");
