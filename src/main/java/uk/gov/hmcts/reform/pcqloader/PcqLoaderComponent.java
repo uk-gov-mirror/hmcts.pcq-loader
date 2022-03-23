@@ -52,7 +52,7 @@ public class PcqLoaderComponent {
 
 
     @SuppressWarnings({"PMD.DataflowAnomalyAnalysis"})
-    public void execute() throws InterruptedException {
+    public void execute() {
 
         log.info("PcqLoaderComponent started...");
 

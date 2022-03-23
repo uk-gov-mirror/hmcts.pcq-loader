@@ -71,7 +71,7 @@ class PcqLoaderComponentTest {
 
 
     @Test
-    void executeSuccess() throws InterruptedException {
+    void executeSuccess() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -129,7 +129,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void testContainerNotAvailable() throws InterruptedException {
+    void testContainerNotAvailable() {
 
         when(blobStorageManager.getPcqContainer()).thenReturn(blobContainerClient);
         when(blobContainerClient.exists()).thenReturn(false);
@@ -144,7 +144,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void testNoZipFilesAvailable() throws InterruptedException {
+    void testNoZipFilesAvailable() {
         List<String> blobFileNames = new ArrayList<>();
 
         when(blobStorageManager.getPcqContainer()).thenReturn(blobContainerClient);
@@ -160,7 +160,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void testBlobDownloadErrorForOneFile() throws InterruptedException {
+    void testBlobDownloadErrorForOneFile() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         BlobProcessingException blobProcessingException = new BlobProcessingException("Test Message");
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
@@ -217,7 +217,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void testZipProcessingExceptionForOneFile() throws InterruptedException {
+    void testZipProcessingExceptionForOneFile() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         ZipProcessingException zipProcessingException = new ZipProcessingException("Test Message");
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
@@ -277,7 +277,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void testEmptyZipFile() throws InterruptedException {
+    void testEmptyZipFile() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -343,7 +343,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void testInvalidMetaDataFileName() throws InterruptedException {
+    void testInvalidMetaDataFileName() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File invalidMetaDataFile = new File("metadataProbate.json");
@@ -412,7 +412,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void testNullListFile() throws InterruptedException {
+    void testNullListFile() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
 
         when(blobStorageManager.getPcqContainer()).thenReturn(blobContainerClient);
@@ -442,7 +442,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void executeSuccessAndMappingError() throws InterruptedException {
+    void executeSuccessAndMappingError() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -500,7 +500,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void executeMappingErrorNoSuchField() throws InterruptedException {
+    void executeMappingErrorNoSuchField() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -548,7 +548,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void executeMappingErrorIllegalAccessException() throws InterruptedException {
+    void executeMappingErrorIllegalAccessException() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -596,7 +596,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void executeSuccessDuplicateDcn() throws InterruptedException {
+    void executeSuccessDuplicateDcn() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -655,7 +655,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void executeInvalidRequest() throws InterruptedException {
+    void executeInvalidRequest() {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1, TEST_BLOB_FILENAME2);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
         File[] listedFiles = {metaDataFile};
@@ -714,7 +714,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void executeInvalidApiException() throws InterruptedException {
+    void executeInvalidApiException() {
 
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
@@ -764,7 +764,7 @@ class PcqLoaderComponentTest {
     }
 
     @Test
-    void executeInvalidApiExceptionSuccessfulThirdAttempt() throws InterruptedException {
+    void executeInvalidApiExceptionSuccessfulThirdAttempt() {
 
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
