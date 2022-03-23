@@ -99,8 +99,8 @@ public class PcqLoaderComponent {
                         jurisdiction = mappedAnswers.getServiceId();
                         try {
                             invokeSubmitAnswers(mappedAnswers, tmpZipFileName, blobContainerClient);
-                        } catch (InterruptedException ie){
-                            log.info("Interrupted Exception is thrown : " , ie);
+                        } catch (InterruptedException ie) {
+                            log.info("Interrupted Exception is thrown : ", ie);
                             Thread.currentThread().interrupt();
                         }
                     }
