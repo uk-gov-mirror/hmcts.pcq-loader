@@ -97,15 +97,13 @@ public class PcqLoaderComponent {
                     } else {
                         //Step 8. Invoke the back-end API
                         jurisdiction = mappedAnswers.getServiceId();
-                        try {
-                            invokeSubmitAnswers(mappedAnswers, tmpZipFileName, blobContainerClient);
-                        } catch (InterruptedException ie) {
-                            log.info("Interrupted Exception is thrown : ", ie);
-                            Thread.currentThread().interrupt();
-                        }
+                        invokeSubmitAnswers(mappedAnswers, tmpZipFileName, blobContainerClient);
+
                     }
                 }
-
+            } catch (InterruptedException ie) {
+                log.info("Interrupted Exception is thrown : ", ie);
+                Thread.currentThread().interrupt();
             } catch (Exception ioe) {
                 log.error("Error during processing " + ioe.getMessage(), ioe);
                 incrementServiceCount(jurisdiction + ERROR_SUFFIX);
