@@ -101,9 +101,6 @@ public class PcqLoaderComponent {
 
                     }
                 }
-            } catch (InterruptedException ie) {
-                log.info("Interrupted Exception is thrown : ", ie);
-                Thread.currentThread().interrupt();
             } catch (Exception ioe) {
                 log.error("Error during processing " + ioe.getMessage(), ioe);
                 incrementServiceCount(jurisdiction + ERROR_SUFFIX);
@@ -120,7 +117,7 @@ public class PcqLoaderComponent {
 
     @SuppressWarnings("unchecked")
     private void invokeSubmitAnswers(PcqAnswerRequest mappedAnswers, String tmpZipFileName,
-                                     BlobContainerClient sourceContainer) throws InterruptedException {
+                                     BlobContainerClient sourceContainer)  {
         int retryCount = 0;
         while (retryCount < MAX_RETRIES) {
             try {
@@ -150,8 +147,13 @@ public class PcqLoaderComponent {
                     apiException
                 );
                 if (retryCount < MAX_RETRIES - 1) {
-                    Thread.sleep(threadDelay);
-                    log.info("Re-trying to process file {}", tmpZipFileName);
+                    try {
+                        Thread.sleep(threadDelay);
+                        log.info("Re-trying to process file {}", tmpZipFileName);
+                    } catch (InterruptedException ie) {
+                        log.info("Interrupted Exception is thrown : ", ie);
+                        Thread.currentThread().interrupt();
+                    }
                 } else {
                     incrementServiceCount(mappedAnswers.getServiceId() + ERROR_SUFFIX);
                 }
