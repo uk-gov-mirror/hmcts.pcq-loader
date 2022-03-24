@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -860,9 +861,9 @@ class PcqLoaderComponentTest {
 
         thread.start();
         thread.interrupt();
+        assertTrue("Thread is not Interrupted", thread.isInterrupted());
         thread.join();
-        assertFalse("Thread is not Interrupted", Thread.currentThread().isInterrupted());
-        assertFalse("Thread is not Interrupted", thread.isInterrupted());
+        assertFalse("Thread is Interrupted", thread.isInterrupted());
 
         verify(blobStorageManager, times(1)).getPcqContainer();
         verify(blobContainerClient, times(1)).exists();
