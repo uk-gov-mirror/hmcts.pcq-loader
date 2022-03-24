@@ -846,9 +846,6 @@ class PcqLoaderComponentTest {
         } catch (Exception e) {
             fail(EXCEPTION_UNEXPECTED + e.getMessage());
         }
-
-        //ResponseEntity<Map<String, String>> successResponse = getResponse(answerRequest.getPcqId(),
-        // HTTP_CREATED,SUCCESS_MSG);
         when(pcqBackendService.submitAnswers(answerRequest)).thenThrow(
                 new ExternalApiException(HttpStatus.SERVICE_UNAVAILABLE, "Test Error"));
 
@@ -868,7 +865,6 @@ class PcqLoaderComponentTest {
         verify(blobStorageManager, times(1)).getPcqContainer();
         verify(blobContainerClient, times(1)).exists();
         verify(blobStorageManager, times(1)).collectBlobFileNamesFromContainer(blobContainerClient);
-
     }
 
 
