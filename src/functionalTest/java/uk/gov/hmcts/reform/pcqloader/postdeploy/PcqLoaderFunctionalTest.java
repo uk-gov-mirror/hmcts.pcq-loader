@@ -89,7 +89,7 @@ public class PcqLoaderFunctionalTest extends PcqLoaderTestBase {
     }
 
     @Test
-    public void testExecuteMethod() throws InterruptedException {
+    public void testExecuteMethod() {
         //Invoke the executor
         pcqLoaderComponent.execute();
 
