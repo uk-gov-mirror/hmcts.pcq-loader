@@ -145,7 +145,7 @@ jacocoTestReport {
 project.tasks['sonarqube'].dependsOn jacocoTestReport
 
 pitest {
-    junit5PluginVersion = '0.14'
+    junit5PluginVersion = '0.12'
     targetClasses = ['uk.gov.hmcts.reform.pcqloader.*']
     threads = 10
     enableDefaultIncrementalAnalysis = true
@@ -261,7 +261,7 @@ def versions = [
         springfoxSwagger    : '3.0.0',
         restAssured         : '4.2.0',
         lombok              : '1.18.12',
-        pitest              : '1.6.9',
+        pitest              : '1.6.3',
         testcontainers      : '1.15.1',
         springFramework     : '5.3.20',
         fasterXmlJackson    : '2.14.0-rc1',
