@@ -58,6 +58,7 @@ public class PcqLoaderComponent {
 
         // Step 1. Connect and Authenticate with the PCQ Azure Blob Storage Account.
         BlobContainerClient blobContainerClient = blobStorageManager.getPcqContainer();
+        log.info("blobConatinerClient" + blobContainerClient.exists());
         Assert.isTrue(blobContainerClient.exists(), "Can't connect to Blob Storage.");
 
         // Step 2. Check for zip files in the Pcq container.
