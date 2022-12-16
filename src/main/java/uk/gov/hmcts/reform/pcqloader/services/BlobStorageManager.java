@@ -67,12 +67,13 @@ public class BlobStorageManager {
         }
 
         Collections.shuffle(zipFilenames);
+        log.info("ZIPFilenames : "  + zipFilenames.toString());
         return zipFilenames;
     }
 
     @SuppressWarnings({"PMD.DataflowAnomalyAnalysis","PMD.LawOfDemeter"})
     public File downloadFileFromBlobStorage(BlobContainerClient blobContainerClient, String blobName) {
-        log.debug("Downloading blob name {} to {} path",
+        log.info("Downloading blob name {} to {} path",
                   blobName, blobStorageProperties.getBlobStorageDownloadPath());
         String filePath = blobStorageProperties.getBlobStorageDownloadPath() + File.separator + blobName;
         File localFile = new File(filePath);
