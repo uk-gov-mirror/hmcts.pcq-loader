@@ -27,9 +27,19 @@ apply plugin: "com.gorylenko.gradle-git-properties"
 group = 'uk.gov.hmcts.reform'
 version = '0.1.0'
 
-allprojects {
+/*allprojects {
     sourceCompatibility = '11'
     targetCompatibility = '11'
+}*/
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+tasks.withType(JavaExec).configureEach {
+  javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
 }
 
 gitProperties {
@@ -123,6 +133,7 @@ checkstyle {
 }
 
 pmd {
+  
     toolVersion = "6.28.0"
     sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest, sourceSets.integrationTest, sourceSets.smokeTest]
     reportsDir = file("$project.buildDir/reports/pmd")
@@ -260,11 +271,11 @@ def versions = [
         springBoot          : springBoot.class.package.implementationVersion,
         springfoxSwagger    : '3.0.0',
         restAssured         : '4.2.0',
-        lombok              : '1.18.12',
+        lombok              : '1.18.22',
         pitest              : '1.6.3',
         testcontainers      : '1.15.1',
         springFramework     : '5.3.20',
-        fasterXmlJackson    : '2.14.0-rc1',
+        fasterXmlJackson    : '2.14.1',
         springSecurity      : '5.7.5'
 ]
 
