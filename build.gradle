@@ -262,14 +262,13 @@ repositories {
 
 def versions = [
         junit               : '5.9.2',
-        junitPlatform       : '1.9.2',
         reformLogging       : '5.1.1',
         springBoot          : springBoot.class.package.implementationVersion,
         springfoxSwagger    : '3.0.0',
         restAssured         : '4.2.0',
         lombok              : '1.18.22',
         pitest              : '1.6.3',
-        testcontainers      : '1.15.1',
+        testcontainers      : '1.17.6',
         springFramework     : '5.3.20',
         fasterXmlJackson    : '2.14.1',
         springSecurity      : '5.7.5'
@@ -358,7 +357,6 @@ dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: versions.junit
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
-    testImplementation group: 'org.junit.platform', name: 'junit-platform-commons', version: versions.junitPlatform
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'2.6.7'
     testImplementation group: 'org.springframework.security', name: 'spring-security-test'
