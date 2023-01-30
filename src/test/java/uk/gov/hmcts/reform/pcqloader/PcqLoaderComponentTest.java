@@ -25,8 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//import static org.junit.Assert.assertFalse;
-//import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -823,7 +823,7 @@ class PcqLoaderComponentTest {
 
     }
 
-    /*@Test
+    @Test
     void testInterruptedException() throws InterruptedException {
         List<String> blobFileNames = Arrays.asList(TEST_BLOB_FILENAME1);
         File metaDataFile = new File(PAYLOAD_TEST_FILE);
@@ -865,7 +865,7 @@ class PcqLoaderComponentTest {
         verify(blobStorageManager, times(1)).getPcqContainer();
         verify(blobContainerClient, times(1)).exists();
         verify(blobStorageManager, times(1)).collectBlobFileNamesFromContainer(blobContainerClient);
-    }*/
+    }
 
 
     private PcqAnswerRequest getAnswerRequest() {
