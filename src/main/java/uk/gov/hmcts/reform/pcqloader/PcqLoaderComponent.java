@@ -152,7 +152,7 @@ public class PcqLoaderComponent {
                         log.info("Re-trying to process file {}", tmpZipFileName);
                     } catch (InterruptedException ie) {
                         log.info("Interrupted Exception is thrown : ", ie);
-                        Thread.currentThread().interrupt();
+                        //Thread.currentThread().interrupt();
                     }
                 } else {
                     incrementServiceCount(mappedAnswers.getServiceId() + ERROR_SUFFIX);

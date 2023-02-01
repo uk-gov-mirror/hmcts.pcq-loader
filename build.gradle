@@ -340,7 +340,6 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.1.0', withoutSpringCloudContext
     implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
-    //implementation group: "com.gilecode.yagson", name:"j9-reflection-utils", version:"1.0"
 
     implementation group: "io.jsonwebtoken", name: "jjwt", version: "0.9.1"
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
@@ -374,7 +373,6 @@ dependencies {
     testImplementation 'com.github.hmcts:fortify-client:1.2.0:all'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
-    //testImplementation group: "com.gilecode.yagson", name:"j9-reflection-utils", version:"1.0"
     testImplementation group: "io.jsonwebtoken", name: "jjwt", version: "0.9.1"
     testImplementation group: "org.testcontainers", name: "junit-jupiter", version: versions.testcontainers
 
