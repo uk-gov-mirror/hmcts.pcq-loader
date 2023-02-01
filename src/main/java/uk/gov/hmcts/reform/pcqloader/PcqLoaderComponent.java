@@ -153,7 +153,6 @@ public class PcqLoaderComponent {
                     } catch (InterruptedException ie) {
                         log.info("Interrupted Exception is thrown : ", ie);
                         Thread.currentThread().interrupt();
-                        Thread.interrupted();
                     }
                 } else {
                     incrementServiceCount(mappedAnswers.getServiceId() + ERROR_SUFFIX);
