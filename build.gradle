@@ -16,7 +16,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.5'
     id 'org.owasp.dependencycheck' version '8.0.2'
     id 'com.github.ben-manes.versions' version '0.44.0'
-    id "info.solidsoft.pitest" version '1.6.0'
+    id "info.solidsoft.pitest" version '1.9.0'
     id 'org.sonarqube' version '3.5.0.2730'
     id 'com.gorylenko.gradle-git-properties' version '2.4.1'
     id "io.freefair.lombok" version "6.5.1"
@@ -149,7 +149,7 @@ jacocoTestReport {
 project.tasks['sonarqube'].dependsOn jacocoTestReport
 
 pitest {
-    junit5PluginVersion = '0.12'
+    junit5PluginVersion = '1.0.0'
     targetClasses = ['uk.gov.hmcts.reform.pcqloader.*']
     threads = 10
     enableDefaultIncrementalAnalysis = true
@@ -265,7 +265,7 @@ def versions = [
         springfoxSwagger    : '3.0.0',
         restAssured         : '4.2.0',
         lombok              : '1.18.22',
-        pitest              : '1.6.3',
+        pitest              : '1.9.0',
         testcontainers      : '1.17.6',
         springFramework     : '5.3.20',
         fasterXmlJackson    : '2.14.1',
