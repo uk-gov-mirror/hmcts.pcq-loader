@@ -48,7 +48,7 @@ public class PayloadMappingHelper extends PayloadMappingHelperBase {
                 && StringUtils.isNotEmpty(scannedItems[0].getOcrData())) {
 
                 // Step 3. Retrieve and decode the Ocr Data.
-                String ocrData = new String(Base64.getDecoder().decode(scannedItems[0].getOcrData()));
+                String ocrData = new String(decodeFromString(scannedItems[0].getOcrData()));
 
                 //Step 4. Get the payload object for the Json ocrData
                 PcqPayLoad pcqPayLoad = new ObjectMapper().readValue(ocrData, PcqPayLoad.class);
@@ -208,6 +208,13 @@ public class PayloadMappingHelper extends PayloadMappingHelperBase {
                 answers.setEthnicity(-1);
             }
         }
+    }
+
+    private byte[] decodeFromString(String src) {
+        if (src.isEmpty()) {
+            return new byte[0];
+        }
+        return Base64.getDecoder().decode(src);
     }
 
 }

@@ -549,11 +549,11 @@ class PayloadMappingHelperTest {
         return new ObjectMapper().readValue(jsonString, PcqMetaData.class);
     }
 
-    private byte[] decodeFromString(String code) {
-        if (code.isEmpty()) {
+    private byte[] decodeFromString(String src) {
+        if (src.isEmpty()) {
             return new byte[0];
         }
-        return Base64.getDecoder().decode(code);
+        return Base64.getDecoder().decode(src);
     }
 
 }
