@@ -1,13 +1,13 @@
 package uk.gov.hmcts.reform.pcqloader.helper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.common.util.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.Base64Utils;
 import uk.gov.hmcts.reform.pcq.commons.model.PcqAnswerRequest;
 import uk.gov.hmcts.reform.pcq.commons.model.PcqMetaData;
 import uk.gov.hmcts.reform.pcq.commons.model.PcqPayLoad;
@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.pcqloader.utils.AssertionUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -49,7 +50,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.SUCCESS_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -73,7 +74,7 @@ class PayloadMappingHelperTest {
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(
             TestSupportUtils.SUCCESS_EMPTY_DOB_PROVIDED_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -96,7 +97,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.MULTIPLE_RELIGION_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -119,7 +120,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.INVALID_DOB_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -143,7 +144,7 @@ class PayloadMappingHelperTest {
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(
             TestSupportUtils.INVALID_DOB_EMPTY_PROVIDED_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -166,7 +167,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.DISABILITY_NONE_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -189,7 +190,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.MULTIPLE_ETHNICITY_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -212,7 +213,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.INVALID_OTHER_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -234,7 +235,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.MULTIPLE_INVALID_OTHER_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -304,7 +305,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.DOB_NOT_PROVIDED_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -327,7 +328,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.DOB_EMPTY_NOT_PROVIDED_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -350,7 +351,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.NO_DISABILITY_CONDITION_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -374,7 +375,7 @@ class PayloadMappingHelperTest {
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(
             TestSupportUtils.NOT_PREFER_DISABILITY_CONDITION_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -397,7 +398,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.NO_DISABILITY_IMPACT_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -421,7 +422,7 @@ class PayloadMappingHelperTest {
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(
             TestSupportUtils.NOT_PREFER_DISABILITY_IMPACT_PAYLOAD);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -444,7 +445,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.EMPTY_LANGUAGE_LEVEL);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -467,7 +468,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.EMPTY_MAIN_LANGUAGE);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -490,7 +491,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.MAIN_LANG_NOT_PREFERRED);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -513,7 +514,7 @@ class PayloadMappingHelperTest {
         PcqMetaData metaData = jsonMetaDataObjectFromString(metaDataPayLoad);
 
         PcqPayLoad expectedPcqPayload = jsonPayloadObjectFromString(TestSupportUtils.OTHER_MAIN_LANGUAGE);
-        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(Base64Utils.decodeFromString(
+        PcqPayLoad actualPayLoad = jsonPayloadObjectFromString(new String(decodeFromString(
             metaData.getScannableItems()[0].getOcrData())));
         // Assert the expected and actual payloads are correct before invoking the mapping.
         assertUtils.assertPayLoads(expectedPcqPayload, actualPayLoad);
@@ -549,6 +550,11 @@ class PayloadMappingHelperTest {
         return new ObjectMapper().readValue(jsonString, PcqMetaData.class);
     }
 
-
+    private byte[] decodeFromString(String src) {
+        if (StringUtils.isEmpty(src)) {
+            return new byte[0];
+        }
+        return Base64.getDecoder().decode(src);
+    }
 
 }
