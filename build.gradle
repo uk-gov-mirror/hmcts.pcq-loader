@@ -310,7 +310,6 @@ dependencies {
 
     implementation group: 'com.github.hmcts', name: 'properties-volume-spring-boot-starter', version:'0.1.1', withoutSpringCloudContext
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
-    implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: versions.reformLogging
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.3'
     implementation group: 'com.microsoft.azure', name: 'applicationinsights-web', version: '3.4.12'
 
