@@ -72,8 +72,6 @@ public class BlobStorageManager {
 
     @SuppressWarnings({"PMD.DataflowAnomalyAnalysis","PMD.LawOfDemeter"})
     public File downloadFileFromBlobStorage(BlobContainerClient blobContainerClient, String blobName) {
-        log.debug("Downloading blob name {} to {} path",
-                  blobName, blobStorageProperties.getBlobStorageDownloadPath());
         String filePath = blobStorageProperties.getBlobStorageDownloadPath() + File.separator + blobName;
         File localFile = new File(filePath);
 
@@ -101,7 +99,7 @@ public class BlobStorageManager {
         log.debug("Uploading file {} to {} container",
                  localFileUpload.getName(), blobContainerClient.getBlobContainerName());
         BlobClient blobClient = blobContainerClient.getBlobClient(localFileUpload.getName());
-        log.info("Uploading to Blob storage as blob: {}", blobClient.getBlobUrl());
+        log.debug("Uploading to Blob storage as blob: {}", blobClient.getBlobUrl());
         blobClient.uploadFromFile(filePath);
     }
 
