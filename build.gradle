@@ -308,7 +308,6 @@ dependencies {
     implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
 
-    implementation group: 'com.github.hmcts', name: 'properties-volume-spring-boot-starter', version:'0.1.1', withoutSpringCloudContext
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.3'
     implementation group: 'com.microsoft.azure', name: 'applicationinsights-web', version: '3.4.12'
