@@ -207,7 +207,7 @@ dependencyManagement {
           entry 'spring-security-core'
           entry 'spring-security-test'
         }
-        dependencySet(group: 'io.netty', version: '4.1.104.Final') {
+        dependencySet(group: 'io.netty', version: '4.1.105.Final') {
           entry 'netty-buffer'
           entry 'netty-codec'
           entry 'netty-codec-http'
@@ -250,7 +250,7 @@ repositories {
 def versions = [
         jjwt                : '0.11.5',
         junit               : '5.9.2',
-        reformLogging       : '6.1.2',
+        reformLogging       : '6.1.3',
         springBoot          : springBoot.class.package.implementationVersion,
         springfoxSwagger    : '3.0.0',
         restAssured         : '5.4.0',
