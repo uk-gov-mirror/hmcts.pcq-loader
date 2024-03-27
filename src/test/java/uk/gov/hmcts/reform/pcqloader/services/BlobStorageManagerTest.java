@@ -139,8 +139,8 @@ class BlobStorageManagerTest {
 
     @Test
     void testCollectBlobFileNamesSuccess() {
-        BlobItem blobItem1 = new BlobItem().setName(TEST_BLOB_FILENAME1).setDeleted(false).setIsPrefix(null);
-        BlobItem blobItem2 = new BlobItem().setName(TEST_BLOB_FILENAME2).setDeleted(false).setIsPrefix(null);
+        BlobItem blobItem1 = new BlobItem().setName(TEST_BLOB_FILENAME1).setDeleted(false).setIsPrefix(false);
+        BlobItem blobItem2 = new BlobItem().setName(TEST_BLOB_FILENAME2).setDeleted(false).setIsPrefix(false);
         List<BlobItem> blobs = Arrays.asList(blobItem1, blobItem2);
 
         when(pcqContainer.listBlobsByHierarchy(ROOT_FOLDER)).thenReturn(pageIterableBlobs);
@@ -170,8 +170,23 @@ class BlobStorageManagerTest {
     }
 
     @Test
-    void testCollectBlobFileNamesMissingName() {
-        BlobItem blobItem1 = new BlobItem().setDeleted(false).setIsPrefix(null);
+    void testCollectBlobFileNamesWithNameNull() {
+        BlobItem blobItem1 = new BlobItem().setDeleted(false).setIsPrefix(false).setName(null);
+        var blobs = Arrays.asList(blobItem1);
+
+        when(pcqContainer.listBlobsByHierarchy(ROOT_FOLDER)).thenReturn(pageIterableBlobs);
+        when(pageIterableBlobs.iterator()).thenReturn(blobs.iterator());
+
+        testBlobStorageManager = new BlobStorageManager(blobStorageProperties, blobServiceClient, zipFileUtils);
+        List<String> response = testBlobStorageManager.collectBlobFileNamesFromContainer(pcqContainer);
+
+        verify(pageIterableBlobs, times(1)).iterator();
+        Assertions.assertEquals(0, response.size(), "No files added as no name was provided");
+    }
+
+    @Test
+    void testCollectBlobFileNamesWithPrefixTrue() {
+        BlobItem blobItem1 = new BlobItem().setIsPrefix(true);
         var blobs = Arrays.asList(blobItem1);
 
         when(pcqContainer.listBlobsByHierarchy(ROOT_FOLDER)).thenReturn(pageIterableBlobs);
