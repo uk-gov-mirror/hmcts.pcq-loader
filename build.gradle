@@ -228,7 +228,7 @@ dependencyManagement {
           entry 'netty-transport-classes-epoll'
           entry 'netty-transport-classes-kqueue'
         }
-      
+
       dependencySet(group: 'ch.qos.logback', version: '1.5.3') {
         entry 'logback-core'
         entry 'logback-classic'
@@ -295,7 +295,7 @@ dependencies {
 
     implementation group: 'org.springframework.security', name: 'spring-security-core', version: '6.2.3'
 
-    implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.19.0'
+    implementation group: 'com.azure', name: 'azure-storage-blob', version: '12.25.3'
 
     implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: '13.2.1'
 
