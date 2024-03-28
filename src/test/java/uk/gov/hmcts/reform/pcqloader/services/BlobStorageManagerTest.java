@@ -181,7 +181,7 @@ class BlobStorageManagerTest {
         List<String> response = testBlobStorageManager.collectBlobFileNamesFromContainer(pcqContainer);
 
         verify(pageIterableBlobs, times(1)).iterator();
-        Assertions.assertEquals(0, response.size(), "No files added as no name was provided");
+        Assertions.assertEquals(0, response.size(), "No files added as name was provided as null");
     }
 
     @Test
@@ -196,7 +196,7 @@ class BlobStorageManagerTest {
         List<String> response = testBlobStorageManager.collectBlobFileNamesFromContainer(pcqContainer);
 
         verify(pageIterableBlobs, times(1)).iterator();
-        Assertions.assertEquals(0, response.size(), "No files added as no name was provided");
+        Assertions.assertEquals(0, response.size(), "No files added to list as IsPrefix(virtual Directory) was true");
     }
 
     @Test
