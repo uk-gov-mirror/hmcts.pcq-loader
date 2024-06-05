@@ -193,8 +193,6 @@ dependencyCheck {
 
 dependencyManagement {
     dependencies {
-        dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
-
         // CVE-2021-29425
         dependency group: 'commons-io', name: 'commons-io', version: '2.16.1'
 
@@ -229,10 +227,6 @@ dependencyManagement {
           entry 'netty-transport-classes-kqueue'
         }
 
-      dependencySet(group: 'ch.qos.logback', version: '1.5.6') {
-        entry 'logback-core'
-        entry 'logback-classic'
-      }
     }
     imports {
       mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2023.0.2'
@@ -248,7 +242,7 @@ repositories {
 }
 
 def versions = [
-        jjwt                : '0.11.5',
+        feignForm           : '3.8.0',
         junit               : '5.9.2',
         reformLogging       : '6.1.4',
         springBoot          : springBoot.class.package.implementationVersion,
@@ -260,32 +254,9 @@ def versions = [
         springSecurity      : '6.1.2'
 ]
 
-configurations.all {
-    resolutionStrategy {
-        eachDependency { DependencyResolveDetails details ->
-            if (details.requested.group in ['org.apache.logging.log4j']) {
-                details.useVersion '2.20.0'
-            }
-            if (details.requested.group in ['org.scala-lang']) {
-                details.useVersion '2.12.10'
-            }
-            if (details.requested.group in ['org.apache.httpcomponents.httpclient']) {
-              details.useVersion '4.5.13'
-            }
-        }
-    }
-}
-
 dependencies {
-    // exclude spring-cloud-context as it is already included in spring-cloud-starter-netflix-hystrix
-    def withoutSpringCloudContext = {
-        exclude group: 'org.springframework.cloud', module: 'spring-cloud-context'
-    }
 
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', {
-      exclude group: 'org.apache.tomcat.embed', module: 'tomcat-embed-websocket'
-      exclude group: 'org.apache.tomcat.embed', module: 'tomcat-embed-core'
-    }
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web-services'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
@@ -306,34 +277,24 @@ dependencies {
     implementation group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     implementation group: "com.networknt", name: "json-schema-validator", version: "1.4.0"
 
-    implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
-    implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
-    implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
+    implementation group: 'io.github.openfeign.form', name: 'feign-form', version: versions.feignForm
+    implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: versions.feignForm
 
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.4'
     implementation group: 'com.microsoft.azure', name: 'applicationinsights-web', version: '3.5.2'
 
-    implementation group: "io.jsonwebtoken", name: "jjwt-api", version: versions.jjwt
-    implementation group: "io.jsonwebtoken", name: "jjwt-impl", version: versions.jjwt
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-gson', version: versions.jjwt
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
-    implementation group: 'com.github.hmcts', name: 'pcq-commons', version: '1.2.4'
+    implementation group: 'com.github.hmcts', name: 'pcq-commons', version: '1.2.5'
 
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.2'
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
     implementation group: 'commons-net', name: 'commons-net', version: '3.11.0'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
 
-    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '10.1.24'
-    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '10.1.24'
-
     testImplementation(platform(group: 'org.junit', name: 'junit-bom', version: '5.10.2'))
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
-      exclude group: 'junit', module: 'junit'
-      exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
     testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
@@ -350,7 +311,6 @@ dependencies {
     testImplementation 'com.github.hmcts:fortify-client:1.4.2:all'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
-    testImplementation group: "io.jsonwebtoken", name: "jjwt", version: "0.12.5"
     testImplementation group: "org.testcontainers", name: "junit-jupiter", version: versions.testcontainers
 
     integrationTestImplementation sourceSets.main.runtimeClasspath
