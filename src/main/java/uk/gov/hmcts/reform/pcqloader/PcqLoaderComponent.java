@@ -36,6 +36,9 @@ public class PcqLoaderComponent {
 
     private final Map<String, Integer> serviceSummaryMap = new ConcurrentHashMap<>();
 
+    @Value("${throwException:false}")
+    private boolean throwException;
+
     @Value("${apiExecutionThreadDelay:1000}")
     private int threadDelay;
 
@@ -48,6 +51,9 @@ public class PcqLoaderComponent {
     private final ZipFileUtils fileUtil;
 
     public void execute() {
+        if (throwException) {
+            throw new IllegalArgumentException("Exception to test alert");
+        }
 
         // Step 1. Connect and Authenticate with the PCQ Azure Blob Storage Account.
         BlobContainerClient blobContainerClient = blobStorageManager.getPcqContainer();
