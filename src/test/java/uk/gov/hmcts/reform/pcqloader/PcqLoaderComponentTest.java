@@ -6,8 +6,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.pcq.commons.exception.ExternalApiException;
 import uk.gov.hmcts.reform.pcq.commons.model.PcqAnswerRequest;
 import uk.gov.hmcts.reform.pcq.commons.model.PcqAnswers;
@@ -25,7 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -69,6 +73,9 @@ class PcqLoaderComponentTest {
 
     @Mock
     private File unzippedFile;
+
+    @Mock
+    Environment environment;
 
 
     @Test
@@ -889,4 +896,25 @@ class PcqLoaderComponentTest {
 
         return new ResponseEntity<>(responseMap, HttpStatus.valueOf(Integer.parseInt(statusCode)));
     }
+
+    @Test
+    void shouldThrowException() {
+
+        // given
+        ReflectionTestUtils.setField(pcqLoaderComponent, "throwException", true);
+
+        Exception exception = null;
+
+        //when
+        try {
+            pcqLoaderComponent.execute();
+        } catch (Exception t) {
+            exception = t;
+        }
+
+        //then
+        assertNotNull(exception,"Exception should not be null");
+        assertEquals("Exception message is not matching","Exception to test alert",exception.getMessage());
+    }
+
 }
