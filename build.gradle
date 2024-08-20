@@ -11,7 +11,7 @@ plugins {
     id "info.solidsoft.pitest" version '1.15.0'
     id 'org.sonarqube' version '5.1.0.4882'
     id 'com.gorylenko.gradle-git-properties' version '2.4.2'
-    id "io.freefair.lombok" version "8.7.1"
+    id "io.freefair.lombok" version "8.10"
 }
 
 group = 'uk.gov.hmcts.reform'
@@ -200,7 +200,7 @@ dependencyManagement {
           entry 'spring-cloud-openfeign-core'
         }
 
-        dependencySet(group: 'org.springframework.security', version: '6.3.1') {
+        dependencySet(group: 'org.springframework.security', version: '6.3.2') {
           entry 'spring-security-core'
           entry 'spring-security-test'
         }
@@ -286,7 +286,7 @@ dependencies {
     implementation group: 'commons-net', name: 'commons-net', version: '3.11.1'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.16.0'
 
-    testImplementation(platform(group: 'org.junit', name: 'junit-bom', version: '5.10.3'))
+    testImplementation(platform(group: 'org.junit', name: 'junit-bom', version: '5.11.0'))
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
