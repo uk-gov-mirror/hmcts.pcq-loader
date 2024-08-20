@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
-import org.springframework.core.env.Environment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -29,9 +28,6 @@ class PcqLoaderApplicationTest {
 
     @Mock
     private PcqLoaderComponent pcqLoaderComponent;
-
-    @Mock
-    Environment environment;
 
     @Test
     void testApplicationExecuted() throws Exception{
