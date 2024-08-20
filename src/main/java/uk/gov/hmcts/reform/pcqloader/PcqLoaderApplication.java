@@ -28,7 +28,7 @@ public class PcqLoaderApplication implements ApplicationRunner {
     private int waitPeriod;
 
     @Override
-    public void run(ApplicationArguments args) {
+    public void run(ApplicationArguments args) throws Exception {
 
         try {
             log.info("Starting the Pcq Loader job.");
@@ -43,8 +43,13 @@ public class PcqLoaderApplication implements ApplicationRunner {
             log.error("Error executing Pcq Loader", e);
         } finally {
             client.flush();
+            waitTelemetryGracefulPeriod();
         }
 
+    }
+
+    private void waitTelemetryGracefulPeriod() throws InterruptedException {
+        Thread.sleep(waitPeriod);
     }
 
     public static void main(String[] args) {
