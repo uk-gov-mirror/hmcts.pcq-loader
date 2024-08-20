@@ -30,7 +30,7 @@ class PcqLoaderApplicationTest {
     private PcqLoaderComponent pcqLoaderComponent;
 
     @Test
-    void testApplicationExecuted() throws Exception{
+    void testApplicationExecuted() throws Exception {
         testPcqLoaderApplication.run(null);
         verify(pcqLoaderComponent, times(1)).execute();
         verify(client, times(1)).flush();
@@ -45,7 +45,7 @@ class PcqLoaderApplicationTest {
     }
 
     @Test
-    void shouldCatchExceptionAndLogError(CapturedOutput output) throws Exception{
+    void shouldCatchExceptionAndLogError(CapturedOutput output) throws Exception {
 
         // given
         doThrow(new IllegalArgumentException("Exception from PCQ Disposer service"))
