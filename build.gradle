@@ -236,7 +236,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven {
-        url 'https://jitpack.io'
+      url = 'https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1'
     }
 }
 
@@ -298,9 +298,9 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.18.0'
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '5.2.0'
 
-    testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version: '3.6.0'
+    testImplementation group: 'org.wiremock', name: 'wiremock', version: '3.6.0'
 
-    testImplementation 'com.github.hmcts:fortify-client:1.4.8:all'
+    testImplementation 'com.github.hmcts:fortify-client:1.4.9:all'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
     testImplementation group: "org.testcontainers", name: "junit-jupiter", version: versions.testcontainers
